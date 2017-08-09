@@ -1,0 +1,7 @@
+.vertx
+server/target
+**/*.iml
+**/*.ipr
+**/*.iws
+*.db
+target
