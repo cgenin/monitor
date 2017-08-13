@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "au run --watch",
-    "prepare": "au prepare-materialize"
+    "postinstall": "au prepare-materialize & r.js.cmd -o rbuild.js",
+    "prebuild": "au clean-build",
+    "build": "au build --env prod"
   },
   "license": "MIT",
   "dependencies": {
@@ -21,7 +23,7 @@
     "bluebird": "^3.4.1",
     "jquery": "2.2.4",
     "material-design-icons": "^3.0.1",
-    "materialize-css": "0.100.0",
+    "materialize-css": "0.99.0",
     "requirejs": "^2.3.4",
     "text": "github:requirejs/text#latest"
   },
@@ -46,6 +48,7 @@
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-babel": "^6.1.2",
     "gulp-changed-in-place": "^2.0.3",
+    "gulp-clean": "^0.3.2",
     "gulp-eslint": "^2.0.0",
     "gulp-htmlmin": "^3.0.0",
     "gulp-notify": "^2.2.0",
