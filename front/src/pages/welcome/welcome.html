@@ -1,0 +1,21 @@
+<template>
+    <require from="./welcome.css"></require>
+    <div class="welcome-page">
+        <div class="section splash-container">
+            <img md-box src="/img/splash.jpg" width="450"/>
+        </div>
+        <div class="section">
+
+            <md-carousel md-indicators="true" md-slider="true" class="center" style="max-height: 250px;">
+                <md-carousel-item class="red white-text" style="height: 150px;">
+                    <h1>Nombre de projets : ${nbProjects}</h1>
+                    <a href="/projects" md-button md-waves>Détail</a>
+                </md-carousel-item>
+                <md-carousel-item class="amber white-text">
+                    <h1>Nombe de tables</h1>
+                    <a md-button md-waves class="white grey-text darken-text-2">Aller</a>
+                </md-carousel-item>
+            </md-carousel>
+        </div>
+    </div>
+</template>

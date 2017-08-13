@@ -1,0 +1,16 @@
+<template>
+    <require from="./add.css"></require>
+    <div class="projects-add-page">
+        <md-card md-title="Ajouter un projet manuellement.">
+            <form role="form" submit.delegate="submit()">
+                <div class="section">
+                    <label for="json">Json :</label>
+                    <textarea id="json" value.bind="json" class="materialize-textarea" required minlength="5" auto-resize="${json}"></textarea>
+                </div>
+                <div class="section">
+                    <button class="submit-button" md-button><i class="material-icons">send</i>&nbsp;<span>Envoyer</span></button>
+                </div>
+            </form>
+        </md-card>
+    </div>
+</template>

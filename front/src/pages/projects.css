@@ -1,0 +1,25 @@
+.projects-page .table-result {
+    font-size: 1.3rem;
+    line-height: inherit;
+}
+
+.projects-page .table-result td > a.tootip,
+.projects-page .table-result td > a.link {
+    text-decoration: solid;
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+    height: 1.3rem;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.projects-page .table-result td > a.tootip {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.projects-page .table-result td > a.tootip > i.material-icons {
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+    height: 1.3rem;
+    vertical-align: middle !important;
+}

@@ -1,0 +1,21 @@
+<template>
+
+    <md-navbar fixed="true">
+        <a href="#" class="brand-logo right"><span  >${router.title}</span></a>
+        <a md-sidenav-collapse="ref.bind:sideNavCloseOnClick;" md-button  md-waves
+           class="left hide-on-med-and-up"  style="height: 100%">
+            <i class="material-icons">dehaze</i>
+        </a>
+        <ul class="left hide-on-small-only">
+            <li  repeat.for="row of menu" class="${row.isActive ? 'active' : ''}">
+                <a href.bind="row.href" md-waves>${row.title}</a>
+            </li>
+        </ul>
+    </md-navbar>
+    <md-sidenav view-model.ref="sideNavCloseOnClick" md-edge="left" md-close-on-click="true">
+        <ul>
+            <li repeat.for="row of menu" ><a href.bind="row.href">${row.title}</a></li>
+        </ul>
+    </md-sidenav>
+    <slot></slot>
+</template>

@@ -1,0 +1,69 @@
+<template>
+    <require from="./projects.css"></require>
+    <div class="projects-page">
+        <md-card md-title="Projets">
+            <div class="row">
+                <div class="col s6 offset-s1">
+                    <input type="text" value.bind="filter" keyup.delegate="filtering() & debounce:100"
+                           class="form-control" id="filter" placeholder="Filtre">
+                </div>
+                <div class="col s4 offset-s1">
+                    <a href="#" md-button="floating: true;large:true;" class="primary" click.trigger="refresh()"
+                       title="Rafraîchir la liste" md-waves="color: light; circle: true;">
+                        <i class="material-icons">refresh</i>
+                    </a>
+                    <a href="/projects/add" md-button="floating: true;large:true;"
+                       title="Ajouter un projet" md-waves="color: light; circle: true;"><i
+                            class="material-icons">add</i></a>
+                </div>
+            </div>
+        </md-card>
+        <div class="divider"></div>
+        <md-card>
+            <div>
+                <strong>Résultats : ${list.length}</strong>
+            </div>
+            <table class="table-result highlight">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Snapshot</th>
+                    <th>Release</th>
+                    <th>Java</th>
+                    <th>Npm</th>
+                    <th>Table</th>
+                    <th>Dernière Mise à jour</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr repeat.for="project of list">
+                    <td><a href.one-time="project.destinationUrl" class="link">${project.name}</a></td>
+                    <td><a href.one-time="project.destinationUrl" class="link">${project.snapshot}</a></td>
+                    <td><a href.one-time="project.destinationUrl" class="link">${project.release}</a></td>
+                    <td>
+                        <a md-tooltip="html: true; position: top; text.bind: project.javaDepsTootip;" class="tootip">
+                            <span>${project.javaDeps.length}&nbsp;</span>
+                            <i class="material-icons">info </i>
+                        </a>
+                    </td>
+                    <td><a md-tooltip="html: true; position: top; text.bind: project.npmDepsTootip;" class="tootip">
+                        <span>${project.npmDeps.length}&nbsp;</span>
+                        <i class="material-icons">info </i>
+                    </a></td>
+                    <td><a md-tooltip="html: true; position: top; text.bind: project.tablesTootip;" class="tootip">
+                        <span>${project.tables.length}&nbsp;</span>
+                        <i class="material-icons">info </i>
+                    </a></td>
+                    <td>${project.latest}</td>
+                </tr>
+                <tr show.bind="list.length === 0">
+                    <td colspan="7"><p>Aucun projet trouvé.</p></td>
+                </tr>
+                </tbody>
+            </table>
+        </md-card>
+    </div>
+
+
+</template>
