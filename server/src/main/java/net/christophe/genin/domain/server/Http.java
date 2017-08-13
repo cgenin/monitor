@@ -8,6 +8,7 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
+import net.christophe.genin.domain.server.http.Index;
 import net.christophe.genin.domain.server.http.Services;
 
 public class Http extends AbstractVerticle {
@@ -25,17 +26,11 @@ public class Http extends AbstractVerticle {
         router.route().handler(BodyHandler.create());
         router.mountSubRouter("/api", new Services(vertx).build());
 
-        router.route("/*")
-                .handler(StaticHandler.create("build")
-                        .setCachingEnabled(true)
-                        .setFilesReadOnly(true)
-                );
+        new Index().register(router);
 
         router.route("/*")
                 .handler(StaticHandler.create("build")
-//                        .setCachingEnabled(true)
-//                        .setMaxAgeSeconds(60 * 60 * 24 * 7 * 4)
-                        .setFilesReadOnly(true)
+                                .setFilesReadOnly(true)
                 );
 
         logger.info("port : " + port);
