@@ -4,9 +4,10 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.Dbs;
-import net.christophe.genin.domain.server.utils.Jsons;
+import net.christophe.genin.domain.server.db.Schemas;
+
+import net.christophe.genin.domain.server.json.Jsons;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 
@@ -16,15 +17,16 @@ import java.util.stream.Collectors;
 
 import static org.dizitart.no2.filters.Filters.eq;
 
-public class ProjectUpdater extends AbstractVerticle {
-    private static final Logger logger = LoggerFactory.getLogger(ProjectUpdater.class);
+public class ProjectBatch extends AbstractVerticle {
+    private static final Logger logger = LoggerFactory.getLogger(ProjectBatch.class);
 
     @Override
     public void start() throws Exception {
+        final long batch = Treatments.batchTime(config());
+        logger.info("batch time : " + batch);
+        vertx.setPeriodic(batch, (id) -> periodic());
 
-        vertx.setPeriodic(10_000L, (id) -> periodic());
-
-        logger.info("ProjectUpdater started.");
+        logger.info("started.");
     }
 
     private synchronized void periodic() {

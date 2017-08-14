@@ -2,12 +2,21 @@ package net.christophe.genin.domain.server;
 
 import io.vertx.core.Launcher;
 
+import java.io.IOException;
+import java.util.logging.LogManager;
+
 /**
  * Main Classe
  */
 public class Main extends Launcher {
 
     public static void main(String[] args) {
-        new Main().dispatch(new String[]{"run", Server.class.getName()});
+        try {
+            LogManager.getLogManager().readConfiguration(Main.class.getResourceAsStream("/logging.properties"));
+            new Main().dispatch(new String[]{"run", Server.class.getName()});
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+
     }
 }

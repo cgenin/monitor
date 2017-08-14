@@ -19,7 +19,7 @@ public final class Https {
 
     private static final Logger logger = LoggerFactory.getLogger(Https.class);
 
-    public static Integer toStatusCreated(AsyncResult as) {
+    static Integer toStatusCreated(AsyncResult as) {
         return toStatus(as, 204);
     }
 
@@ -33,7 +33,7 @@ public final class Https {
                 });
     }
 
-    public static class EbCaller {
+    static class EbCaller {
         private final Vertx vertx;
         private final RoutingContext rc;
 
@@ -60,7 +60,7 @@ public final class Https {
         }
     }
 
-    public static class Json {
+    static class Json {
         private final RoutingContext rc;
 
 

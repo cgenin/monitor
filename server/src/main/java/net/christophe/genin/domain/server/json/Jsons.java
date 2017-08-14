@@ -1,4 +1,4 @@
-package net.christophe.genin.domain.server.utils;
+package net.christophe.genin.domain.server.json;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;

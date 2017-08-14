@@ -3,8 +3,9 @@ package net.christophe.genin.domain.server;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.apps.ProjectUpdater;
+import net.christophe.genin.domain.server.apps.ProjectBatch;
 import net.christophe.genin.domain.server.apps.Raw;
+import net.christophe.genin.domain.server.apps.TablesBatch;
 
 /**
  * Main Verticle
@@ -20,7 +21,8 @@ public class Server extends AbstractVerticle {
             if(as.failed()){
                 throw new IllegalStateException("Error in creating DB", as.cause());
             }
-            vertx.deployVerticle(new ProjectUpdater());
+            vertx.deployVerticle(new ProjectBatch());
+            vertx.deployVerticle(new TablesBatch());
             vertx.deployVerticle(new Projects());
         });
         vertx.deployVerticle(new Raw());
