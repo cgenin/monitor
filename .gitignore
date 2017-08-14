@@ -5,3 +5,6 @@ server/target
 **/*.iws
 *.db
 target
+log/*.log
+*.json
+log/*.lck
