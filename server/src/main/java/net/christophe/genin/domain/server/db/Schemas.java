@@ -1,5 +1,7 @@
 package net.christophe.genin.domain.server.db;
 
+import io.vertx.core.json.JsonObject;
+
 public final class Schemas {
     public static final String RAW_COLLECTION = "Apps-Store";
     public static final String RAW_STATE = "state";
@@ -22,6 +24,8 @@ public final class Schemas {
                 return Dependencies.class.getSimpleName().toLowerCase();
             }
         }
+
+
     }
 
     public enum Projects {
@@ -32,5 +36,11 @@ public final class Schemas {
         }
     }
 
+    public enum Tables {
+        id, name, latestUpdate, services;
 
+        public static String collection() {
+            return Tables.class.getSimpleName().toLowerCase();
+        }
+    }
 }

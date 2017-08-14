@@ -6,7 +6,6 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
-
 import net.christophe.genin.domain.server.json.Jsons;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
@@ -22,15 +21,11 @@ public class ProjectBatch extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        final long batch = Treatments.batchTime(config());
-        logger.info("batch time : " + batch);
-        vertx.setPeriodic(batch, (id) -> periodic());
-
-        logger.info("started.");
+        new Treatments.Periodic(this, logger).run(this::periodic);
     }
 
-    private synchronized void periodic() {
-        logger.debug("Début du traitement");
+    private synchronized boolean periodic() {
+
         final NitriteCollection collection = Dbs.instance
                 .getCollection(Schemas.RAW_COLLECTION);
         collection
@@ -53,7 +48,8 @@ public class ProjectBatch extends AbstractVerticle {
             // Dans tous les cas marqués le doc comme traiter.
             collection.update(doc.put(Schemas.RAW_STATE, Treatments.TABLES.getState()));
         });
-        logger.debug("Fin du traitement");
+
+        return true;
     }
 
     private Optional<Document> updateFromJson(Document document, JsonObject json) {
