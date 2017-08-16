@@ -1,4 +1,4 @@
- import environment from '../environment';
+import environment from '../environment';
 
 export function getBaseUrl() {
   if(environment.local){

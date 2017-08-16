@@ -5,7 +5,16 @@ import io.vertx.core.json.JsonObject;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.NitriteCollection;
+import org.dizitart.no2.tool.ExportOptions;
+import org.dizitart.no2.tool.Exporter;
+import org.dizitart.no2.tool.Importer;
+import rx.Observable;
+import rx.Observer;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,6 +59,25 @@ public final class Dbs {
                 .orElseThrow(() -> new IllegalStateException("Nitrite not found"));
     }
 
+    public Observable<String> exporter() {
+        return Observable.fromCallable(() -> Exporter.of(nitrite()))
+                .map(exporter -> {
+                    ExportOptions options = new ExportOptions();
+                    options.setExportData(true);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    exporter.withOptions(options).exportTo(stream);
+                    return stream;
+                })
+                .map(baos -> new String(baos.toByteArray()));
+    }
+
+    public boolean importFrom(JsonObject json) {
+        String str = json.encode();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(str.getBytes());
+        Importer.of(nitrite())
+                .importFrom(byteArrayInputStream);
+        return true;
+    }
 
     public static class Raws {
         public static Document toDoc(JsonObject json) {

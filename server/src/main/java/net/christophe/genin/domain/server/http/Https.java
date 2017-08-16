@@ -15,7 +15,7 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public final class Https {
+final class Https {
 
     private static final Logger logger = LoggerFactory.getLogger(Https.class);
 
@@ -23,7 +23,7 @@ public final class Https {
         return toStatus(as, 204);
     }
 
-    private static Integer toStatus(AsyncResult reply, int okStatus) {
+    static Integer toStatus(AsyncResult reply, int okStatus) {
         return Optional.of(reply)
                 .filter(AsyncResult::succeeded)
                 .map(r -> okStatus)
@@ -37,12 +37,12 @@ public final class Https {
         private final Vertx vertx;
         private final RoutingContext rc;
 
-        public EbCaller(Vertx vertx, RoutingContext rc) {
+        EbCaller(Vertx vertx, RoutingContext rc) {
             this.vertx = vertx;
             this.rc = rc;
         }
 
-        public void arr(String addr, Consumer<JsonArray> consumer) {
+        void arr(String addr, Consumer<JsonArray> consumer) {
             vertx.eventBus()
                     .send(addr, new JsonObject(), new DeliveryOptions(), (Handler<AsyncResult<Message<JsonArray>>>) (reply) -> {
                         if (reply.succeeded()) {
@@ -55,7 +55,15 @@ public final class Https {
                     });
         }
 
-        public void arrAndReply(String addr) {
+        void created(String addr, JsonObject data) {
+            vertx.eventBus()
+                    .send(addr, data, new DeliveryOptions(), (Handler<AsyncResult<Message<JsonArray>>>) (reply) -> {
+                        final Integer status = Https.toStatusCreated(reply);
+                        rc.response().setStatusCode(status).end();
+                    });
+        }
+
+        void arrAndReply(String addr) {
             arr(addr, (jsonArray) -> new Https.Json(rc).send(jsonArray));
         }
     }
@@ -64,15 +72,15 @@ public final class Https {
         private final RoutingContext rc;
 
 
-        public Json(RoutingContext rc) {
+        Json(RoutingContext rc) {
             this.rc = rc;
         }
 
-        public void send(JsonArray array) {
+        void send(JsonArray array) {
             send(array.encode());
         }
 
-        public void send(String data) {
+        void send(String data) {
             rc.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json").end(data);
         }
     }

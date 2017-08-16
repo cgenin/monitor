@@ -1,4 +1,4 @@
-package net.christophe.genin.domain.server.apps;
+package net.christophe.genin.domain.server.command;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;

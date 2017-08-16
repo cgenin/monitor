@@ -1,18 +1,9 @@
-.color-box div {
-    display: inline-block;
-    margin: 10px;
-    width: 120px;
-    height: 100px;
-    border: dashed 1px black;
-    text-align: center;
-    line-height: 100px;
+.material-icons-button {
+  width: 100%;
+  font-size: 1.3rem;
 }
 
-ul.native-list {
-    padding: 0 30px;
-}
-
-ul.native-list li {
-    list-style-type: initial;
-    color: #60a9bb
+.material-icons-button > span {
+  line-height: 100%;
+  vertical-align: text-top;
 }

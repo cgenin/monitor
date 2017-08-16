@@ -1,0 +1,46 @@
+<template>
+  <require from="./configuration.css"></require>
+  <div class="configuration-page">
+    <md-card md-title="Administration">
+      <div class="row">
+        <div class="col s12">
+          <ul md-tabs="fixed: true;">
+            <li><a class="active" href="#conf">Configuration</a></li>
+            <li><a href="#export">Export</a></li>
+            <li><a href="#import">Import</a></li>
+          </ul>
+        </div>
+        <section id="conf">
+          <div class="row">
+            <div class="col s12">
+              <h2>TODO</h2>
+            </div>
+          </div>
+        </section>
+        <section id="import">
+          <form submit.trigger="submitImport()">
+          <div class="row">
+            <div class="col s6 padding center">
+              <input type="file" required class="form-control" change.delegate="fileSelected($event)">
+            </div>
+            <div class="col s6 padding">
+              <button type="submit" md-button class="full-width material-icons-button">
+                <i class="material-icons">file_upload</i><span>Importer</span>
+              </button>
+            </div>
+          </div>
+          </form>
+        </section>
+        <section id="export">
+          <div class="main row">
+            <div class="col s12">
+              <a md-button href.bind="urlExport" target="_blank" class="full-width material-icons-button">
+                <i class="material-icons">file_download</i><span>Export</span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    </md-card>
+  </div>
+</template>

@@ -1,0 +1,9 @@
+.configuration-page #import .padding {
+  padding-top: 50px;
+
+}
+
+.configuration-page #export >.main  .full-width {
+  width:100%;
+  margin-top: 50px;
+}

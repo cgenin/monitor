@@ -1,6 +1,7 @@
 import {inject} from 'aurelia-framework';
 import {MdToastService} from 'aurelia-materialize-bridge';
 import {AppsStore} from '../../store/AppsStore';
+import {success, error} from '../../Toasts';
 
 @inject(AppsStore, MdToastService)
 export class ProjectsAdd {
@@ -13,12 +14,8 @@ export class ProjectsAdd {
   }
 
   submit() {
-    this.store.save(this.json).then(() => {
-      console.log('ok');
-      this.toast.show("Mise à jour effectuer avec succés. :)", 4000, 'green');
-    }).catch(() => {
-      console.error('error');
-      this.toast.show("Erreur technique !!! :(", 4000, 'red');
-    });
+    this.store.save(this.json)
+      .then(() =>  success(this.toast))
+      .catch((err) => error(this.toast, err));
   }
 }

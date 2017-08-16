@@ -5,6 +5,7 @@ server/target
 **/*.iws
 *.db
 target
+.idea
 log/*.log
 *.json
 log/*.lck

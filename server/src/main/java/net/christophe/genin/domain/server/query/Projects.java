@@ -1,11 +1,11 @@
-package net.christophe.genin.domain.server;
+package net.christophe.genin.domain.server.query;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.apps.Raw;
+import net.christophe.genin.domain.server.command.Raw;
 import net.christophe.genin.domain.server.db.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 
@@ -40,5 +40,6 @@ public class Projects extends AbstractVerticle {
                     }).collect(Collectors.toList());
             msg.reply(new JsonArray(l));
         });
+        logger.info("started");
     }
 }

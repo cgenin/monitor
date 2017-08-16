@@ -147,7 +147,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>move fonts</id>
+                        <id>move img</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>exec</goal>

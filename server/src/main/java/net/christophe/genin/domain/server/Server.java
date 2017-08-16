@@ -3,9 +3,13 @@ package net.christophe.genin.domain.server;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.apps.ProjectBatch;
-import net.christophe.genin.domain.server.apps.Raw;
-import net.christophe.genin.domain.server.apps.TablesBatch;
+import net.christophe.genin.domain.server.command.Import;
+import net.christophe.genin.domain.server.command.ProjectBatch;
+import net.christophe.genin.domain.server.command.Raw;
+import net.christophe.genin.domain.server.command.TablesBatch;
+import net.christophe.genin.domain.server.query.Configuration;
+import net.christophe.genin.domain.server.query.Projects;
+import net.christophe.genin.domain.server.query.Tables;
 
 /**
  * Main Verticle
@@ -21,11 +25,23 @@ public class Server extends AbstractVerticle {
             if(as.failed()){
                 throw new IllegalStateException("Error in creating DB", as.cause());
             }
-            vertx.deployVerticle(new ProjectBatch());
-            vertx.deployVerticle(new TablesBatch());
-            vertx.deployVerticle(new Projects());
+            deployCommand();
+            deployQuery();
+
         });
-        vertx.deployVerticle(new Raw());
         logger.info("start : OK");
+    }
+
+    private void deployCommand() {
+        vertx.deployVerticle(new Raw());
+        vertx.deployVerticle(new ProjectBatch());
+        vertx.deployVerticle(new TablesBatch());
+        vertx.deployVerticle(new Import());
+    }
+
+    private void deployQuery() {
+        vertx.deployVerticle(new Projects());
+        vertx.deployVerticle(new Tables());
+        vertx.deployVerticle(new Configuration());
     }
 }

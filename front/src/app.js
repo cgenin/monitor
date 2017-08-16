@@ -17,6 +17,14 @@ export class App {
       },
       {route: 'projects', name: 'projects', moduleId: 'pages/projects', nav: true, title: 'Projets', menu: true},
       {
+        route: 'configuration',
+        name: 'configuration',
+        moduleId: 'pages/conf/configuration',
+        nav: true,
+        title: 'Admin.',
+        menu: true
+      },
+      {
         route: 'projects/add',
         name: 'projects-add',
         moduleId: 'pages/projects/add',
