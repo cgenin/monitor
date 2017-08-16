@@ -1,0 +1,49 @@
+<template>
+  <div class="tables-page">
+    <md-card md-title="Tables">
+      <div class="row">
+        <div class="col s6 offset-s1">
+          <input type="text" value.bind="filter" keyup.trigger="filtering() & debounce:100"
+                 class="form-control" id="filter" placeholder="Filtre">
+        </div>
+        <div class="col s4 offset-s1">
+          <a href="#" md-button="floating: true;large:true;" class="primary" click.trigger="refresh()"
+             title="Rafraîchir la liste" md-waves="color: light; circle: true;">
+            <i class="material-icons">refresh</i>
+          </a>
+        </div>
+      </div>
+    </md-card>
+    <div class="divider"></div>
+    <div class="center" if.bind="loading">
+      <md-progress md-type="circular" md-color="flashing"></md-progress>
+    </div>
+    <md-card if.bind="!loading">
+      <div>
+        <strong>Résultats : ${list.length}</strong>
+      </div>
+      <table class="table-result highlight">
+        <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Projet(s) lié(s)</th>
+          <th>Dernière Mise à jour</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr repeat.for="table of list">
+          <td>${table.name}</td>
+          <td>
+            ${table.serviceStr}
+          </td>
+          <td>${table.latest}</td>
+        </tr>
+        <tr show.bind="list.length === 0">
+          <td colspan="7"><p>Aucune table trouvée.</p></td>
+        </tr>
+        </tbody>
+      </table>
+    </md-card>
+    </div>
+</template>

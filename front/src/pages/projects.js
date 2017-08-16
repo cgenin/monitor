@@ -1,5 +1,6 @@
 import {inject} from 'aurelia-framework';
 import {ProjectsStore} from '../store/ProjectsStore';
+import {format} from '../Dates';
 
 const depTootip = (attr) => {
   if (!attr || attr.length === 0) {
@@ -8,12 +9,7 @@ const depTootip = (attr) => {
   return attr.map(v => `<ul><li>${v}</li></ul>`).reduce((a, b) => a + b, '');
 };
 
-const format = (long) => {
-  const date = new Date(long);
-  const cMont = `${date.getMonth() + 1}`;
-  const fMonth = (cMont.length === 1) ? `0${cMont}` : cMont;
-  return `${date.getFullYear()}/${fMonth}/${date.getDate() + 1}`;
-};
+
 
 const map = (l) => {
   if (!l) {
@@ -58,7 +54,6 @@ export class Projects {
   }
 
   filtering() {
-    console.log(this.filter)
     if (!this.filter || this.filter.trim() === '') {
       this.list = this.original;
       return;
@@ -66,7 +61,7 @@ export class Projects {
     const upFilter = this.filter.toUpperCase();
     this.list = this.original
       .filter(p => {
-        const data = JSON.stringify(p).toUpperCase();
+        const data = JSON.stringify(Object.values(p)).toUpperCase();
         return data.indexOf(upFilter) !== -1;
       });
   }
