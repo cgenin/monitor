@@ -4,11 +4,10 @@ import {format} from '../Dates';
 
 const depTootip = (attr) => {
   if (!attr || attr.length === 0) {
-    return '<p>Aucune dépendance.</p>'
+    return '<p>Aucune dépendance.</p>';
   }
   return attr.map(v => `<ul><li>${v}</li></ul>`).reduce((a, b) => a + b, '');
 };
-
 
 
 const map = (l) => {
@@ -17,8 +16,8 @@ const map = (l) => {
   }
   return l.map(p => {
     p.destinationUrl = `/projects/${p.id}`;
-    p.snapshot =  p.snapshot || '-';
-    p.release =  p.release || '-';
+    p.snapshot = p.snapshot || '-';
+    p.release = p.release || '-';
     p.javaDeps = p.javaDeps || [];
     p.npmDeps = p.npmDeps || [];
     p.tables = p.tables || [];
@@ -50,7 +49,6 @@ export class Projects {
 
   constructor(projectStore) {
     this.projectStore = projectStore;
-
   }
 
   filtering() {

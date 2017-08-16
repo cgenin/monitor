@@ -1,9 +1,8 @@
 import {HttpClient} from 'aurelia-http-client';
-import {getBaseUrl} from './Api'
+import {getBaseUrl} from './Api';
 
 export class AppsStore {
   constructor() {
-
     this.client = new HttpClient()
       .configure(x => {
         x.withBaseUrl(getBaseUrl());

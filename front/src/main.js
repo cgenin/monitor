@@ -6,7 +6,6 @@ export function configure(aurelia) {
     .feature('resources');
 
   aurelia.use.plugin('aurelia-materialize-bridge', b => b.useAll());
-  console.log(aurelia)
   if (environment.debug) {
     aurelia.use.developmentLogging();
   }

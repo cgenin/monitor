@@ -11,6 +11,6 @@ export class Welcome {
   }
 
   activate() {
-  this.projectStore.initialize().then(()=>this.nbProjects = this.projectStore.list.length)
+    this.projectStore.initialize().then(() => this.nbProjects = this.projectStore.list.length);
   }
 }

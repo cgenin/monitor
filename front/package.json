@@ -21,6 +21,7 @@
     "aurelia-materialize-bridge": "^0.30.0",
     "aurelia-validation": "^1.1.1",
     "bluebird": "^3.4.1",
+    "eslint": "^3.8.1",
     "jquery": "2.2.4",
     "material-design-icons": "^3.0.1",
     "materialize-css": "0.99.0",

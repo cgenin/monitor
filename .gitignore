@@ -1,5 +1,4 @@
 .vertx
-server/target
 **/*.iml
 **/*.ipr
 **/*.iws
@@ -7,5 +6,5 @@ server/target
 target
 .idea
 log/*.log
-*.json
+export.json
 log/*.lck

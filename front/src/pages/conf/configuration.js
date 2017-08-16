@@ -26,9 +26,8 @@ export class Configuration {
   submitImport() {
     if (this.jsonImport) {
       this.store.importDb(this.jsonImport)
-        .then(() =>  success(this.toast))
+        .then(() => success(this.toast))
         .catch((err) => error(this.toast, err));
-
     }
   }
 }
