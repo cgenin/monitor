@@ -1,4 +1,5 @@
 .welcome-page > .splash-container {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,7 +1,7 @@
 <template>
     <require from="./welcome.css"></require>
     <div class="welcome-page">
-        <div class="section splash-container">
+        <div class="section splash-container center">
             <img md-box src="/img/splash.jpg" width="450"/>
         </div>
         <div class="section">
@@ -12,8 +12,8 @@
                     <a href="/projects" md-button md-waves>Détail</a>
                 </md-carousel-item>
                 <md-carousel-item class="amber white-text">
-                    <h1>Nombe de tables</h1>
-                    <a md-button md-waves class="white grey-text darken-text-2">Aller</a>
+                    <h1>Nombre de tables : ${nbTables}</h1>
+                    <a href="/tables" md-button md-waves class="white grey-text darken-text-2">Détail</a>
                 </md-carousel-item>
             </md-carousel>
         </div>

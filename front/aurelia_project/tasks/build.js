@@ -23,18 +23,27 @@ let main;
 if (CLIOptions.taskName() === 'build' && CLIOptions.hasFlag('watch')) {
   main = gulp.series(
     build,
-    (done) => { watch(); done(); }
+    (done) => {
+      watch();
+      done();
+    }
   );
 } else {
   main = build;
 }
 
 function readProjectConfiguration() {
-  return buildCLI.src(project);
+  const isProd = CLIOptions.getEnvironment() === 'prod';
+  if (!isProd) {
+    return buildCLI.src(project);
+  }
+  const conf = project;
+  conf.build.options.rev = true;
+  return  buildCLI.src(conf);
 }
 
 function writeBundles() {
   return buildCLI.dest();
 }
 
-export { main as default };
+export {main as default};
