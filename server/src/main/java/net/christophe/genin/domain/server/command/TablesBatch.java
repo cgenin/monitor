@@ -50,6 +50,7 @@ public class TablesBatch extends AbstractVerticle {
                             ).orElseGet(
                                     () -> Document.createDocument(Schemas.Projects.latestUpdate.name(), 0L)
                                             .put(Schemas.Tables.name.name(), tableName)
+                                            .put(Schemas.Tables.id.name(), Dbs.newId())
                             )
                     )
                     .filter(document -> {
@@ -61,9 +62,8 @@ public class TablesBatch extends AbstractVerticle {
                         logger.info("New data for " + document.getId().getIdValue() + ". Document must be updated.");
                         tablesCollection.update(document, true);
                     });
-            ;
 
-            collection.update(doc.put(Schemas.RAW_STATE, Treatments.END.getState()));
+            collection.update(doc.put(Schemas.RAW_STATE, Treatments.VERSION.getState()));
         });
 
         return true;

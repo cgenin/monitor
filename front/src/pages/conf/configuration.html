@@ -1,5 +1,6 @@
 <template>
   <require from="./configuration.css"></require>
+  <require from="./administration"></require>
   <div class="configuration-page">
     <md-card md-title="Administration">
       <div class="row">
@@ -11,24 +12,20 @@
           </ul>
         </div>
         <section id="conf">
-          <div class="row">
-            <div class="col s12">
-              <h2>TODO</h2>
-            </div>
-          </div>
+          <administration></administration>
         </section>
         <section id="import">
           <form submit.trigger="submitImport()">
-          <div class="row">
-            <div class="col s6 padding center">
-              <input type="file" required class="form-control" change.delegate="fileSelected($event)">
+            <div class="row">
+              <div class="col s6 padding center">
+                <input type="file" required class="form-control" change.delegate="fileSelected($event)">
+              </div>
+              <div class="col s6 padding">
+                <button type="submit" md-button class="full-width material-icons-button">
+                  <i class="material-icons">file_upload</i><span>Importer</span>
+                </button>
+              </div>
             </div>
-            <div class="col s6 padding">
-              <button type="submit" md-button class="full-width material-icons-button">
-                <i class="material-icons">file_upload</i><span>Importer</span>
-              </button>
-            </div>
-          </div>
           </form>
         </section>
         <section id="export">

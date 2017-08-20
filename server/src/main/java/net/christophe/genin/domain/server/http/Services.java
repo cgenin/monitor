@@ -10,6 +10,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import net.christophe.genin.domain.server.InitializeDb;
+import net.christophe.genin.domain.server.command.ConfigurationCommand;
 import net.christophe.genin.domain.server.command.Import;
 import net.christophe.genin.domain.server.query.Configuration;
 import net.christophe.genin.domain.server.query.Projects;
@@ -59,6 +60,13 @@ public class Services {
             final JsonObject body = rc.getBodyAsJson();
             new Https.EbCaller(vertx, rc).created(Import.IMPORT, body);
         });
+        router.get("/").handler(
+                rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Configuration.GET)
+        );
+        router.put("/").handler(rc -> {
+            final JsonObject body = rc.getBodyAsJson();
+            new Https.EbCaller(vertx, rc).created(ConfigurationCommand.SAVE, body);
+        });
         return router;
     }
 
@@ -80,6 +88,10 @@ public class Services {
 
     private Router projects() {
         Router router = Router.router(vertx);
+        router.get("/:id").handler(rc -> {
+            String id = rc.request().params().get("id");
+            new Https.EbCaller(vertx, rc).arrAndReply(Projects.GET, new JsonObject().put(Projects.ID, id));
+        });
         router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Projects.LIST));
         return router;
     }

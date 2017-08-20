@@ -1,6 +1,6 @@
 import {inject} from 'aurelia-framework';
 import {ProjectsStore} from '../store/ProjectsStore';
-import {format} from '../Dates';
+import {formatYYYYMMDDHHmm} from '../Dates';
 
 const depTootip = (attr) => {
   if (!attr || attr.length === 0) {
@@ -24,7 +24,7 @@ const map = (l) => {
     p.javaDepsTootip = depTootip(p.javaDeps);
     p.npmDepsTootip = depTootip(p.npmDeps);
     p.tablesTootip = depTootip(p.tables);
-    p.latest = format(p.latestUpdate);
+    p.latest = formatYYYYMMDDHHmm(p.latestUpdate);
     return p;
   });
 };
@@ -34,18 +34,6 @@ export class Projects {
   original = [];
   list = [];
   filter = '';
-
-  htmlTooltip = `
-  <table>
-    <tr>
-      <td><img src="http://aurelia-ui-toolkits.github.io/demo-materialize/images/chips-sample-1.jpg" /></td>
-      <td>
-        custom html with crappy table layout<br />
-        but shows that it's working (I mean tables)
-      </td>
-    </tr>
-  </table>
-  `;
 
   constructor(projectStore) {
     this.projectStore = projectStore;

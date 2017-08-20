@@ -40,7 +40,10 @@ public class ProjectBatch extends AbstractVerticle {
             final Document document = Optional.ofNullable(projectCollection
                     .find(eq(Schemas.Projects.name.name(), artifactId))
                     .firstOrDefault()
-            ).orElseGet(() -> Document.createDocument(Schemas.Projects.latestUpdate.name(), 0L));
+            ).orElseGet(
+                    () -> Document.createDocument(Schemas.Projects.latestUpdate.name(), 0L)
+                            .put(Schemas.Projects.id.name(), Dbs.newId())
+            );
             updateFromJson(document, json).ifPresent((dc) -> {
                 logger.info("New data for " + artifactId + ". Document must be updated.");
                 projectCollection.update(dc, true);
@@ -60,20 +63,15 @@ public class ProjectBatch extends AbstractVerticle {
 
             document.put(Schemas.Projects.name.name(), artifactId);
             final String version = json.getString(Schemas.Raw.version.name());
-            if (version.contains("SNAPSHOT")) {
+            if (isSnapshot(version)) {
                 document.put(Schemas.Projects.snapshot.name(), version);
             } else {
                 document.put(Schemas.Projects.release.name(), version);
             }
 
-            final List<String> tables = Jsons.builder(json.getJsonArray(Schemas.Raw.Tables.collection())).toStream()
-                    .map(js -> js.getString(Schemas.Raw.Tables.table.name(), ""))
-                    .collect(Collectors.toList());
+            final List<String> tables = extractTables(json);
             document.put(Schemas.Projects.tables.name(), tables);
-            final List<String> javaDeps = Jsons.builder(json.getJsonArray(Schemas.Raw.Dependencies.collection())).toStream()
-                    //                            Todo Filtering .filter
-                    .map(js -> js.getString(Schemas.Raw.Dependencies.artifactId.name(), ""))
-                    .collect(Collectors.toList());
+            final List<String> javaDeps = extractJavaDeps(json);
             document.put(Schemas.Projects.javaDeps.name(), javaDeps);
 
             document.put(Schemas.Projects.latestUpdate.name(), update);
@@ -81,6 +79,23 @@ public class ProjectBatch extends AbstractVerticle {
         }
         logger.info("No data for " + artifactId + ". Document must not be updated: " + lUpdate + " > " + update);
         return Optional.empty();
+    }
+
+    static boolean isSnapshot(String version) {
+        return version.contains("SNAPSHOT");
+    }
+
+    static List<String> extractJavaDeps(JsonObject json) {
+        return Jsons.builder(json.getJsonArray(Schemas.Raw.Dependencies.collection())).toStream()
+                //                            Todo Filtering .filter
+                .map(js -> js.getString(Schemas.Raw.Dependencies.artifactId.name(), ""))
+                .collect(Collectors.toList());
+    }
+
+    static List<String> extractTables(JsonObject json) {
+        return Jsons.builder(json.getJsonArray(Schemas.Raw.Tables.collection())).toStream()
+                .map(js -> js.getString(Schemas.Raw.Tables.table.name(), ""))
+                .collect(Collectors.toList());
     }
 
 }

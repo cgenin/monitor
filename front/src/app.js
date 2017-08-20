@@ -31,6 +31,13 @@ export class App {
         moduleId: 'pages/projects/add',
         nav: true,
         title: 'Projets - Ajout'
+      }, {
+        route: 'projects/:id',
+        href: 'projects/:id',
+        name: 'projects-detail',
+        moduleId: 'pages/projects/detail',
+        nav: true,
+        title: 'Projets - Détail'
       },
       {route: 'about', name: 'about', moduleId: 'pages/about', nav: true, title: 'About', menu: true},
     ]);

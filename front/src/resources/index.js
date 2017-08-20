@@ -1,3 +1,5 @@
 export function configure(config) {
-  config.globalResources(['./attributes/textarea-resizer',]);
+  config.globalResources(['./attributes/textarea-resizer',
+    // './elements/administration'
+  ]);
 }

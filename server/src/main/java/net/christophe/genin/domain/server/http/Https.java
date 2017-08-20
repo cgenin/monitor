@@ -33,6 +33,9 @@ final class Https {
                 });
     }
 
+    /**
+     * Class for transform event bus result to Http request
+     */
     static class EbCaller {
         private final Vertx vertx;
         private final RoutingContext rc;
@@ -42,11 +45,11 @@ final class Https {
             this.rc = rc;
         }
 
-        void arr(String addr, Consumer<JsonArray> consumer) {
+       private <T> void consume(String addr, JsonObject obj, Consumer<T> consumer) {
             vertx.eventBus()
-                    .send(addr, new JsonObject(), new DeliveryOptions(), (Handler<AsyncResult<Message<JsonArray>>>) (reply) -> {
+                    .send(addr, obj, new DeliveryOptions(), (Handler<AsyncResult<Message<T>>>) (reply) -> {
                         if (reply.succeeded()) {
-                            JsonArray jsonArray = reply.result().body();
+                            T jsonArray = reply.result().body();
                             consumer.accept(jsonArray);
                             return;
                         }
@@ -64,10 +67,25 @@ final class Https {
         }
 
         void arrAndReply(String addr) {
-            arr(addr, (jsonArray) -> new Https.Json(rc).send(jsonArray));
+            arrAndReply(addr, new JsonObject());
+        }
+
+        void arrAndReply(String addr, JsonObject data) {
+            consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
+        }
+
+        void jsonAndReply(String addr, JsonObject data) {
+            consume(addr, data, (Consumer<JsonObject>) (obj) -> new Https.Json(rc).send(obj));
+        }
+
+        void jsonAndReply(String addr) {
+            jsonAndReply(addr, new JsonObject());
         }
     }
 
+    /**
+     * Manage Json response.
+     */
     static class Json {
         private final RoutingContext rc;
 
@@ -80,8 +98,15 @@ final class Https {
             send(array.encode());
         }
 
+        void send(JsonObject obj) {
+            send(obj.encode());
+        }
+
         void send(String data) {
-            rc.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json").end(data);
+            rc.response()
+                    .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
+                    .putHeader(HttpHeaders.CACHE_CONTROL, "private, no cache")
+                    .end(data);
         }
     }
 }

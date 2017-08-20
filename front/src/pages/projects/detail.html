@@ -1,0 +1,21 @@
+<template>
+  <div class="detail-project-page">
+    <md-card md-title.one-way="title">
+      <select md-select="label:Sélectionner une version" change.trigger="changeVersion($event)">
+        <option value.bind="latest.id" selected>LATEST</option>
+        <optgroup if.bind="releases.length > 0" label="releases : ">
+          <option repeat.for="v of releases" value.bind="v.id">${v.name}</option>
+        </optgroup>
+        <optgroup if.bind="snapshots.length > 0" label="snapshots : ">
+          <option repeat.for="v of snapshots" value.bind="v.id">${v.name}</option>
+        </optgroup>
+      </select>
+    </md-card>
+    <div class="divider"></div>
+    <md-card if.bind="selected" md-title.one-way="selected.name">
+      <p>
+        Date de la dernière mise à jour : <code>${selected.latest}</code>
+      </p>
+    </md-card>
+  </div>
+</template>

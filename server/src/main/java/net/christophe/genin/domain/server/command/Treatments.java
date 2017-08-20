@@ -10,7 +10,8 @@ import java.util.function.Supplier;
 public enum Treatments {
     PROJECTS(0),
     TABLES(1),
-    END(2);
+    VERSION(2),
+    END(3);
 
     private final Integer state;
 

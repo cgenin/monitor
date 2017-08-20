@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonObject;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.NitriteCollection;
+import org.dizitart.no2.objects.ObjectRepository;
 import org.dizitart.no2.tool.ExportOptions;
 import org.dizitart.no2.tool.Exporter;
 import org.dizitart.no2.tool.Importer;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class Dbs {
@@ -25,7 +27,15 @@ public final class Dbs {
 
     private Nitrite db;
 
+    public static String newId(){
+        return UUID.randomUUID().toString();
+    }
+
     private Dbs() {
+    }
+
+    public <T> ObjectRepository<T> repository(Class<T> clazz){
+        return db.getRepository(clazz);
     }
 
 
@@ -49,6 +59,8 @@ public final class Dbs {
                 .openOrCreate(user, pwd);
         return this;
     }
+
+
 
     public NitriteCollection getCollection(String name) {
         return nitrite().getCollection(name);

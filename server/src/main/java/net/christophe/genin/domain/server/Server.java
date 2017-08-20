@@ -3,10 +3,7 @@ package net.christophe.genin.domain.server;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.command.Import;
-import net.christophe.genin.domain.server.command.ProjectBatch;
-import net.christophe.genin.domain.server.command.Raw;
-import net.christophe.genin.domain.server.command.TablesBatch;
+import net.christophe.genin.domain.server.command.*;
 import net.christophe.genin.domain.server.query.Configuration;
 import net.christophe.genin.domain.server.query.Projects;
 import net.christophe.genin.domain.server.query.Tables;
@@ -36,7 +33,9 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new Raw());
         vertx.deployVerticle(new ProjectBatch());
         vertx.deployVerticle(new TablesBatch());
+        vertx.deployVerticle(new VersionBatch());
         vertx.deployVerticle(new Import());
+        vertx.deployVerticle(new ConfigurationCommand());
     }
 
     private void deployQuery() {

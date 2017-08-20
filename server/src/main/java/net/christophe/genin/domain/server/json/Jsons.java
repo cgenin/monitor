@@ -46,6 +46,7 @@ public interface Jsons {
             this.arr = arr;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public Stream<JsonObject> toStream() {
             return Optional.ofNullable(arr).orElse(new JsonArray())
