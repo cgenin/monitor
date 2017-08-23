@@ -19,7 +19,9 @@ public class ConfigurationDto implements Serializable {
     @Id
     private long confId = 0L;
 
+
     private List<String> javaFilters = new ArrayList<>();
+    private List<String> npmFilters = new ArrayList<>();
 
     public long getConfId() {
         return confId;
@@ -35,5 +37,13 @@ public class ConfigurationDto implements Serializable {
 
     public void setJavaFilters(List<String> javaFilters) {
         this.javaFilters = javaFilters;
+    }
+
+    public List<String> getNpmFilters() {
+        return npmFilters;
+    }
+
+    public void setNpmFilters(List<String> npmFilters) {
+        this.npmFilters = npmFilters;
     }
 }

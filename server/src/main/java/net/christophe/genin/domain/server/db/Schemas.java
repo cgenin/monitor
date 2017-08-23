@@ -17,6 +17,8 @@ public final class Schemas {
             return new JsonObject()
                     .put("id", configurationDto.getConfId())
                     .put("javaFilters", configurationDto.getJavaFilters()
+                            .parallelStream().collect(Jsons.Collectors.toJsonArray()))
+                    .put("npmFilters", configurationDto.getNpmFilters()
                             .parallelStream().collect(Jsons.Collectors.toJsonArray()));
         }
 
@@ -24,13 +26,8 @@ public final class Schemas {
         public static ConfigurationDto fromJson(JsonObject obj) {
             ConfigurationDto configurationDto = new ConfigurationDto();
             configurationDto.setConfId(obj.getLong("id", 0L));
-
-            List<Object> javaFilters1 = obj.getJsonArray("javaFilters", new JsonArray()).getList();
-            List<String> javaFilters = javaFilters1
-                    .stream()
-                    .map(Object::toString)
-                    .collect(Collectors.toList());
-            configurationDto.setJavaFilters(javaFilters);
+            configurationDto.setJavaFilters(Jsons.builder(obj.getJsonArray("javaFilters")).toListString());
+            configurationDto.setNpmFilters(Jsons.builder(obj.getJsonArray("npmFilters")).toListString());
             return configurationDto;
         }
     }

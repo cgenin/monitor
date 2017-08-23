@@ -2,7 +2,7 @@ import {HttpClient} from 'aurelia-http-client';
 import {getBaseUrl} from './Api';
 
 export class ConfigurationStore {
-  state = {};
+  _state = {};
 
   constructor() {
     this.client = new HttpClient()
@@ -12,6 +12,14 @@ export class ConfigurationStore {
       });
   }
 
+  get javaFilters() {
+    return Array.from(this._state.javaFilters);
+  }
+
+  get npmFilters() {
+    return Array.from(this._state.npmFilters);
+  }
+
   importDb(data) {
     return this.client.put('/api/configuration/db/import', data);
   }
@@ -19,7 +27,7 @@ export class ConfigurationStore {
   initialize() {
     return this.client.get('/api/configuration')
       .then(res => {
-        this.state = res.content;
+        this._state = res.content;
         return this.state;
       });
   }
@@ -27,7 +35,7 @@ export class ConfigurationStore {
   save(configuration) {
     return this.client.put('/api/configuration', configuration)
       .then(() => {
-        this.state = configuration;
+        this._state = configuration;
         return this.state;
       });
   }

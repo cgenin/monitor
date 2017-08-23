@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 public interface Jsons {
 
     Stream<JsonObject> toStream();
+    List<String> toListString();
 
     static Jsons builder(JsonArray arr) {
         return new JsonsArray(arr);
@@ -54,7 +55,15 @@ public interface Jsons {
                     .map(Jsons::objToJson);
         }
 
+        @SuppressWarnings("unchecked")
+        public List<String> toListString(){
+            final List<Object> javaFilters1 = Optional.ofNullable(arr).orElse(new JsonArray()).getList();
+            return javaFilters1
+                    .stream()
+                    .map(Object::toString)
+                    .collect(java.util.stream.Collectors.toList());
 
+        }
     }
 
 }
