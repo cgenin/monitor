@@ -13,4 +13,9 @@ export class AppsStore {
   save(data) {
     return this.client.post('/api/apps', data);
   }
+
+
+  remove() {
+    return this.client.delete('/api/apps');
+  }
 }

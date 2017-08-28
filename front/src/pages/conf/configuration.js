@@ -1,15 +1,17 @@
 import {inject} from 'aurelia-framework';
 import {MdToastService} from 'aurelia-materialize-bridge';
 import {ConfigurationStore} from '../../store/ConfigurationStore';
+import {AppsStore} from '../../store/AppsStore';
 import {getBaseUrl} from '../../store/Api';
 import {success, error} from '../../Toasts';
 
-@inject(ConfigurationStore, MdToastService)
+@inject(ConfigurationStore, MdToastService, AppsStore)
 export class Configuration {
 
-  constructor(store, toast) {
+  constructor(store, toast, appStore) {
     this.store = store;
     this.toast = toast;
+    this.appStore = appStore;
     this.urlExport = `${getBaseUrl()}/api/configuration/db/export.json`;
     this.jsonImport = null;
   }
@@ -29,5 +31,10 @@ export class Configuration {
         .then(() => success(this.toast))
         .catch((err) => error(this.toast, err));
     }
+  }
+
+  submitReset() {
+    this.appStore.remove().then(() => success(this.toast))
+      .catch((err) => error(this.toast, err));
   }
 }
