@@ -12,6 +12,7 @@ import io.vertx.ext.web.handler.CorsHandler;
 import net.christophe.genin.domain.server.InitializeDb;
 import net.christophe.genin.domain.server.command.ConfigurationCommand;
 import net.christophe.genin.domain.server.command.Import;
+import net.christophe.genin.domain.server.command.Reset;
 import net.christophe.genin.domain.server.query.Configuration;
 import net.christophe.genin.domain.server.query.Projects;
 import net.christophe.genin.domain.server.command.Raw;
@@ -34,6 +35,7 @@ public class Services {
                 .allowedMethod(HttpMethod.GET)
                 .allowedMethod(HttpMethod.POST)
                 .allowedMethod(HttpMethod.PUT)
+                .allowedMethod(HttpMethod.DELETE)
                 .allowedMethod(HttpMethod.OPTIONS)
                 .allowedHeader("Content-Type"));
         router.get("/_health").handler(rc ->
@@ -83,6 +85,10 @@ public class Services {
                     .put("update", new Date().getTime());
             new Https.EbCaller(vertx, rc).created(Raw.SAVING, body);
         });
+        router.delete("/").handler(rc -> {
+            new Https.EbCaller(vertx, rc).created(Reset.RUN, new JsonObject());
+        });
+
         return router;
     }
 

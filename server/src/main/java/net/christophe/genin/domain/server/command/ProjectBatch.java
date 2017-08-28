@@ -4,6 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.json.Jsons;
@@ -12,6 +13,7 @@ import org.dizitart.no2.NitriteCollection;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.dizitart.no2.filters.Filters.eq;
@@ -69,10 +71,26 @@ public class ProjectBatch extends AbstractVerticle {
                 document.put(Schemas.Projects.release.name(), version);
             }
 
+
             final List<String> tables = extractTables(json);
             document.put(Schemas.Projects.tables.name(), tables);
-            final List<String> javaDeps = extractJavaDeps(json);
+            final List<String> allDeps = extractJavaDeps(json);
+            final ConfigurationDto conf = Optional.ofNullable(Dbs.instance
+                    .repository(ConfigurationDto.class)
+                    .find().firstOrDefault())
+                    .orElseGet(ConfigurationDto::new);
+
+            List<String> javaFilters = conf.getJavaFilters();
+            final List<String> javaDeps = allDeps.parallelStream()
+                    .map(String::toUpperCase)
+                    .filter(s ->
+                            javaFilters.isEmpty() ||
+                                    javaFilters.parallelStream()
+                                            .map(String::toUpperCase)
+                                            .anyMatch(s::contains)
+                    ).collect(Collectors.toList());
             document.put(Schemas.Projects.javaDeps.name(), javaDeps);
+
 
             document.put(Schemas.Projects.latestUpdate.name(), update);
             return Optional.of(document);
@@ -86,15 +104,18 @@ public class ProjectBatch extends AbstractVerticle {
     }
 
     static List<String> extractJavaDeps(JsonObject json) {
+
+
         return Jsons.builder(json.getJsonArray(Schemas.Raw.Dependencies.collection())).toStream()
-                //                            Todo Filtering .filter
                 .map(js -> js.getString(Schemas.Raw.Dependencies.artifactId.name(), ""))
+                .distinct()
                 .collect(Collectors.toList());
     }
 
     static List<String> extractTables(JsonObject json) {
         return Jsons.builder(json.getJsonArray(Schemas.Raw.Tables.collection())).toStream()
                 .map(js -> js.getString(Schemas.Raw.Tables.table.name(), ""))
+                .distinct()
                 .collect(Collectors.toList());
     }
 

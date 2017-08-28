@@ -73,8 +73,10 @@ public final class Schemas {
     public enum Version {
         id, name, isSnapshot, tables, javaDeps, npmDeps, latestUpdate;
 
+        public static final String PREFIX = "version/";
+
         public static String collection(String id) {
-            return "version/" + id;
+            return PREFIX + id;
         }
     }
 }

@@ -6,16 +6,12 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
-import net.christophe.genin.domain.server.json.Jsons;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import org.dizitart.no2.filters.Filters;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.dizitart.no2.filters.Filters.eq;
 
