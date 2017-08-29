@@ -21,9 +21,7 @@ const map = (l) => {
     p.javaDeps = p.javaDeps || [];
     p.npmDeps = p.npmDeps || [];
     p.tables = p.tables || [];
-    p.javaDepsTootip = depTootip(p.javaDeps);
     p.npmDepsTootip = depTootip(p.npmDeps);
-    p.tablesTootip = depTootip(p.tables);
     p.latest = formatYYYYMMDDHHmm(p.latestUpdate);
     return p;
   });
@@ -34,6 +32,10 @@ export class Projects {
   original = [];
   list = [];
   filter = '';
+  modalOpt = {
+    title: '',
+    data: []
+  };
 
   constructor(projectStore) {
     this.projectStore = projectStore;
@@ -64,5 +66,23 @@ export class Projects {
         this.original = res;
         this.filter = '';
       });
+  }
+
+  openTables(p) {
+    const data = p.tables.sort();
+    const title = "Tables";
+    this.modalOpt = {
+      data, title
+    };
+    this.modal.open();
+  }
+
+  openJava(p) {
+    const data = p.javaDeps.sort();
+    const title = "Dépendance Java";
+    this.modalOpt = {
+      data, title
+    };
+    this.modal.open();
   }
 }
