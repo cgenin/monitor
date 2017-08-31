@@ -1,21 +1,30 @@
 <template>
-    <require from="./welcome.css"></require>
-    <div class="welcome-page">
-        <div class="section splash-container center">
-            <img md-box src="/img/splash.jpg" width="450"/>
-        </div>
-        <div class="section">
+  <require from="./welcome.css"></require>
+  <div class="welcome-page">
+    <div class="section main">
+      <div class="splash-container">
+        <img md-box src="/img/splash.jpg" width="450"/>
+      </div>
 
-            <md-carousel md-indicators="true" md-slider="true" class="center" style="max-height: 250px;">
-                <md-carousel-item class="red white-text" style="height: 150px;">
-                    <h1>Nombre de projets : ${nbProjects}</h1>
-                    <a href="/projects" md-button md-waves>Détail</a>
-                </md-carousel-item>
-                <md-carousel-item class="amber white-text">
-                    <h1>Nombre de tables : ${nbTables}</h1>
-                    <a href="/tables" md-button md-waves class="white grey-text darken-text-2">Détail</a>
-                </md-carousel-item>
-            </md-carousel>
-        </div>
+      <md-carousel md-indicators="true" md-slider="true" class="center welcome-carousel">
+        <md-carousel-item class="projects white-text">
+          <!---->
+          <div class="item">
+            <h1>Nombre de projets : ${nbProjects}</h1>
+            <a href="/projects" md-button md-waves class="material-icons-button">
+              <i class="material-icons">location_searching</i><span>&nbsp;Détail</span></a>
+          </div>
+
+        </md-carousel-item>
+        <md-carousel-item class="tables white-text">
+          <div class="item">
+            <h1>Nombre de tables : ${nbTables}</h1>
+            <a href="/tables" md-button md-waves class="white black-text darken-text-2 material-icons-button">
+              <i class="material-icons">location_searching</i><span>&nbsp;Détail</span>
+            </a>
+          </div>
+        </md-carousel-item>
+      </md-carousel>
     </div>
+  </div>
 </template>

@@ -7,6 +7,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
+import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import net.christophe.genin.domain.server.http.Index;
 import net.christophe.genin.domain.server.http.Services;
@@ -23,6 +24,7 @@ public class Http extends AbstractVerticle {
         final HttpServer httpServer = vertx.createHttpServer(new HttpServerOptions().setCompressionSupported(true));
 
         final Router router = Router.router(vertx);
+        router.route().handler(FaviconHandler.create(600));
         router.route().handler(BodyHandler.create());
         router.mountSubRouter("/api", new Services(vertx).build());
 
