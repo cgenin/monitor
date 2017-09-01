@@ -1,5 +1,39 @@
-.welcome-page > .splash-container {
+.welcome-page .section.main {
+  position: relative;
+}
+
+.welcome-page .splash-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
+
+.welcome-page .projects {
+  background-color: rgba(75, 7, 3, 0.55);
+}
+.welcome-page .tables {
+  background-color: rgba(8, 13, 150, 0.55);
+}
+
+.welcome-page .welcome-carousel {
+  z-index: 2000;
+  height: 445px;
+  position: absolute;
+  top: 15px;
+
+}
+.welcome-page .welcome-carousel  .item {
+  width: 450px;
+  margin: auto;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.welcome-page .welcome-carousel  .item > h1 {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+
