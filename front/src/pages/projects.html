@@ -1,5 +1,6 @@
 <template>
   <require from="./projects.css"></require>
+  <require from="./projects/ChangelogButton"></require>
   <div class="projects-page">
     <md-card md-title="Projets">
       <div class="row">
@@ -30,9 +31,10 @@
           <th>Snapshot</th>
           <th>Release</th>
           <th>Java</th>
-          <th>Npm</th>
+          <th>Apis</th>
           <th>Table</th>
           <th>Dernière Mise à jour</th>
+          <th></th>
         </tr>
         </thead>
 
@@ -47,8 +49,8 @@
               <i class="material-icons">info </i>
             </a>
           </td>
-          <td><a md-tooltip="html: true; position: top; text.bind: project.npmDepsTootip;" class="tootip">
-            <span>${project.npmDeps.length}&nbsp;</span>
+          <td><a click.delegate="openApis(project)" class="tootip">
+            <span>${project.apis.length}&nbsp;</span>
             <i class="material-icons">info </i>
           </a></td>
           <td><a click.delegate="openTables(project)" class="tootip">
@@ -56,9 +58,10 @@
             <i class="material-icons">info </i>
           </a></td>
           <td>${project.latest}</td>
+          <td><changelog-button model.bind="project.changelog"></changelog-button></td>
         </tr>
         <tr show.bind="list.length === 0">
-          <td colspan="7"><p>Aucun projet trouvé.</p></td>
+          <td colspan="8"><p>Aucun projet trouvé.</p></td>
         </tr>
         </tbody>
       </table>
@@ -77,6 +80,8 @@
            class="modal-action modal-close">Fermer</a>
       </div>
     </div>
+
+
   </div>
 
 

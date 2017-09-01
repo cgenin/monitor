@@ -37,6 +37,7 @@ export class Projects {
     data: []
   };
 
+
   constructor(projectStore) {
     this.projectStore = projectStore;
   }
@@ -71,6 +72,15 @@ export class Projects {
   openTables(p) {
     const data = p.tables.sort();
     const title = "Tables";
+    this.modalOpt = {
+      data, title
+    };
+    this.modal.open();
+  }
+
+  openApis(p) {
+    const data = p.apis.sort();
+    const title = "Apis";
     this.modalOpt = {
       data, title
     };

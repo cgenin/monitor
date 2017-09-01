@@ -38,6 +38,8 @@ public class Projects extends AbstractVerticle {
                                 .put(Schemas.Projects.name.name(), doc.get(Schemas.Projects.name.name()))
                                 .put(Schemas.Projects.latestUpdate.name(), doc.get(Schemas.Projects.latestUpdate.name()))
                                 .put(Schemas.Projects.tables.name(), attributes.toJsonArray(Schemas.Projects.tables.name()))
+                                .put(Schemas.Projects.apis.name(), attributes.toJsonArray(Schemas.Projects.apis.name()))
+                                .put(Schemas.Projects.changelog.name(), doc.get(Schemas.Projects.changelog.name()))
                                 .put(Schemas.Projects.javaDeps.name(), attributes.toJsonArray(Schemas.Projects.javaDeps.name()));
                     }).collect(Jsons.Collectors.toJsonArray());
             if (logger.isDebugEnabled()) {

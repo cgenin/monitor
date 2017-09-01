@@ -21,7 +21,12 @@ public class Index {
     private static final Logger logger = LoggerFactory.getLogger(Http.class);
 
     private enum Path {
-        index("/"), projects("/projects", "/projects/*"), apps("/apps", "/apps/*"), about("/about");
+        index("/"),
+        projects("/projects", "/projects/*"),
+        apps("/apps", "/apps/*"),
+        tables("/tables", "/tables/*"),
+        configuration("/configuration"),
+        about("/about");
 
         private final String[] paths;
 

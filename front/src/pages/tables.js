@@ -37,6 +37,7 @@ export default class Tables {
     const upFilter = this.filter.toUpperCase();
     this.list = this.original
       .filter(p => {
+        console.log(JSON.stringify(Object.values(p)))
         const data = JSON.stringify(Object.values(p)).toUpperCase();
         return data.indexOf(upFilter) !== -1;
       });
@@ -50,6 +51,8 @@ export default class Tables {
           const latest = format(o.latestUpdate);
           const serviceStr = toServicesStr(o.services);
           return Object.assign({}, o, {latest, serviceStr});
+        }).sort((a, b) => {
+          return a.name.localeCompare(b.name);
         });
         this.list = l;
         this.original = l;

@@ -55,7 +55,7 @@ public final class Schemas {
     }
 
     public enum Projects {
-        id, name, release, snapshot, tables, javaDeps, npmDeps, latestUpdate;
+        id, name, release, snapshot, tables, javaDeps, npmDeps, latestUpdate, changelog, apis;
 
         public static String collection() {
             return Projects.class.getSimpleName().toLowerCase();
@@ -71,7 +71,7 @@ public final class Schemas {
     }
 
     public enum Version {
-        id, name, isSnapshot, tables, javaDeps, npmDeps, latestUpdate;
+        id, name, isSnapshot, tables, javaDeps, npmDeps, latestUpdate, changelog;
 
         public static final String PREFIX = "version/";
 

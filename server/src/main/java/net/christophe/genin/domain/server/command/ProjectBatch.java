@@ -1,6 +1,7 @@
 package net.christophe.genin.domain.server.command;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -13,7 +14,6 @@ import org.dizitart.no2.NitriteCollection;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.dizitart.no2.filters.Filters.eq;
@@ -90,8 +90,10 @@ public class ProjectBatch extends AbstractVerticle {
                                             .anyMatch(s::contains)
                     ).collect(Collectors.toList());
             document.put(Schemas.Projects.javaDeps.name(), javaDeps);
-
-
+            Optional.ofNullable(json.getString(Schemas.Projects.changelog.name()))
+                    .ifPresent(s -> document.put(Schemas.Projects.changelog.name(), s));
+            final List<String> apis = extractUrls(json);
+            document.put(Schemas.Projects.apis.name(), apis);
             document.put(Schemas.Projects.latestUpdate.name(), update);
             return Optional.of(document);
         }
@@ -108,6 +110,23 @@ public class ProjectBatch extends AbstractVerticle {
 
         return Jsons.builder(json.getJsonArray(Schemas.Raw.Dependencies.collection())).toStream()
                 .map(js -> js.getString(Schemas.Raw.Dependencies.artifactId.name(), ""))
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    static List<String> extractUrls(JsonObject json) {
+        JsonObject apis = json.getJsonObject("apis", new JsonObject());
+        JsonArray services = apis.getJsonArray("services", new JsonArray());
+
+
+        return Jsons.builder(services).toStream()
+                .map(js -> js.getJsonArray("methods", new JsonArray()))
+                .flatMap(arr -> Jsons.builder(arr).toStream())
+                .map(js -> {
+                    final String method = js.getString("method", "");
+                    final String path = js.getString("path", "");
+                    return method + " - " + path;
+                })
                 .distinct()
                 .collect(Collectors.toList());
     }

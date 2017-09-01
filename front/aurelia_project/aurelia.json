@@ -150,6 +150,7 @@
           "aurelia-templating",
           "aurelia-templating-binding",
           "aurelia-http-client",
+          "showdown",
           "text",
           {
             "name": "aurelia-templating-resources",

@@ -26,6 +26,7 @@
     "material-design-icons": "^3.0.1",
     "materialize-css": "0.99.0",
     "requirejs": "^2.3.4",
+    "showdown": "^1.7.3",
     "text": "github:requirejs/text#latest"
   },
   "peerDependencies": {},
