@@ -1,16 +1,18 @@
 package net.christophe.genin.domain.server.db;
 
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import net.christophe.genin.domain.server.json.Jsons;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+/**
+ * description of the datas.
+ */
 public final class Schemas {
     public static final String RAW_COLLECTION = "Apps-Store";
     public static final String RAW_STATE = "state";
 
+    /**
+     * Configuration Dto builder / parser.
+     */
     public static class Configuration {
 
         public static JsonObject toJson(ConfigurationDto configurationDto) {

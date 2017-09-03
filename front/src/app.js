@@ -17,6 +17,7 @@ export class App {
       },
       {route: 'projects', name: 'projects', moduleId: 'pages/projects', nav: true, title: 'Projets', menu: true},
       {route: 'tables', name: 'tables', moduleId: 'pages/tables', nav: true, title: 'Tables', menu: true},
+      {route: 'apis', name: 'apis', moduleId: 'pages/apis', nav: true, title: 'Apis', menu: true},
       {
         route: 'configuration',
         name: 'configuration',

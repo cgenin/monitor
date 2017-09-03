@@ -1,3 +1,7 @@
+:root{
+  --welcome-im-width:450px;
+}
+
 .welcome-page .section.main {
   position: relative;
 }
@@ -9,6 +13,10 @@
   z-index: 1000;
 }
 
+.welcome-page .splash-container > img {
+  width:var(--welcome-im-width);
+}
+
 .welcome-page .projects {
   background-color: rgba(75, 7, 3, 0.55);
 }
@@ -18,13 +26,13 @@
 
 .welcome-page .welcome-carousel {
   z-index: 2000;
-  height: 445px;
+  height: var(--welcome-im-width);
   position: absolute;
   top: 15px;
 
 }
 .welcome-page .welcome-carousel  .item {
-  width: 450px;
+  width: var(--welcome-im-width);
   margin: auto;
   height: 90%;
   display: flex;

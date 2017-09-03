@@ -1,0 +1,21 @@
+<template>
+  <require from="./apis.css"></require>
+  <require from="./apis/card-api"></require>
+  <div class="apis-page">
+    <md-card md-title="Api rest">
+      <div class="row">
+        <div class="col s6 offset-s1">
+          <input type="text" value.bind="filter" keyup.trigger="filtering() & debounce:100"
+                 class="form-control" id="filter" placeholder="Filtre">
+        </div>
+        <div class="col s4 offset-s1">
+
+        </div>
+      </div>
+    </md-card>
+    <div class="divider"></div>
+    <div class="card-container">
+      <card-api repeat.for="api of datas" api.bind="api"></card-api>
+    </div>
+  </div>
+</template>

@@ -17,11 +17,17 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Endpoint for registering the index.html.
+ */
 public class Index {
     private static final Logger logger = LoggerFactory.getLogger(Http.class);
 
+    /**
+     * The paths of routes
+     */
     private enum Path {
-        index("/"), projects("/projects", "/projects/*"), apps("/apps", "/apps/*"), about("/about");
+        index("/"), projects("/projects", "/projects/*"), apps("/apps", "/apps/*"), apis("/apis", "/apis/*"), about("/about");
 
         private final String[] paths;
 
@@ -34,6 +40,11 @@ public class Index {
         }
     }
 
+    /**
+     * Register all handlers for index.html.
+     *
+     * @param router the main router.
+     */
     public void register(Router router) {
         final Handler<RoutingContext> indexHandler = indexHandler();
         Arrays.stream(Path.values())
@@ -41,7 +52,12 @@ public class Index {
                 .forEach(p -> router.get(p).handler(indexHandler));
     }
 
-
+    /**
+     * load the file.
+     *
+     * @param path the classpath path
+     * @return the Observable of stream
+     */
     private Observable<String> getObservableClasspathResource(String path) {
         return Observable.fromCallable(
                 () -> Index.class.getClassLoader().getResourceAsStream(path)
@@ -58,6 +74,11 @@ public class Index {
                 .subscribeOn(Schedulers.io());
     }
 
+    /**
+     * Handler http factory.
+     *
+     * @return an instance of the handler.
+     */
     private Handler<RoutingContext> indexHandler() {
         return rc ->
                 getObservableClasspathResource("build/index.html")
