@@ -7,7 +7,7 @@ export function format(long) {
   const date = new Date(long);
   const cMont = `${date.getMonth() + 1}`;
   const fMonth = twoDigits(cMont);
-  return `${date.getFullYear()}/${fMonth}/${date.getDate() + 1}`;
+  return `${date.getFullYear()}/${fMonth}/${twoDigits(date.getDate())}`;
 }
 
 
