@@ -33,7 +33,7 @@ public final class Schemas {
     }
 
     public enum Raw {
-        groupId, artifactId, version, dependencies, update;
+        groupId, artifactId, version, dependencies, update, apis;
 
         public enum Tables {
             table, className;
@@ -51,6 +51,17 @@ public final class Schemas {
             }
         }
 
+        public enum Apis {
+            artifactId, groupId, version, services;
+
+            public enum Services {
+                name, methods;
+
+                public enum methods {
+                    name, method, returns, path, params, comment;
+                }
+            }
+        }
 
     }
 
@@ -59,6 +70,14 @@ public final class Schemas {
 
         public static String collection() {
             return Projects.class.getSimpleName().toLowerCase();
+        }
+    }
+
+    public enum Apis {
+        id, artifactId, groupId, name, method, returns, path, params, comment, since, className, latestUpdate;
+
+        public static String collection() {
+            return Apis.class.getSimpleName().toLowerCase();
         }
     }
 

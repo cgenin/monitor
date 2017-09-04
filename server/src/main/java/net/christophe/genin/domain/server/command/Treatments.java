@@ -11,7 +11,8 @@ public enum Treatments {
     PROJECTS(0),
     TABLES(1),
     VERSION(2),
-    END(3);
+    URL(3),
+    END(4);
 
     private final Integer state;
 
@@ -26,7 +27,7 @@ public enum Treatments {
     public static long batchTime(JsonObject config) {
         final Long batch = config.getLong("batch", 1_000L);
         Random r = new Random();
-        final Long noise = r.longs(1_000L, 10_001L).findFirst().getAsLong();
+        final Long noise = r.longs(1_000L, 5_001L).findFirst().getAsLong();
         return noise + batch;
     }
 

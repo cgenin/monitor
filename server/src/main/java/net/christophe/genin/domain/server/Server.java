@@ -37,6 +37,7 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new Import());
         vertx.deployVerticle(new ConfigurationCommand());
         vertx.deployVerticle(new Reset());
+        vertx.deployVerticle(new ApisBatch());
     }
 
     private void deployQuery() {

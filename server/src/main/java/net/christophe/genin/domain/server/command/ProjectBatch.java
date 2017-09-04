@@ -115,7 +115,7 @@ public class ProjectBatch extends AbstractVerticle {
     }
 
     static List<String> extractUrls(JsonObject json) {
-        JsonObject apis = json.getJsonObject("apis", new JsonObject());
+        JsonObject apis = json.getJsonObject(Schemas.Raw.apis.name(), new JsonObject());
         JsonArray services = apis.getJsonArray("services", new JsonArray());
 
 

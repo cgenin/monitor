@@ -18,7 +18,7 @@ public class Http extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        final int port = config().getInteger("port", 8888);
+        final int port = config().getInteger("port", 8280);
         final String host = config().getString("host", "localhost");
 
         final HttpServer httpServer = vertx.createHttpServer(new HttpServerOptions().setCompressionSupported(true));
@@ -39,7 +39,7 @@ public class Http extends AbstractVerticle {
         logger.info("host : " + host);
 
         httpServer.requestHandler(router::accept)
-                .listen(port, host);
+                .listen(port);
         logger.info("Http server launched !");
     }
 

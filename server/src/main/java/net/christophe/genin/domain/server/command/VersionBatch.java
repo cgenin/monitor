@@ -57,7 +57,7 @@ public class VersionBatch extends AbstractVerticle {
                 versionCollection.update(rawToVersion(json, currentDoc, version)
                         .put(Schemas.Version.latestUpdate.name(), update), true);
             }
-            collection.update(doc.put(Schemas.RAW_STATE, Treatments.END.getState()));
+            collection.update(doc.put(Schemas.RAW_STATE, Treatments.URL.getState()));
         });
 
         return true;
