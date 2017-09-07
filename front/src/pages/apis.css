@@ -1,0 +1,28 @@
+.apis-page .card-container {
+  padding: .5em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+
+}
+
+.apis-page .card-container .card {
+  padding: 10px;
+  margin: 5px;
+}
+
+.apis-page .card-container .card .card-title.with-icon {
+  display: flex;
+
+}
+
+.apis-page .card-container .card .card-title.with-icon  .name{
+  flex-grow: 2;
+}
+
+.apis-page .card-container .card .card-title.with-icon  .icon{
+  width: 40px;
+  max-width: 40px;
+  flex-grow: 1;
+}
+
