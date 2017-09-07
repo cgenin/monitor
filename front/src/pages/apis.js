@@ -16,8 +16,13 @@ export default class Apis {
     const {nb, page} = this;
     this.endpointsstore.find({nb, page})
       .then(list => {
-        this.original = list;
-        this.datas = list;
+        let l = list.map(o => {
+          const context = (o.artifactId || '').replace('-client', '');
+          const absolutePath = `/${context}${o.path}`;
+          return Object.assign({}, o, {absolutePath});
+        });
+        this.original = l;
+        this.datas = l;
       });
   }
 }

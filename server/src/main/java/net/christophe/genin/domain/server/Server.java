@@ -5,6 +5,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.command.*;
 import net.christophe.genin.domain.server.query.Configuration;
+import net.christophe.genin.domain.server.query.Endpoints;
 import net.christophe.genin.domain.server.query.Projects;
 import net.christophe.genin.domain.server.query.Tables;
 
@@ -44,5 +45,6 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new Projects());
         vertx.deployVerticle(new Tables());
         vertx.deployVerticle(new Configuration());
+        vertx.deployVerticle(new Endpoints());
     }
 }

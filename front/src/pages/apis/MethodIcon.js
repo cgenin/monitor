@@ -5,7 +5,7 @@ const toColor = (method) => {
     case 'POST':
       return 'purple';
     case 'GET':
-      return 'yellow darken-2';
+      return 'blue darken-2';
   }
   return '';
 };
@@ -36,4 +36,5 @@ export default class MethodIcon {
   get clazz() {
     return `icon center ${toColor(this.method)} white-text small`;
   }
+
 }

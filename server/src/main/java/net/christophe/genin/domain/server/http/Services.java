@@ -15,6 +15,7 @@ import net.christophe.genin.domain.server.command.ConfigurationCommand;
 import net.christophe.genin.domain.server.command.Import;
 import net.christophe.genin.domain.server.command.Reset;
 import net.christophe.genin.domain.server.query.Configuration;
+import net.christophe.genin.domain.server.query.Endpoints;
 import net.christophe.genin.domain.server.query.Projects;
 import net.christophe.genin.domain.server.command.Raw;
 import net.christophe.genin.domain.server.query.Tables;
@@ -71,30 +72,7 @@ public class Services {
     private Router apis() {
         Router router = Router.router(vertx);
         router.get("/").handler(rc -> {
-            JsonArray arr = new JsonArray();
-            arr.add(new JsonObject()
-                    .put("name", "create")
-                    .put("method", "POST")
-                    .put("url", "/api/mon-item")
-                    .put("comment", "dqsd dqsdqs dsdqsd ddd ")
-                    .put("groupId", "fr.mm.dsds")
-                    .put("artifactId", "test-service-impl")
-                    .put("latestUpdate", new Date().getTime())
-                    .put("since", "1.0.0-SNAPSHOT")
-                    .put("className", "IServiceTruc")
-            );
-            arr.add(new JsonObject()
-                    .put("name", "find")
-                    .put("method", "GET")
-                    .put("url", "/api/mon-item")
-                    .put("comment", "dqsd dqsdqs dsdqsd ddd ")
-                    .put("groupId", "fr.mm.dsds")
-                    .put("artifactId", "test-service-impl")
-                    .put("latestUpdate", new Date().getTime())
-                    .put("since", "1.0.0-SNAPSHOT")
-                    .put("className", "IServiceTruc")
-            );
-            new Https.Json(rc).send(arr);
+            new Https.EbCaller(vertx, rc).arrAndReply(Endpoints.FIND);
         });
         return router;
     }
