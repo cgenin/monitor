@@ -1,4 +1,4 @@
-import {bindable, customElement, computedFrom, observable} from 'aurelia-framework';
+import {bindable, customElement, computedFrom} from 'aurelia-framework';
 
 const toColor = (method) => {
   switch (method) {
@@ -6,6 +6,10 @@ const toColor = (method) => {
       return 'purple';
     case 'GET':
       return 'blue darken-2';
+    case 'DELETE':
+      return 'red darken-2';
+    case 'PUT':
+      return 'green darken-2';
   }
   return '';
 };
@@ -21,9 +25,13 @@ export default class MethodIcon {
     if (this.method)
       switch (this.method) {
         case 'POST':
-          return 'content_create';
+          return 'move_to_inbox';
         case 'GET':
           return 'unarchive';
+        case 'DELETE':
+          return 'delete_forever';
+        case 'PUT':
+          return 'add_box';
         default:
           console.error('method unkonwn' + this.method);
       }

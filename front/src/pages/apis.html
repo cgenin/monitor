@@ -1,5 +1,6 @@
 <template>
   <require from="./apis.css"></require>
+  <require from="./apis/MethodIcon"></require>
   <require from="./apis/card-api"></require>
   <div class="apis-page">
     <md-card md-title="Api rest">
@@ -9,13 +10,43 @@
                  class="form-control" id="filter" placeholder="Filtre">
         </div>
         <div class="col s4 offset-s1">
-
+          Affichage :
+          <md-switch  md-label-on="Tables" md-label-off="Cards"  md-checked.bind="viewTable"></md-switch>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s6 offset-s1">
+          <strong>Nombre de résultat : ${datas.length}</strong>
         </div>
       </div>
     </md-card>
     <div class="divider"></div>
-    <div class="card-container">
+    <div class="card-container" if.bind="!viewTable">
       <card-api repeat.for="api of datas" api.bind="api"></card-api>
     </div>
+    <md-card if.bind="viewTable">
+      <table class="table-result highlight">
+        <thead>
+        <tr>
+          <th>Méthode</th>
+          <th>path</th>
+          <th>Commentaire</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr repeat.for="api of datas">
+          <td> <method-icon method.bind="api.method"></method-icon></td>
+          <td class="api-url">
+            ${api.absolutePath}
+          </td>
+          <td class="api-comment">${api.comment}</td>
+        </tr>
+        <tr show.bind="datas.length === 0">
+          <td colspan="3"><p>Aucune table trouvée.</p></td>
+        </tr>
+        </tbody>
+      </table>
+    </md-card>
   </div>
 </template>

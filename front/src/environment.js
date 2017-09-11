@@ -1,5 +1,5 @@
 export default {
-  debug: true,
-  testing: true,
-  local: true
+  debug: false,
+  testing: false,
+  local: false
 };

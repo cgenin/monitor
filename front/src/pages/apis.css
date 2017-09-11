@@ -1,3 +1,7 @@
+:root{
+  --api-max-comment-width:200px;
+}
+
 .apis-page .card-container {
   padding: .5em;
   display: flex;
@@ -9,7 +13,7 @@
 }
 
 .apis-page .card-container .card {
-  padding: 10px;
+  padding: 5px;
   margin: 2px;
 }
 
@@ -19,13 +23,27 @@
   padding: 5px;
 }
 
-.apis-page .card-container .card .card-title.with-icon  .name{
+.apis-page .card-container .card .card-title.with-icon .name {
   flex-grow: 2;
+  word-break: break-all;
 }
 
-.apis-page .card-container .card .card-title.with-icon  .icon{
-  /*width: 40px;*/
-  /*max-width: 40px;*/
+.apis-page method-icon .icon {
+  width: 85px;
   flex-grow: 1;
+  display: flex;
+  justify-content: space-around;
+}
+
+
+.api-url{
+  word-break: break-all;
+
+}
+
+.api-comment {
+  max-width: var(--api-max-comment-width);
+  min-width: var(--api-max-comment-width);
+  width:var(--api-max-comment-width);
 }
 
