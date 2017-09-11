@@ -27,10 +27,41 @@
               </div>
             </li>
             <li>
-              <div class="collapsible-header"><i class="mdi-maps-place"></i>Entrée / Sortie :</div>
+              <div class="collapsible-header" if.bind="api.queryParams && api.queryParams.length >  0"><i class="mdi-maps-place"></i>Query Params :</div>
               <div class="collapsible-body">
-                <p>${api.params}</p>
-                <p>Sortie : <strong>${api.returns}</strong></p>
+                <ul class="query-params">
+                  <li repeat.for="query of api.queryParams">${query}</li>
+                </ul>
+
+              </div>
+            </li>
+            <li>
+              <div class="collapsible-header"><i class="mdi-maps-place"></i>Entrée</div>
+              <div class="collapsible-body">
+                <table>
+                  <thead>
+                  <tr>
+                    <th>Emp.</th>
+                    <th>Type</th>
+                    <th>Nom</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr repeat.for="p of parameters">
+                    <td>${p.type}</td>
+                    <td>${p.object}</td>
+                    <td>${p.name}</td>
+                  </tr>
+                  </tbody>
+                </table>
+
+
+              </div>
+            <li>
+              <div class="collapsible-header"><i class="mdi-maps-place"></i>Sortie</div>
+              <div class="collapsible-body">
+
+                <p><strong>${api.returns}</strong></p>
               </div>
             </li>
           </ul>

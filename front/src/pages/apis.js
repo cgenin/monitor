@@ -3,13 +3,21 @@ import filtering from '../Filters'
 import EndpointsStore from '../store/EndpointsStore';
 
 const sortApis = (a, b) => {
-  return a.absolutePath.localeCompare(b.absolutePath) ;
+  return a.absolutePath.localeCompare(b.absolutePath);
+};
+
+const extractQueryParams = (path) => {
+  if (!path || path.indexOf('&') === -1) {
+    return [];
+  }
+  return path.replace(/^(.*)\?/, '')
+    .split('&');
 };
 
 @inject(EndpointsStore)
 export default class Apis {
   nb = 25;
-  filter='';
+  filter = '';
   page = 1;
   datas = [];
   original = [];
@@ -31,9 +39,8 @@ export default class Apis {
           const context = (o.artifactId || '').replace('-client', '');
           const absolutePath = `/${context}${o.path}`
             .replace(/\?(.*)$/, '');
-
-
-          return Object.assign({}, o, {absolutePath});
+          const queryParams = extractQueryParams(`/${context}${o.path}`);
+          return Object.assign({}, o, {absolutePath, queryParams});
         }).sort(sortApis);
         this.original = l;
         this.datas = l;

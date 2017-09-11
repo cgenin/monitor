@@ -28,6 +28,11 @@
   word-break: break-all;
 }
 
+.apis-page .card-container .card ul.query-params li{
+  list-style-type: circle;
+
+}
+
 .apis-page method-icon .icon {
   width: 85px;
   flex-grow: 1;
