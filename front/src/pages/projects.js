@@ -1,6 +1,7 @@
 import {inject} from 'aurelia-framework';
 import {ProjectsStore} from '../store/ProjectsStore';
 import {formatYYYYMMDDHHmm} from '../Dates';
+import filtering from '../Filters';
 
 const depTootip = (attr) => {
   if (!attr || attr.length === 0) {
@@ -43,16 +44,7 @@ export class Projects {
   }
 
   filtering() {
-    if (!this.filter || this.filter.trim() === '') {
-      this.list = this.original;
-      return;
-    }
-    const upFilter = this.filter.toUpperCase();
-    this.list = this.original
-      .filter(p => {
-        const data = JSON.stringify(Object.values(p)).toUpperCase();
-        return data.indexOf(upFilter) !== -1;
-      });
+    this.list = filtering(this.original, this.filter);
   }
 
   activate() {

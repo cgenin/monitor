@@ -1,4 +1,5 @@
 import {inject} from 'aurelia-framework';
+import filtering from '../Filters'
 import EndpointsStore from '../store/EndpointsStore';
 
 const sortApis = (a, b) => {
@@ -19,17 +20,7 @@ export default class Apis {
   }
 
   filtering() {
-    if (!this.filter || this.filter.trim() === '') {
-      this.datas = this.original;
-      return;
-    }
-    const upFilter = this.filter.toUpperCase();
-    this.datas = this.original
-      .filter(p => {
-
-        const data = JSON.stringify(Object.values(p)).toUpperCase();
-        return data.indexOf(upFilter) !== -1;
-      });
+    this.datas = filtering(this.original, this.filter);
   }
 
   activate() {
