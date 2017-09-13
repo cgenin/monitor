@@ -1,5 +1,5 @@
 import {inject} from 'aurelia-framework';
-import filtering from '../Filters'
+import filtering, {filteringByAttribute} from '../Filters'
 import EndpointsStore from '../store/EndpointsStore';
 
 const sortApis = (a, b) => {
@@ -14,6 +14,10 @@ const extractQueryParams = (path) => {
     .split('&');
 };
 
+const methodFiltering = filteringByAttribute('method');
+const artifactIdFiltering = filteringByAttribute('artifactId');
+const absolutePathFiltering = filteringByAttribute('absolutePath');
+
 @inject(EndpointsStore)
 export default class Apis {
   nb = 25;
@@ -22,13 +26,27 @@ export default class Apis {
   datas = [];
   original = [];
   viewTable = true;
+  filtersPanel = false;
+  subFilters = {};
 
   constructor(endpointsstore) {
     this.endpointsstore = endpointsstore;
   }
 
+  showOrHideFilterPanel() {
+    this.filtersPanel = !this.filtersPanel;
+    if (!this.filtersPanel) {
+      this.subFilters = {};
+      this.filtering();
+    }
+  }
+
   filtering() {
-    this.datas = filtering(this.original, this.filter);
+    const mF = methodFiltering(this.original, this.subFilters.method);
+    const aF = absolutePathFiltering(mF, this.subFilters.path);
+    const aiF = artifactIdFiltering(aF, this.subFilters.domain);
+
+    this.datas =  filtering(aiF, this.filter);
   }
 
   activate() {

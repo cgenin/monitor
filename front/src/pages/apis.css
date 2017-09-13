@@ -52,3 +52,33 @@
   width:var(--api-max-comment-width);
 }
 
+.apis-page .filters-panel{
+  z-index:200;
+  -webkit-animation-duration: 1.5s;
+  animation-duration: 1.5s;
+  -webkit-animation-fill-mode: inherit;
+  animation-fill-mode: inherit;
+  -webkit-animation-name: fadeInFiltersPanel;
+  animation-name: fadeInFiltersPanel;
+}
+
+@-webkit-keyframes fadeInFiltersPanel {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInFiltersPanel {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
