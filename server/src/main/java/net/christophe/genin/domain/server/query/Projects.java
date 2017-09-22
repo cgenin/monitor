@@ -54,13 +54,15 @@ public class Projects extends AbstractVerticle {
                     .parallelStream()
                     .map(doc -> {
                         final Dbs.Attributes attributes = new Dbs.Attributes(doc);
-                        return new JsonObject()
+                        JsonObject put = new JsonObject()
                                 .put(Schemas.Version.id.name(), doc.get(Schemas.Version.id.name()))
                                 .put(Schemas.Version.name.name(), doc.get(Schemas.Version.name.name()))
                                 .put(Schemas.Version.isSnapshot.name(), doc.get(Schemas.Version.isSnapshot.name()))
                                 .put(Schemas.Version.latestUpdate.name(), doc.get(Schemas.Version.latestUpdate.name()))
                                 .put(Schemas.Version.tables.name(), attributes.toJsonArray(Schemas.Version.tables.name()))
+                                .put(Schemas.Version.apis.name(), attributes.toJsonArray(Schemas.Version.apis.name()))
                                 .put(Schemas.Version.javaDeps.name(), attributes.toJsonArray(Schemas.Version.javaDeps.name()));
+                        return put;
                     }).collect(Jsons.Collectors.toJsonArray());
             if (logger.isDebugEnabled()) {
                 logger.debug("GET : " + id + " -res :" + l.encodePrettily());

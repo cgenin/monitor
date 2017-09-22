@@ -16,6 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,14 +28,14 @@ public final class Dbs {
 
     private Nitrite db;
 
-    public static String newId(){
+    public static String newId() {
         return UUID.randomUUID().toString();
     }
 
     private Dbs() {
     }
 
-    public <T> ObjectRepository<T> repository(Class<T> clazz){
+    public <T> ObjectRepository<T> repository(Class<T> clazz) {
         return db.getRepository(clazz);
     }
 
@@ -57,9 +58,9 @@ public final class Dbs {
                 .compressed()
                 .filePath(dbPath)
                 .openOrCreate(user, pwd);
+        this.db.compact();
         return this;
     }
-
 
 
     public NitriteCollection getCollection(String name) {
@@ -112,7 +113,7 @@ public final class Dbs {
 
         @SuppressWarnings("unchecked")
         public <T> List<T> toList(String attr) {
-            return document.get(attr, List.class);
+            return Optional.ofNullable(document.get(attr, List.class)).orElse(Collections.emptyList());
         }
 
         public JsonArray toJsonArray(String attr) {

@@ -1,5 +1,6 @@
 <template>
-  <div class="detail-project-page">
+  <require from="./detail.css"></require>
+  <div id="detail-project-page">
     <md-card md-title.one-way="title">
       <select md-select="label:Sélectionner une version" change.trigger="changeVersion($event)">
         <option value.bind="latest.id" selected>LATEST</option>
@@ -13,9 +14,51 @@
     </md-card>
     <div class="divider"></div>
     <md-card if.bind="selected" md-title.one-way="selected.name">
-      <p>
-        Date de la dernière mise à jour : <code>${selected.latest}</code>
-      </p>
+      <div class="row">
+        <div class="col s12 bloc-time">
+          <img src.bind="selected.icon" class="state">
+          <p>
+            Date de la dernière mise à jour : <code>${selected.latest}</code>
+          </p>
+        </div>
+
+      </div>
+      <div class="collapsible-popout">
+        <ul md-collapsible="accordion.bind: accordion; popout: true;">
+          <li>
+            <div class="collapsible-header"><span class="green-text darken-3">LibrairiesJava : </span><span
+              class="badge-number">${selected.javaDeps.length}</span></div>
+            <div class="collapsible-body">
+              <div>
+
+              </div>
+              <ul class="browser-default">
+                <li repeat.for="deps of selected.javaDeps">${deps}</li>
+              </ul>
+            </div>
+          </li>
+          <li if.bind="selected.tables">
+            <div class="collapsible-header"><strong class="blue-grey-text darken-3">Tables : </strong><span
+              class="badge-number blue-grey">${selected.tables.length}</span></div>
+            <div class="collapsible-body">
+              <ul class="browser-default">
+                <li repeat.for="deps of selected.tables">${deps}</li>
+              </ul>
+            </div>
+          </li>
+          <li if.bind="selected.apis">
+            <div class="collapsible-header"><strong class="red-text darken-3">Apis : </strong><span
+              class="badge-number red">${selected.apis.length}</span></div>
+            <div class="collapsible-body">
+              <ul class="browser-default">
+                <li repeat.for="api of selected.apis">${api}</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+        </ul>
+      </div>
+
     </md-card>
   </div>
 </template>

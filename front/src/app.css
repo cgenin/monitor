@@ -11,3 +11,12 @@ body{
   line-height: 100%;
   vertical-align: text-top;
 }
+
+ul.browser-default {
+  padding-left: 30px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+ul.browser-default li {
+  list-style-type: initial;
+}

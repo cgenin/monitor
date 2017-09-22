@@ -67,10 +67,12 @@ public class VersionBatch extends AbstractVerticle {
         boolean snapshot = ProjectBatch.isSnapshot(version);
         List<String> javaDeps = ProjectBatch.extractJavaDeps(json);
         List<String> tables = ProjectBatch.extractTables(json);
+        List<String> urls = ProjectBatch.extractUrls(json);
         return currentDoc
                 .put(Schemas.Version.isSnapshot.name(), snapshot)
                 .put(Schemas.Version.javaDeps.name(), javaDeps)
                 .put(Schemas.Version.tables.name(), tables)
+                .put(Schemas.Version.apis.name(), urls)
                 ;
     }
 

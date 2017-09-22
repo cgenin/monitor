@@ -31,12 +31,20 @@ export default class ProjectDetail {
           const latest = formatYYYYMMDDHHmm(o.latestUpdate);
           return Object.assign({}, o, {latest});
         });
-        this.latest = this.versions.reduce((a, b) => {
-          if (a.latestUpdate > b.latestUpdate) {
-            return a;
-          }
-          return b;
-        });
+        this.latest = this.versions
+          .map(v => {
+            v.table = v.tables.sort();
+            v.javaDeps = v.javaDeps.sort();
+            v.apis = v.apis.sort();
+            v.icon=(v.isSnapshot) ? '/img/snapshot.svg': '/img/release.svg';
+;            return v;
+          })
+          .reduce((a, b) => {
+            if (a.latestUpdate > b.latestUpdate) {
+              return a;
+            }
+            return b;
+          });
         this.selected = this.latest;
         this.releases = this.versions.filter(v => !v.isSnapshot);
         this.snapshots = this.versions.filter(v => v.isSnapshot);
