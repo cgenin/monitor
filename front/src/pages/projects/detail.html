@@ -55,6 +55,12 @@
               </ul>
             </div>
           </li>
+          <li if.bind="selected.changelog">
+            <div class="collapsible-header"><strong class="grey-text darken-3">Change log : </strong></div>
+            <div class="collapsible-body">
+              <markdown model.bind="selected.changelog"></markdown>
+            </div>
+          </li>
         </ul>
         </ul>
       </div>

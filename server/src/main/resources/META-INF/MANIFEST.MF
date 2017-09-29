@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Verticle: net.christophe.genin.domain.server.Server
+Main-Class: net.christophe.genin.domain.server.Main
+

@@ -58,6 +58,7 @@ public class Projects extends AbstractVerticle {
                                 .put(Schemas.Version.id.name(), doc.get(Schemas.Version.id.name()))
                                 .put(Schemas.Version.name.name(), doc.get(Schemas.Version.name.name()))
                                 .put(Schemas.Version.isSnapshot.name(), doc.get(Schemas.Version.isSnapshot.name()))
+                                .put(Schemas.Version.changelog.name(), doc.get(Schemas.Version.changelog.name()))
                                 .put(Schemas.Version.latestUpdate.name(), doc.get(Schemas.Version.latestUpdate.name()))
                                 .put(Schemas.Version.tables.name(), attributes.toJsonArray(Schemas.Version.tables.name()))
                                 .put(Schemas.Version.apis.name(), attributes.toJsonArray(Schemas.Version.apis.name()))

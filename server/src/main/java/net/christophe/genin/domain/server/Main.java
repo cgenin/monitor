@@ -13,7 +13,9 @@ public class Main extends Launcher {
     public static void main(String[] args) {
         try {
             LogManager.getLogManager().readConfiguration(Main.class.getResourceAsStream("/logging.properties"));
-            new Main().dispatch(new String[]{"run", Server.class.getName()});
+            new Main().dispatch(
+                    args
+            );
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

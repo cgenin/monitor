@@ -2,6 +2,7 @@ package net.christophe.genin.domain.server;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Dbs;
@@ -21,9 +22,10 @@ public class InitializeDb extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        String dbPath = config().getString("dbPath", "test.db");
-        String user = config().getString("userDb", "user");
-        String pwd = config().getString("pwdDb", "password");
+        JsonObject dbConfig = config().getJsonObject("db", new JsonObject());
+        String dbPath = dbConfig.getString("path", "test.db");
+        String user = dbConfig.getString("user", "user");
+        String pwd = dbConfig.getString("pwd", "password");
 
 
         NitriteCollection testCollection = Dbs.instance.build(dbPath, user, pwd).getCollection("health");

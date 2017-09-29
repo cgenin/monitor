@@ -68,6 +68,8 @@ public class VersionBatch extends AbstractVerticle {
         List<String> javaDeps = ProjectBatch.extractJavaDeps(json);
         List<String> tables = ProjectBatch.extractTables(json);
         List<String> urls = ProjectBatch.extractUrls(json);
+        Optional.ofNullable(json.getString(Schemas.Projects.changelog.name()))
+                .ifPresent(s -> currentDoc.put(Schemas.Projects.changelog.name(), s));
         return currentDoc
                 .put(Schemas.Version.isSnapshot.name(), snapshot)
                 .put(Schemas.Version.javaDeps.name(), javaDeps)
