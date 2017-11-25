@@ -26,7 +26,8 @@ export default new VueRouter({
 
   routes: [
     {path: '/', component: load('Welcome')},
-    {name: 'projectDetail', path: '/projects-list', component: load('ProjectsList')},
+    {path: '/projects-list', component: load('ProjectsList')},
+    {path: '/tables-list', component: load('TablesList')},
     {path: '/projects/:id', component: load('projects/Detail')},
     // Always leave this last one
     {path: '*', component: load('Error404')} // Not found

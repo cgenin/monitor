@@ -50,7 +50,6 @@
   import ProjectsStore from '../../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../../Dates';
 
-
   export default {
     name: 'ProjectDetail',
     components: {
