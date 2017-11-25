@@ -4,7 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.db.Dbs;
+import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 import org.dizitart.no2.NitriteCollection;
 

@@ -4,7 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
-import net.christophe.genin.domain.server.db.Dbs;
+import net.christophe.genin.domain.server.db.nitrite.Dbs;
 
 public class Import extends AbstractVerticle {
 

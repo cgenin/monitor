@@ -16,7 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <vertx.version>3.4.2</vertx.version>
+        <vertx.version>3.5.0</vertx.version>
+        <elasticsearch.version>6.0.0</elasticsearch.version>
     </properties>
 
     <dependencyManagement>
@@ -45,6 +46,16 @@
                 <groupId>org.dizitart</groupId>
                 <artifactId>nitrite</artifactId>
                 <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>transport</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-to-slf4j</artifactId>
+                <version>2.9.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

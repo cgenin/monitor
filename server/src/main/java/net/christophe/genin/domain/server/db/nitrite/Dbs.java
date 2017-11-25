@@ -1,4 +1,4 @@
-package net.christophe.genin.domain.server.db;
+package net.christophe.genin.domain.server.db.nitrite;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -10,12 +10,9 @@ import org.dizitart.no2.tool.ExportOptions;
 import org.dizitart.no2.tool.Exporter;
 import org.dizitart.no2.tool.Importer;
 import rx.Observable;
-import rx.Observer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Writer;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

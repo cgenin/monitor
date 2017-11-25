@@ -5,7 +5,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import net.christophe.genin.domain.server.db.ConfigurationDto;
-import net.christophe.genin.domain.server.db.Dbs;
+import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 
 public class ConfigurationCommand extends AbstractVerticle {
