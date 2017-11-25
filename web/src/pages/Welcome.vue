@@ -1,26 +1,19 @@
 <template>
   <div class="logo-container">
-    <!--img src="~assets/splash.jpg" class="splash"-->
+    <img src="~assets/splash.jpg" class="splash">
     <div class="layout-padding slide-container non-selectable no-pointer-events">
 
-      <q-carousel arrows actions class="text-white">
+      <q-carousel arrows autoplay infinite dots class="text-white">
         <div slot="slide" class="slide bg-primary centered">
-          <span class="title">Nb Projects : {{nbProjects}}</span>
-          <q-btn color="dark" glossy @click="test">Close Me</q-btn>
+          <span class="title">Nb Projects : {{nbProjects}}
+          </span>
         </div>
         <div slot="slide" class="slide bg-secondary centered">
           <span class="title">Nb Tables : {{nbTables}}</span>
         </div>
-        <q-icon slot="action" @click="goto('/projects-list')"
-                name="send">
-        </q-icon>
       </q-carousel>
     </div>
-    <q-btn color="dark" glossy @click="test">Close Me</q-btn>
-
   </div>
-
-
 </template>
 
 <script>
@@ -39,12 +32,6 @@
       return {nbProjects: 0, nbTables: 0};
     },
     methods: {
-      test(){
-        alert('dddd')
-      },
-      goto(path) {
-        this.$router.push(path);
-      }
     },
     mounted() {
       console.log(this)

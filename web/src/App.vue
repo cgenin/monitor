@@ -16,7 +16,7 @@
 
         <q-toolbar-title>
           Anti-monitor
-          <div slot="subtitle">Running on Quasar v{{$q.version}}</div>
+          <div slot="subtitle">Récapitualtif des projets Micro services</div>
         </q-toolbar-title>
       </q-toolbar>
 
@@ -28,22 +28,14 @@
         -->
 
         <q-list no-border link inset-delimiter>
-          <q-list-header>Essential Links</q-list-header>
+          <q-list-header>Menu</q-list-header>
           <q-item to="/" exact>
-            <q-item-side icon="school"/>
-            <q-item-main label="Welcome" sublabel="resume page"/>
+            <q-item-side icon="home"/>
+            <q-item-main label="Welcome" sublabel="Page de résumé"/>
           </q-item>
-          <q-item @click="launch('http://forum.quasar-framework.org')">
-            <q-item-side icon="record_voice_over"/>
-            <q-item-main label="Forum" sublabel="forum.quasar-framework.org"/>
-          </q-item>
-          <q-item @click="launch('https://gitter.im/quasarframework/Lobby')">
-            <q-item-side icon="chat"/>
-            <q-item-main label="Gitter Channel" sublabel="Quasar Lobby"/>
-          </q-item>
-          <q-item @click="launch('https://twitter.com/quasarframework')">
-            <q-item-side icon="rss feed"/>
-            <q-item-main label="Twitter" sublabel="@quasarframework"/>
+          <q-item to="/projects-list">
+            <q-item-side icon="view_list"/>
+            <q-item-main label="Liste des projets" sublabel="Résumé des deniers build"/>
           </q-item>
         </q-list>
       </div>

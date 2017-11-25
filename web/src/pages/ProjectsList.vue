@@ -2,16 +2,14 @@
   <div class="projects-page">
     <q-card>
       <q-card-title>
-        Projets
+        Liste des Projets
       </q-card-title>
 
       <q-card-separator/>
       <q-card-main>
         <div class="inputs">
-          <q-input v-model="filter" type="text" class="filter" float-label="filter" v-on:change="filtering"></q-input>
+          <q-input v-model="filter" type="text" class="filter" float-label="filter" @change="filtering"></q-input>
           <q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>
-          <q-btn round color="amber" icon="add"></q-btn>
-
         </div>
         <q-card-separator/>
         <div class="font-result results-number">
@@ -32,20 +30,21 @@
           </thead>
           <tbody>
           <tr v-for="project in list">
-            <td><a  class="link">{{project.name}}</a></td>
-            <td><a  class="link">{{project.snapshot}}</a></td>
-            <td><a  class="link">{{project.release}}</a></td>
+            <td><a class="link">{{project.name}}</a></td>
+            <td><a class="link">{{project.snapshot}}</a></td>
+            <td><a class="link">{{project.release}}</a></td>
             <td>
-              <a click.delegate="openJava(project)" class="tootip">
+              <a href="#" v-on:click.prevent="openJava(project)" class="tootip">
                 <span>{{project.javaDeps.length}}&nbsp;</span>
                 <i class="material-icons">info </i>
               </a>
             </td>
-            <td><a click.delegate="openApis(project)" class="tootip">
-              <span>{{project.apis.length}}&nbsp;</span>
-              <i class="material-icons">info </i>
-            </a></td>
-            <td><a click.delegate="openTables(project)" class="tootip">
+            <td>
+              <a href="#" v-on:click.prevent="openApis(project)" class="tootip">
+                <span>{{project.apis.length}}&nbsp;</span>
+                <i class="material-icons">info </i>
+              </a></td>
+            <td><a href="#" v-on:click.prevent="openTables(project)" class="tootip">
               <span>{{project.tables.length}}&nbsp;</span>
               <i class="material-icons">info </i>
             </a></td>
@@ -58,11 +57,28 @@
         </table>
       </q-card-main>
     </q-card>
+    <q-modal v-model="modal" :content-css="{minWidth: '80vw'}">
+      <q-modal-layout
+        header-style="min-height: 100px"
+        content-class="{'bg-primary': true, 'center': true}"
+        footer-style="{fontSize: '24px', fontWeight: 'bold'}"
+      >
+          <h4 slot="header" class="header-modal-deps">{{modalOpt.title}}</h4>
+        <div slot="content">
+          <q-list highlight>
+            <q-item v-for="d in modalOpt.data">
+              <q-item-main class="text-secondary">{{d}}</q-item-main>
+            </q-item>
+          </q-list>
+        </div>
+          <q-btn slot="footer" class="btn-close-modal" color="primary" @click="modal = false">Fermer</q-btn>
+      </q-modal-layout>
+    </q-modal>
   </div>
 </template>
 <script>
   import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QTooltip
+    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QTooltip, QModal, QList,QItem, QItemMain
   } from 'quasar';
   import ProjectsStore from '../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../Dates';
@@ -93,9 +109,9 @@
 
   export default {
     name: 'ProjectsList',
-    components: {QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QTooltip},
+    components: {QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QTooltip, QModal, QList,QItem, QItemMain},
     data() {
-      return {list: [], original: [], filter: ''};
+      return {list: [], original: [], filter: '', modal: false, modalOpt: {}};
     },
     methods: {
       refresh() {
@@ -107,7 +123,31 @@
             this.filter = '';
           });
       },
+      openJava(p) {
+        const data = p.javaDeps.sort();
+        const title = "Dépendance Java";
+        this.modalOpt = {
+          data, title
+        };
+        this.modal = true;
+      },
+      openTables(p) {
+        const data = p.tables.sort();
+        const title = "Tables";
+        this.modalOpt = {
+          data, title
+        };
+        this.modal = true;
+      },
 
+      openApis(p) {
+        const data = p.apis.sort();
+        const title = "Apis";
+        this.modalOpt = {
+          data, title
+        };
+        this.modal = true;
+      },
       filtering() {
         console.log(this.filter)
         this.list = filtering(this.original, this.filter);
@@ -140,5 +180,13 @@
 
   .projects-page .inputs .filter {
     width: 50%;
+  }
+
+  h4.header-modal-deps {
+    text-align: center;
+  }
+
+  .btn-close-modal{
+    width: 100%;
   }
 </style>
