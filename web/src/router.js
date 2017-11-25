@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-function load (component) {
+function load(component) {
   // '@' is aliased to src/components
   return () => import(`./pages/${component}.vue`)
 }
@@ -22,12 +22,13 @@ export default new VueRouter({
    */
 
   mode: 'hash',
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
 
   routes: [
-    { path: '/', component: load('Welcome') },
-    { path: '/projects-list', component: load('ProjectsList') },
+    {path: '/', component: load('Welcome')},
+    {name: 'projectDetail', path: '/projects-list', component: load('ProjectsList')},
+    {path: '/projects/:id', component: load('projects/Detail')},
     // Always leave this last one
-    { path: '*', component: load('Error404') } // Not found
+    {path: '*', component: load('Error404')} // Not found
   ]
 })
