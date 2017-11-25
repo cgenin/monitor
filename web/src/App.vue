@@ -35,7 +35,11 @@
           </q-item>
           <q-item to="/projects-list">
             <q-item-side icon="view_list"/>
-            <q-item-main label="Liste des projets" sublabel="Résumé des deniers build"/>
+            <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>
+          </q-item>
+          <q-item to="/tables-list">
+            <q-item-side icon="border_all"/>
+            <q-item-main label="Liste des tables" sublabel="liaisons entre les services et les tables"/>
           </q-item>
         </q-list>
       </div>
