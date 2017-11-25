@@ -2,7 +2,7 @@
   <div class="projects-page">
     <q-card>
       <q-card-title>
-        Liste des Projets
+        <h4>Liste des Projets</h4>
       </q-card-title>
 
       <q-card-separator/>
@@ -30,9 +30,9 @@
           </thead>
           <tbody>
           <tr v-for="project in list">
-            <td><a class="link">{{project.name}}</a></td>
-            <td><a class="link">{{project.snapshot}}</a></td>
-            <td><a class="link">{{project.release}}</a></td>
+            <td><router-link :to="project.destinationUrl">{{project.name}}</router-link></td>
+            <td><router-link :to="project.destinationUrl">{{project.snapshot}}</router-link></td>
+            <td><router-link :to="project.destinationUrl">{{project.release}}</router-link></td>
             <td>
               <a href="#" v-on:click.prevent="openJava(project)" class="tootip">
                 <span>{{project.javaDeps.length}}&nbsp;</span>
@@ -58,11 +58,7 @@
       </q-card-main>
     </q-card>
     <q-modal v-model="modal" :content-css="{minWidth: '80vw'}">
-      <q-modal-layout
-        header-style="min-height: 100px"
-        content-class="{'bg-primary': true, 'center': true}"
-        footer-style="{fontSize: '24px', fontWeight: 'bold'}"
-      >
+      <div>
         <h4 slot="header" class="header-modal-deps">{{modalOpt.title}}</h4>
         <div slot="content">
           <q-list highlight>
@@ -72,7 +68,7 @@
           </q-list>
         </div>
         <q-btn slot="footer" class="btn-close-modal" color="primary" @click="modal = false">Fermer</q-btn>
-      </q-modal-layout>
+      </div>
     </q-modal>
   </div>
 </template>
