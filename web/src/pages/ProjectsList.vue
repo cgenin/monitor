@@ -50,7 +50,7 @@
             </a></td>
             <td>{{project.latest}}</td>
             <td>
-              <changelog-button model.bind="project.changelog"></changelog-button>
+              <changelog-button :content="project.changelog"></changelog-button>
             </td>
           </tr>
           </tbody>
@@ -63,23 +63,24 @@
         content-class="{'bg-primary': true, 'center': true}"
         footer-style="{fontSize: '24px', fontWeight: 'bold'}"
       >
-          <h4 slot="header" class="header-modal-deps">{{modalOpt.title}}</h4>
+        <h4 slot="header" class="header-modal-deps">{{modalOpt.title}}</h4>
         <div slot="content">
           <q-list highlight>
-            <q-item v-for="d in modalOpt.data">
+            <q-item v-for="d in modalOpt.data" key="d">
               <q-item-main class="text-secondary">{{d}}</q-item-main>
             </q-item>
           </q-list>
         </div>
-          <q-btn slot="footer" class="btn-close-modal" color="primary" @click="modal = false">Fermer</q-btn>
+        <q-btn slot="footer" class="btn-close-modal" color="primary" @click="modal = false">Fermer</q-btn>
       </q-modal-layout>
     </q-modal>
   </div>
 </template>
 <script>
   import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QTooltip, QModal, QList,QItem, QItemMain
+    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QTooltip, QModal, QList, QItem, QItemMain
   } from 'quasar';
+  import ChangelogButton from '../components/ChangeLogButton'
   import ProjectsStore from '../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../Dates';
   import filtering from '../Filters'
@@ -109,7 +110,20 @@
 
   export default {
     name: 'ProjectsList',
-    components: {QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QTooltip, QModal, QList,QItem, QItemMain},
+    components: {
+      QCard,
+      QCardTitle,
+      QCardSeparator,
+      QCardMain,
+      QInput,
+      QBtn,
+      QTooltip,
+      QModal,
+      QList,
+      QItem,
+      QItemMain,
+      ChangelogButton
+    },
     data() {
       return {list: [], original: [], filter: '', modal: false, modalOpt: {}};
     },
@@ -125,7 +139,7 @@
       },
       openJava(p) {
         const data = p.javaDeps.sort();
-        const title = "Dépendance Java";
+        const title = 'Dépendance Java';
         this.modalOpt = {
           data, title
         };
@@ -133,7 +147,7 @@
       },
       openTables(p) {
         const data = p.tables.sort();
-        const title = "Tables";
+        const title = 'Tables';
         this.modalOpt = {
           data, title
         };
@@ -142,7 +156,7 @@
 
       openApis(p) {
         const data = p.apis.sort();
-        const title = "Apis";
+        const title = 'Apis';
         this.modalOpt = {
           data, title
         };
@@ -186,7 +200,7 @@
     text-align: center;
   }
 
-  .btn-close-modal{
+  .btn-close-modal {
     width: 100%;
   }
 </style>
