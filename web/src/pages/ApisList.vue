@@ -165,12 +165,14 @@
           setTimeout(() => {
             if ((index + maxLoadedCard) >= this.datas.length) {
               this.listCards = this.datas;
-            } else {
+            }
+            else {
               this.listCards = this.datas.filter((o, i) => i < index + maxLoadedCard);
             }
             done();
           }, 600);
-        } else {
+        }
+        else {
           done();
         }
       }
