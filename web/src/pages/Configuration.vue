@@ -2,12 +2,12 @@
   <div class="configuration-page">
     <q-card>
       <q-card-title>
-        <h4>Configuration</h4>
+        <h4>Console d'adminisration</h4>
       </q-card-title>
       <q-card-separator></q-card-separator>
       <q-card-main>
         <q-tabs inverted>
-          <q-route-tab icon="build" label="Administration"
+          <q-route-tab icon="radio" label="Traitement"
                        to="/configuration"
                        exact
                        slot="title"></q-route-tab>

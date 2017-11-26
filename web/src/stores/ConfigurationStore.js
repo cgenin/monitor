@@ -44,7 +44,7 @@ class ConfigurationStore {
       body
     })
       .then(() => {
-        this._state = configuration;
+        this.state = configuration;
         return this.state;
       });
   }
