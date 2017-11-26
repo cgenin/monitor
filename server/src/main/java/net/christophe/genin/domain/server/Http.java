@@ -30,7 +30,7 @@ public class Http extends AbstractVerticle {
         new Index().register(router);
 
         router.route("/*")
-                .handler(StaticHandler.create("build")
+                .handler(StaticHandler.create("dist")
                                 .setFilesReadOnly(true)
                 );
 

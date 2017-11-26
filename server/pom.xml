@@ -43,131 +43,24 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.5.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
                 <executions>
-                    <!--<execution>-->
-                        <!--<id>yarn install</id>-->
-                        <!--<phase>generate-resources</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>exec</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<executable>yarnpkg.cmd</executable>-->
-                            <!--<workingDirectory>${basedir}/../front</workingDirectory>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
                     <execution>
-                        <id>yarn build</id>
+                        <id>copy-web</id>
                         <phase>generate-resources</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>copy-resources</goal>
+
                         </goals>
                         <configuration>
-                            <executable>npm.cmd</executable>
-                            <workingDirectory>${working.dir.front}</workingDirectory>
-                            <arguments>
-                                <argument>run</argument>
-                                <argument>build</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>move scripts</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>cmd</executable>
-                            <workingDirectory>${basedir}</workingDirectory>
-                            <arguments>
-                                <argument>/C</argument>
-                                <argument>xcopy</argument>
-                                <argument>..\front\scripts</argument>
-                                <argument>target\classes\build\scripts</argument>
-                                <argument>/S</argument>
-                                <argument>/E</argument>
-                                <argument>/I</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>move index.html</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>cmd</executable>
-                            <workingDirectory>${working.dir.front}</workingDirectory>
-                            <arguments>
-                                <argument>/C</argument>
-                                <argument>copy</argument>
-                                <argument>index.html</argument>
-                                <argument>..\server\target\classes\build</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>move styles</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>cmd</executable>
-                            <workingDirectory>${working.dir.front}</workingDirectory>
-                            <arguments>
-                                <argument>/C</argument>
-                                <argument>xcopy</argument>
-                                <argument>styles</argument>
-                                <argument>..\server\target\classes\build\styles</argument>
-                                <argument>/S</argument>
-                                <argument>/E</argument>
-                                <argument>/I</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>move fonts</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>cmd</executable>
-                            <workingDirectory>${working.dir.front}</workingDirectory>
-                            <arguments>
-                                <argument>/C</argument>
-                                <argument>xcopy</argument>
-                                <argument>fonts</argument>
-                                <argument>..\server\target\classes\build\fonts</argument>
-                                <argument>/S</argument>
-                                <argument>/E</argument>
-                                <argument>/I</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>move img</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>cmd</executable>
-                            <workingDirectory>${working.dir.front}</workingDirectory>
-                            <arguments>
-                                <argument>/C</argument>
-                                <argument>xcopy</argument>
-                                <argument>img</argument>
-                                <argument>..\server\target\classes\build\img</argument>
-                                <argument>/S</argument>
-                                <argument>/E</argument>
-                                <argument>/I</argument>
-                            </arguments>
+                            <outputDirectory>${basedir}/target/classes/dist</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/../web/dist</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>

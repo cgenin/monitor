@@ -28,10 +28,10 @@ public class Index {
      */
     private enum Path {
         index("/"),
-        projects("/projects", "/projects/*"),
+        projects("/projects-list", "/projects/*"),
         apps("/apps", "/apps/*"),
-        tables("/tables", "/tables/*"),
-        configuration("/configuration"),
+        tables("/tables-list", "/tables/*"),
+        configuration("/configuration", "/configuration/*"),
         about("/about");
 
         private final String[] paths;
@@ -86,7 +86,7 @@ public class Index {
      */
     private Handler<RoutingContext> indexHandler() {
         return rc ->
-                getObservableClasspathResource("build/index.html")
+                getObservableClasspathResource("dist/index.html")
                         .subscribe(
                                 (s) -> rc.response()
                                         .setStatusCode(200)
