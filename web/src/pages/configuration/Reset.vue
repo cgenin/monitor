@@ -9,7 +9,8 @@
   </div>
 </template>
 <script>
-  import {QBtn, Toast} from 'quasar';
+  import {QBtn} from 'quasar';
+  import {success, error} from '../../Toasts'
   import AppsStore from '../../stores/AppsStore';
 
   export default {
@@ -19,18 +20,10 @@
       doReset() {
         AppsStore.remove()
           .then(() => {
-            console.log('OK');
-            Toast.create['positive']({
-              html: `<strong>Mise à jour effectuée avec succés. :)</strong>`,
-              timeout: 2500
-            });
+            success();
           })
           .catch((err) => {
-            console.log(err);
-            Toast.create['negative']({
-              html: `<strong>Erreur Technique</strong>`,
-              timeout: 2500
-            });
+            error(err);
           })
       }
     }
