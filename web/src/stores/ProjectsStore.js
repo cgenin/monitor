@@ -1,4 +1,5 @@
 let instance;
+
 class ProjectsStore {
   constructor () {
     if (instance) {

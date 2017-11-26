@@ -41,6 +41,10 @@
             <q-item-side icon="border_all"/>
             <q-item-main label="Liste des tables" sublabel="liaisons entre les services et les tables"/>
           </q-item>
+          <q-item to="/apis-list">
+            <q-item-side icon="explore"/>
+            <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
+          </q-item>
         </q-list>
       </div>
       <router-view/>
