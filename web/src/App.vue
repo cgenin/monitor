@@ -45,6 +45,10 @@
             <q-item-side icon="explore"/>
             <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
           </q-item>
+          <q-item to="/configuration">
+            <q-item-side icon="build"/>
+            <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
+          </q-item>
         </q-list>
       </div>
       <router-view/>

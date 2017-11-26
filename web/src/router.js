@@ -29,6 +29,16 @@ export default new VueRouter({
     {path: '/projects-list', component: load('ProjectsList')},
     {path: '/tables-list', component: load('TablesList')},
     {path: '/apis-list', component: load('ApisList')},
+    {
+      path: '/configuration',
+      component: load('Configuration'),
+      children: [
+        {path: '', component: load('configuration/Administration')},
+        {path: 'import', component: load('configuration/Import')},
+        {path: 'export', component: load('configuration/Export')},
+        {path: 'reset', component: load('configuration/Reset')},
+      ]
+    },
     {path: '/projects/:id', component: load('projects/Detail')},
     // Always leave this last one
     {path: '*', component: load('Error404')} // Not found
