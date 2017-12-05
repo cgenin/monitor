@@ -12,43 +12,56 @@
           <q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>
         </div>
         <q-card-separator/>
-        <div v-if="loading">
-          Chargement en cours ....
-        </div>
-        <div v-if="!loading" style="width:100%">
-          <div class="font-result results-number">
-            <strong>Résultats : {{list.length}}</strong>
+        <q-transition
+          appear
+          enter="fadeIn"
+          leave="fadeOut"
+        >
+
+          <div v-if="!loading" style="width:100%">
+            <div class="font-result results-number">
+              <strong>Résultats : {{list.length}}</strong>
+            </div>
+            <div>
+              <table class="font-result q-table highlight responsive results">
+                <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Projet(s) Lié(s)</th>
+                  <th>Dernière Mise à jour</th>
+                </tr>
+                </thead>
+                <tbody class="text-secondary">
+                <tr v-for="table in list">
+                  <td>
+                    {{table.name}}
+                  </td>
+                  <td>
+                    <ul>
+                      <li v-for="s in table.services">
+                        {{s}}
+                      </li>
+                    </ul>
+                  </td>
+                  <td>
+                    {{table.latest}}
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-          <table class="font-result q-table highlight responsive ">
-            <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Projet(s) Lié(s)</th>
-              <th>Dernière Mise à jour</th>
-            </tr>
-            </thead>
-            <tbody class="text-secondary">
-            <tr v-for="table in list">
-              <td>
-                {{table.name}}
-              </td>
-              <td>
-                {{table.serviceStr}}
-              </td>
-              <td>
-                {{table.latest}}
-              </td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+        </q-transition>
+        <q-inner-loading :visible="loading">
+          <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
+        </q-inner-loading>
       </q-card-main>
     </q-card>
   </div>
 </template>
 <script>
   import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn
+    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QInnerLoading, QTransition, QSpinnerGears
   } from 'quasar';
   import TablesStore from '../stores/TablesStore';
   import {format} from '../Dates';
@@ -74,6 +87,9 @@
       QCardMain,
       QInput,
       QBtn,
+      QInnerLoading,
+      QTransition,
+      QSpinnerGears
     },
     data() {
       return {list: [], original: [], filter: '', loading: false};
@@ -133,8 +149,8 @@
     width: 50%;
   }
 
-  .tables-page table.results{
-    margin:auto;
+  .tables-page table.results {
+    margin: auto;
     width: 100%;
   }
 
