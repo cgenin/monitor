@@ -1,6 +1,6 @@
 <template>
   <div class="logo-container">
-    <img src="~assets/splash.jpg" class="splash">
+    <!--<img src="~assets/splash.jpg" class="splash">-->
     <div class="layout-padding slide-container non-selectable no-pointer-events">
 
       <q-carousel arrows autoplay infinite dots class="text-white">

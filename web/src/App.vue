@@ -4,9 +4,9 @@
     <q-layout
       ref="layout"
       view="lHh Lpr fff"
-      :left-class="{'bg-grey-2': true}"
+      :left-class="{'bg-primary': true}"
     >
-      <q-toolbar slot="header" class="glossy">
+      <q-toolbar slot="header">
         <q-btn
           flat
           @click="$refs.layout.toggleLeft()"
@@ -28,7 +28,15 @@
         -->
 
         <q-list no-border link inset-delimiter>
-          <q-list-header>Menu</q-list-header>
+          <div class="sidebar-header">
+            <q-list-header class="side-header">
+              <img src="./assets/sinestro_corps_logo_small.png" alt="logo anti-monitor">
+              <span>Anti-monitor</span>
+            </q-list-header>
+            <q-list-header>
+              <h3>Menu</h3>
+            </q-list-header>
+          </div>
           <q-item to="/" exact>
             <q-item-side icon="home"/>
             <q-item-main label="Welcome" sublabel="Page de résumé"/>
