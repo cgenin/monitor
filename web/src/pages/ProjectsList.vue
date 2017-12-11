@@ -1,5 +1,5 @@
 <template>
-  <div class="projects-page">
+  <div class="projects-page page-list">
     <q-card>
       <q-card-title>
         <h4>Liste des Projets</h4>
@@ -8,7 +8,7 @@
       <q-card-separator/>
       <q-card-main>
         <div class="inputs">
-          <q-input v-model="filter" type="text" class="filter" float-label="filter" @change="filtering"></q-input>
+          <q-input v-model="filter" type="text" class="filter" float-label="Filtrer" @change="filtering"></q-input>
           <q-btn color="primary" icon="refresh" @click="refresh">recharger</q-btn>
         </div>
         <q-card-separator/>
@@ -210,45 +210,5 @@
   }
 </script>
 <style scoped>
-  .projects-page table.results {
-    width: 100%;
-  }
 
-  .projects-page .font-result {
-    font-size: 1.1rem;
-    line-height: inherit;
-  }
-
-  .projects-page .results-number {
-    margin-top: .7em;
-    margin-bottom: .5em;
-  }
-
-  .projects-page .inputs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .projects-page .inputs .q-if { margin-bottom: 16px; }
-
-  .projects-page .inputs .filter {
-    width: 50%;
-  }
-
-  /*.projects-page table.q-table th,*/
-  /*.projects-page table.q-table td {*/
-    /*padding: 0.5rem 0.7rem 0.5rem 0;*/
-  /*}*/
-
-  /*.projects-page table.q-table th:last-child,*/
-  /*.projects-page table.q-table td:last-child { padding-right: 0.5rem; }*/
-
-  h4.header-modal-deps {
-    text-align: center;
-  }
-
-  .btn-close-modal {
-    width: 100%;
-  }
 </style>
