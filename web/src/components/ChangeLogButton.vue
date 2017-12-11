@@ -1,13 +1,15 @@
 <template>
   <div>
-    <q-btn @click="modal= true" color="secondary" v-if="content" icon="change_history"></q-btn>
+    <q-btn @click="modal= true" color="secondary" v-if="content">
+      <q-icon name="change_history"></q-icon>
+    </q-btn>
     <q-modal v-model="modal" :content-css="{minWidth: '85vw', minHeight: '85vh', padding:'1em'}">
       <vue-markdown>{{content}}</vue-markdown>
     </q-modal>
   </div>
 </template>
 <script>
-  import {QBtn, QModal, QModalLayout} from 'quasar';
+  import {QBtn, QIcon, QModal, QModalLayout} from 'quasar';
   import VueMarkdown from 'vue-markdown'
 
   export default {
@@ -16,6 +18,6 @@
       return {modal: false};
     },
     props: ['content'],
-    components: {QBtn, QModal, QModalLayout, VueMarkdown}
+    components: {QBtn, QIcon, QModal, QModalLayout, VueMarkdown}
   }
 </script>
