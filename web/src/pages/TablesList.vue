@@ -141,21 +141,24 @@
             field: 'name',
             width: '400px',
             sort: true,
-            type: 'string'
+            type: 'string',
+            filter: true
           },
           {
             label: 'Projet(s) lié(s)',
             field: 'serviceStr',
             width: '380px',
             sort: true,
-            type: 'string'
+            type: 'string',
+            filter: true
           },
           {
             label: 'Dernière Mise à jour',
             field: 'latest',
             width: '230px',
             sort: true,
-            type: 'date'
+            type: 'date',
+            filter: true
           }
         ]
       };
