@@ -1,5 +1,5 @@
 <template>
-  <div class="projects-page">
+  <div class="projects-page page-list">
     <q-card>
       <q-card-title>
         <h4>Liste des Projets</h4>
@@ -8,8 +8,8 @@
       <q-card-separator/>
       <q-card-main>
         <div class="inputs">
-          <q-input v-model="filter" type="text" class="filter" float-label="filter" @change="filtering"></q-input>
-          <q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>
+          <q-input v-model="filter" type="text" class="filter" float-label="Filtrer" @change="filtering"></q-input>
+          <q-btn color="primary" icon="refresh" @click="refresh">recharger</q-btn>
         </div>
         <q-card-separator/>
         <q-transition
@@ -21,7 +21,7 @@
             <div class="font-result results-number">
               <strong>Résultats : {{list.length}}</strong>
             </div>
-            <table class="font-result q-table highlight responsive results">
+            <table class="font-result q-table striped-odd bordered vertical-separator highlight responsive results">
               <thead>
               <tr>
                 <th>Nom</th>
@@ -46,20 +46,26 @@
                   <router-link :to="project.destinationUrl">{{project.release}}</router-link>
                 </td>
                 <td>
-                  <a href="#" v-on:click.prevent="openJava(project)" class="tootip">
+                  <a href="#" v-if="project.javaDeps.length > 0" v-on:click.prevent="openJava(project)" class="tootip">
                     <span>{{project.javaDeps.length}}&nbsp;</span>
                     <i class="material-icons">info </i>
                   </a>
+                  <span v-else>{{project.javaDeps.length}}&nbsp;</span>
                 </td>
                 <td>
-                  <a href="#" v-on:click.prevent="openApis(project)" class="tootip">
+                  <a href="#" v-if="project.apis.length > 0" v-on:click.prevent="openApis(project)" class="tootip">
                     <span>{{project.apis.length}}&nbsp;</span>
                     <i class="material-icons">info </i>
-                  </a></td>
-                <td><a href="#" v-on:click.prevent="openTables(project)" class="tootip">
-                  <span>{{project.tables.length}}&nbsp;</span>
-                  <i class="material-icons">info </i>
-                </a></td>
+                  </a>
+                  <span v-else>{{project.apis.length}}&nbsp;</span>
+                </td>
+                <td>
+                  <a href="#" v-if="project.tables.length > 0" v-on:click.prevent="openTables(project)" class="tootip">
+                    <span>{{project.tables.length}}&nbsp;</span>
+                    <i class="material-icons">info </i>
+                  </a>
+                  <span v-else>{{project.tables.length}}&nbsp;</span>
+                </td>
                 <td>{{project.latest}}</td>
                 <td>
                   <changelog-button :content="project.changelog"></changelog-button>
@@ -204,34 +210,5 @@
   }
 </script>
 <style scoped>
-  .projects-page table.results {
-    width: 100%;
-  }
 
-  .projects-page .font-result {
-    font-size: 1.3rem;
-    line-height: inherit;
-  }
-
-  .projects-page .results-number {
-    margin-top: .5em;
-  }
-
-  .projects-page .inputs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .projects-page .inputs .filter {
-    width: 50%;
-  }
-
-  h4.header-modal-deps {
-    text-align: center;
-  }
-
-  .btn-close-modal {
-    width: 100%;
-  }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="tables-page">
+  <div class="tables-page page-list">
     <q-card>
       <q-card-title>
         <h4>Liste des Tables</h4>
@@ -7,11 +7,11 @@
 
       <q-card-separator/>
       <q-card-main>
-        <div class="inputs">
-          <q-input v-model="filter" type="text" class="filter" float-label="filter" @change="filtering"></q-input>
-          <q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>
-        </div>
-        <q-card-separator/>
+        <!--<div class="inputs">-->
+          <!--<q-input v-model="filter" type="text" class="filter" float-label="filter" @change="filtering"></q-input>-->
+          <!--<q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>-->
+        <!--</div>-->
+        <!--<q-card-separator/>-->
         <q-transition
           appear
           enter="fadeIn"
@@ -19,36 +19,43 @@
         >
 
           <div v-if="!loading" style="width:100%">
-            <div class="font-result results-number">
-              <strong>Résultats : {{list.length}}</strong>
-            </div>
+            <!--<div class="font-result results-number">-->
+              <!--<strong>Résultats : {{list.length}}</strong>-->
+            <!--</div>-->
             <div>
-              <table class="font-result q-table highlight responsive results">
-                <thead>
-                <tr>
-                  <th>Nom</th>
-                  <th>Projet(s) Lié(s)</th>
-                  <th>Dernière Mise à jour</th>
-                </tr>
-                </thead>
-                <tbody class="text-secondary">
-                <tr v-for="table in list">
-                  <td>
-                    {{table.name}}
-                  </td>
-                  <td>
-                    <ul>
-                      <li v-for="s in table.services">
-                        {{s}}
-                      </li>
-                    </ul>
-                  </td>
-                  <td>
-                    {{table.latest}}
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+              <q-data-table
+                :data="list"
+                :config="config"
+                :columns="columns"
+                @refresh="refresh">
+
+              </q-data-table>
+              <!--<table class="font-result q-table striped-odd bordered vertical-separator highlight responsive results">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                  <!--<th>Nom</th>-->
+                  <!--<th>Projet(s) Lié(s)</th>-->
+                  <!--<th>Dernière Mise à jour</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--<tr v-for="table in list">-->
+                  <!--<td>-->
+                    <!--{{table.name}}-->
+                  <!--</td>-->
+                  <!--<td>-->
+                    <!--<ul>-->
+                      <!--<li v-for="s in table.services">-->
+                        <!--{{s}}-->
+                      <!--</li>-->
+                    <!--</ul>-->
+                  <!--</td>-->
+                  <!--<td>-->
+                    <!--{{table.latest}}-->
+                  <!--</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+              <!--</table>-->
             </div>
           </div>
         </q-transition>
@@ -61,7 +68,8 @@
 </template>
 <script>
   import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QInnerLoading, QTransition, QSpinnerGears
+    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QInnerLoading, QTransition, QSpinnerGears,
+    QDataTable, QField, QCollapsible
   } from 'quasar';
   import TablesStore from '../stores/TablesStore';
   import {format} from '../Dates';
@@ -89,10 +97,71 @@
       QBtn,
       QInnerLoading,
       QTransition,
-      QSpinnerGears
+      QSpinnerGears,
+      QDataTable,
+      QField,
+      QCollapsible
     },
     data() {
-      return {list: [], original: [], filter: '', loading: false};
+      return {
+        list: [],
+        tableDatas: [],
+        original: [],
+        filter: '',
+        loading: false,
+        config: {
+          title: 'Liste des tables et projets liés',
+          refresh: true,
+          noHeader: false,
+          bodyStyle: {
+            maxHeight: '500px'
+          },
+          rowHeight: '50px',
+          responsive: true,
+          pagination: {
+            rowsPerPage: 15,
+            options: [5, 10, 15, 30, 50, 500]
+          },
+          messages: {
+            noData: '<i>Attention</i> aucune donnée disponible.',
+            noDataAfterFiltering: '<i>Attention</i> aucun résultat. Veuillez affiner votre recherche.'
+          },
+          labels: {
+            columns: 'Colonnes',
+            allCols: 'Toutes les colonnes',
+            rows: 'Résultats',
+            clear: 'réinitialiser',
+            search: 'Filtrer',
+            all: 'Tous'
+          }
+        },
+        columns: [
+          {
+            label: 'Nom',
+            field: 'name',
+            width: '400px',
+            sort: true,
+            type: 'string',
+            filter: true
+          },
+          {
+            label: 'Projet(s) lié(s)',
+            field: 'serviceStr',
+            width: '380px',
+            sort: true,
+            type: 'string',
+            filter: true
+          },
+          {
+            label: 'Dernière Mise à jour',
+            field: 'latest',
+            width: '230px',
+            sort: true,
+            type: 'date',
+            filter: true
+          }
+        ]
+      };
     },
     methods: {
       refresh() {
@@ -107,7 +176,7 @@
               })
               .sort((a, b) => {
                 return a.name.localeCompare(b.name);
-              });
+              });;
             this.list = l;
             this.original = l;
             this.filter = '';
@@ -126,32 +195,5 @@
   }
 </script>
 <style scoped>
-  .tables-page {
-
-  }
-
-  .tables-page .font-result {
-    font-size: 1.3rem;
-    line-height: inherit;
-  }
-
-  .tables-page .results-number {
-    margin-top: .5em;
-  }
-
-  .tables-page .inputs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .tables-page .inputs .filter {
-    width: 50%;
-  }
-
-  .tables-page table.results {
-    margin: auto;
-    width: 100%;
-  }
 
 </style>
