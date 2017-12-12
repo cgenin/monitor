@@ -12,49 +12,66 @@
           <q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>
         </div>
         <q-card-separator/>
-        <div class="font-result results-number">
-          <strong>Résultats : {{list.length}}</strong>
-        </div>
-        <table class="font-result q-table highlight responsive">
-          <thead>
-          <tr>
-            <th>Nom</th>
-            <th>Snapshot</th>
-            <th>Release</th>
-            <th>Java</th>
-            <th>Apis</th>
-            <th>Table</th>
-            <th>Dernière Mise à jour</th>
-            <th></th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="project in list">
-            <td><router-link :to="project.destinationUrl">{{project.name}}</router-link></td>
-            <td><router-link :to="project.destinationUrl">{{project.snapshot}}</router-link></td>
-            <td><router-link :to="project.destinationUrl">{{project.release}}</router-link></td>
-            <td>
-              <a href="#" v-on:click.prevent="openJava(project)" class="tootip">
-                <span>{{project.javaDeps.length}}&nbsp;</span>
-                <i class="material-icons">info </i>
-              </a>
-            </td>
-            <td>
-              <a href="#" v-on:click.prevent="openApis(project)" class="tootip">
-                <span>{{project.apis.length}}&nbsp;</span>
-                <i class="material-icons">info </i>
-              </a></td>
-            <td><a href="#" v-on:click.prevent="openTables(project)" class="tootip">
-              <span>{{project.tables.length}}&nbsp;</span>
-              <i class="material-icons">info </i>
-            </a></td>
-            <td>{{project.latest}}</td>
-            <td>
-              <changelog-button :content="project.changelog"></changelog-button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+        <q-transition
+          appear
+          enter="fadeIn"
+          leave="fadeOut"
+        >
+          <div v-show="!loading">
+            <div class="font-result results-number">
+              <strong>Résultats : {{list.length}}</strong>
+            </div>
+            <table class="font-result q-table highlight responsive results">
+              <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Snapshot</th>
+                <th>Release</th>
+                <th>Java</th>
+                <th>Apis</th>
+                <th>Table</th>
+                <th>Dernière Mise à jour</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-for="project in list">
+                <td>
+                  <router-link :to="project.destinationUrl">{{project.name}}</router-link>
+                </td>
+                <td>
+                  <router-link :to="project.destinationUrl">{{project.snapshot}}</router-link>
+                </td>
+                <td>
+                  <router-link :to="project.destinationUrl">{{project.release}}</router-link>
+                </td>
+                <td>
+                  <a href="#" v-on:click.prevent="openJava(project)" class="tootip">
+                    <span>{{project.javaDeps.length}}&nbsp;</span>
+                    <i class="material-icons">info </i>
+                  </a>
+                </td>
+                <td>
+                  <a href="#" v-on:click.prevent="openApis(project)" class="tootip">
+                    <span>{{project.apis.length}}&nbsp;</span>
+                    <i class="material-icons">info </i>
+                  </a></td>
+                <td><a href="#" v-on:click.prevent="openTables(project)" class="tootip">
+                  <span>{{project.tables.length}}&nbsp;</span>
+                  <i class="material-icons">info </i>
+                </a></td>
+                <td>{{project.latest}}</td>
+                <td>
+                  <changelog-button :content="project.changelog"></changelog-button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </q-transition>
+        <q-inner-loading :visible="loading">
+          <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
+        </q-inner-loading>
       </q-card-main>
     </q-card>
     <q-modal v-model="modal" :content-css="{minWidth: '80vw'}">
@@ -74,7 +91,20 @@
 </template>
 <script>
   import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QTooltip, QModal, QList, QItem, QItemMain
+    QCard,
+    QCardTitle,
+    QCardSeparator,
+    QCardMain,
+    QInput,
+    QBtn,
+    QTooltip,
+    QModal,
+    QList,
+    QItem,
+    QItemMain,
+    QInnerLoading,
+    QTransition,
+    QSpinnerGears
   } from 'quasar';
   import ChangelogButton from '../components/ChangeLogButton'
   import ProjectsStore from '../stores/ProjectsStore';
@@ -118,19 +148,24 @@
       QList,
       QItem,
       QItemMain,
-      ChangelogButton
+      ChangelogButton,
+      QInnerLoading,
+      QTransition,
+      QSpinnerGears
     },
     data() {
-      return {list: [], original: [], filter: '', modal: false, modalOpt: {}};
+      return {list: [], original: [], filter: '', modal: false, modalOpt: {}, loading: false};
     },
     methods: {
       refresh() {
+        this.loading = true;
         ProjectsStore.initialize()
           .then((list) => {
             const res = map(list);
             this.list = res;
             this.original = res;
             this.filter = '';
+            this.loading = false;
           });
       },
       openJava(p) {
@@ -169,8 +204,8 @@
   }
 </script>
 <style scoped>
-  .projects-page {
-
+  .projects-page table.results {
+    width: 100%;
   }
 
   .projects-page .font-result {
@@ -184,7 +219,7 @@
 
   .projects-page .inputs {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
   }
 

@@ -12,3 +12,49 @@
 // Custom App variables must be declared before importing Quasar.
 // Quasar will use its default values when a custom variable isn't provided.
 @import '~quasar-framework/dist/quasar.mat.styl'
+
+.logo-container
+  width 100%
+  height 100%
+  min-height: calc(100vh - 50px)
+  background url("../assets/splash.jpg") no-repeat
+  background-size cover
+.q-list
+  padding-top 0
+  .sidebar-header
+    .q-list-header
+      line-height 50px
+      background-color $primary
+      display flex
+      justify-content flex-start
+      align-items center
+      color $white
+      h3
+        text-shadow: 1px 1px $indigo-10
+        letter-spacing: .5px
+        font-weight: 700
+        font-size: 11px
+        text-transform: uppercase
+    .side-header
+      span
+        font-size 24px
+        padding-left 15px
+  .q-item
+    .q-item-section
+      color: $white
+      .q-item-sublabel
+        color: $grey-5
+  .q-item.active,
+  .q-item.router-link-active,
+  .q-item:focus,
+  .q-item:hover
+    background-color darken($primary, 10%)
+
+
+.layout-header
+  box-shadow none
+  .q-toolbar
+    background $light
+    color $faded
+    border-bottom 1px solid $grey-5
+
