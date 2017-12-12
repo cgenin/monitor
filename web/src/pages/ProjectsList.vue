@@ -146,6 +146,7 @@
         loading: false,
         config: {
           refresh: true,
+          columnPicker: false,
           noHeader: false,
           bodyStyle: {
             maxHeight: '500px'
@@ -203,30 +204,36 @@
             label: 'Java',
             field: 'javaDeps',
             width: '73px',
-            sort: true,
-            type: 'string',
+            sort (a, b) {
+              return (a.length - b.length);
+            },
+            type: 'number',
             filter: true
           },
           {
             label: 'Apis',
             field: 'apis',
             width: '73px',
-            sort: true,
-            type: 'string',
+            sort (a, b) {
+              return (a.length - b.length);
+            },
+            type: 'number',
             filter: true
           },
           {
             label: 'Table',
             field: 'table',
             width: '73px',
-            sort: true,
-            type: 'string',
+            sort (a, b) {
+              return (a.length - b.length);
+            },
+            type: 'number',
             filter: true
           },
           {
             label: 'Dernière Mise à jour',
             field: 'latest',
-            width: '185px',
+            width: '175px',
             sort: true,
             type: 'date',
             filter: true
