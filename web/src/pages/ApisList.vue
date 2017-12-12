@@ -1,9 +1,10 @@
 <template>
-  <div class="apis-page">
+  <div class="apis-page page-list">
     <q-card>
       <q-card-title>
-        <h4>Liste des apis</h4>
+        <h3>Liste des apis</h3>
       </q-card-title>
+      <q-card-separator/>
       <q-card-main>
         <div class="inputs">
           <q-input v-model="filter" type="text" class="filter" float-label="filter"

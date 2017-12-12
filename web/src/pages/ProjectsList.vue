@@ -2,77 +2,52 @@
   <div class="projects-page page-list">
     <q-card>
       <q-card-title>
-        <h4>Liste des Projets</h4>
+        <h3>Liste des Projets</h3>
       </q-card-title>
-
       <q-card-separator/>
       <q-card-main>
-        <div class="inputs">
-          <q-input v-model="filter" type="text" class="filter" float-label="Filtrer" @change="filtering"></q-input>
-          <q-btn color="primary" icon="refresh" @click="refresh">recharger</q-btn>
-        </div>
-        <q-card-separator/>
         <q-transition
           appear
           enter="fadeIn"
           leave="fadeOut"
         >
           <div v-show="!loading">
-            <div class="font-result results-number">
-              <strong>Résultats : {{list.length}}</strong>
-            </div>
-            <table class="font-result q-table striped-odd bordered vertical-separator highlight responsive results">
-              <thead>
-              <tr>
-                <th>Nom</th>
-                <th>Snapshot</th>
-                <th>Release</th>
-                <th>Java</th>
-                <th>Apis</th>
-                <th>Table</th>
-                <th>Dernière Mise à jour</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="project in list">
-                <td>
-                  <router-link :to="project.destinationUrl">{{project.name}}</router-link>
-                </td>
-                <td>
-                  <router-link :to="project.destinationUrl">{{project.snapshot}}</router-link>
-                </td>
-                <td>
-                  <router-link :to="project.destinationUrl">{{project.release}}</router-link>
-                </td>
-                <td>
-                  <a href="#" v-if="project.javaDeps.length > 0" v-on:click.prevent="openJava(project)" class="tootip">
-                    <span>{{project.javaDeps.length}}&nbsp;</span>
-                    <i class="material-icons">info </i>
-                  </a>
-                  <span v-else>{{project.javaDeps.length}}&nbsp;</span>
-                </td>
-                <td>
-                  <a href="#" v-if="project.apis.length > 0" v-on:click.prevent="openApis(project)" class="tootip">
-                    <span>{{project.apis.length}}&nbsp;</span>
-                    <i class="material-icons">info </i>
-                  </a>
-                  <span v-else>{{project.apis.length}}&nbsp;</span>
-                </td>
-                <td>
-                  <a href="#" v-if="project.tables.length > 0" v-on:click.prevent="openTables(project)" class="tootip">
-                    <span>{{project.tables.length}}&nbsp;</span>
-                    <i class="material-icons">info </i>
-                  </a>
-                  <span v-else>{{project.tables.length}}&nbsp;</span>
-                </td>
-                <td>{{project.latest}}</td>
-                <td>
-                  <changelog-button :content="project.changelog"></changelog-button>
-                </td>
-              </tr>
-              </tbody>
-            </table>
+            <q-data-table
+              :data="list"
+              :config="config"
+              :columns="columns"
+              @refresh="refresh"
+              @selection="link">
+              <template slot="col-javaDeps" slot-scope="cell">
+                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Dépendance Java')" class="tootip">
+                  <span>{{cell.data.length}}&nbsp;</span>
+                  <i class="material-icons">info </i>
+                </a>
+                <span v-else>{{cell.data.length}}&nbsp;</span>
+              </template>
+              <template slot="col-apis" slot-scope="cell">
+                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Apis')" class="tootip">
+                  <span>{{cell.data.length}}&nbsp;</span>
+                  <i class="material-icons">info </i>
+                </a>
+                <span v-else>{{cell.data.length}}&nbsp;</span>
+              </template>
+              <template slot="col-tables" slot-scope="cell">
+                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Tables')" class="tootip">
+                  <span>{{cell.data.length}}&nbsp;</span>
+                  <i class="material-icons">info </i>
+                </a>
+                <span v-else>{{cell.data.length}}&nbsp;</span>
+              </template>
+              <template slot="col-changelog" slot-scope="cell">
+                <changelog-button :content="cell.data"></changelog-button>
+              </template>
+              <template slot="selection" slot-scope="props">
+                <q-btn flat color="primary" @click="$router.push(props.rows[0].data.destinationUrl)">
+                  Détail du projet
+                </q-btn>
+              </template>
+            </q-data-table>
           </div>
         </q-transition>
         <q-inner-loading :visible="loading">
@@ -110,7 +85,8 @@
     QItemMain,
     QInnerLoading,
     QTransition,
-    QSpinnerGears
+    QSpinnerGears,
+    QDataTable
   } from 'quasar';
   import ChangelogButton from '../components/ChangeLogButton'
   import ProjectsStore from '../stores/ProjectsStore';
@@ -157,10 +133,115 @@
       ChangelogButton,
       QInnerLoading,
       QTransition,
-      QSpinnerGears
+      QSpinnerGears,
+      QDataTable
     },
     data() {
-      return {list: [], original: [], filter: '', modal: false, modalOpt: {}, loading: false};
+      return {
+        list: [],
+        original: [],
+        filter: '',
+        modal: false,
+        modalOpt: {},
+        loading: false,
+        config: {
+          refresh: true,
+          noHeader: false,
+          bodyStyle: {
+            maxHeight: '500px'
+          },
+          rowHeight: '55px',
+          responsive: true,
+          pagination: {
+            rowsPerPage: 15,
+            options: [5, 10, 15, 30, 50, 500]
+          },
+          messages: {
+            noData: '<i>Attention</i> aucune donnée disponible.',
+            noDataAfterFiltering: '<i>Attention</i> aucun résultat. Veuillez affiner votre recherche.'
+          },
+          selection: 'single',
+          labels: {
+            columns: 'Colonnes',
+            allCols: 'Toutes les colonnes',
+            rows: 'Résultats',
+            selected: {
+              singular: 'projet sélectionné.',
+              plural: 'projets sélectionnés.'
+            },
+            clear: 'réinitialiser',
+            search: 'Filtrer',
+            all: 'Tous'
+          }
+        },
+        columns: [
+          {
+            label: 'Nom',
+            field: 'name',
+            width: '270px',
+            sort: true,
+            type: 'string',
+            filter: true
+          },
+          {
+            label: 'Snapshot',
+            field: 'snapshot',
+            width: '170px',
+            sort: false,
+            type: 'string',
+            filter: true
+          },
+          {
+            label: 'Release',
+            field: 'release',
+            width: '90px',
+            sort: false,
+            type: 'string',
+            filter: true
+          },
+          {
+            label: 'Java',
+            field: 'javaDeps',
+            width: '73px',
+            sort: true,
+            type: 'string',
+            filter: true
+          },
+          {
+            label: 'Apis',
+            field: 'apis',
+            width: '73px',
+            sort: true,
+            type: 'string',
+            filter: true
+          },
+          {
+            label: 'Table',
+            field: 'table',
+            width: '73px',
+            sort: true,
+            type: 'string',
+            filter: true
+          },
+          {
+            label: 'Dernière Mise à jour',
+            field: 'latest',
+            width: '185px',
+            sort: true,
+            type: 'date',
+            filter: true
+          },
+          {
+            label: 'Changelog',
+            field: 'changelog',
+            width: '94px',
+            sort: false,
+            format() {
+              return ''
+            }
+          }
+        ]
+      };
     },
     methods: {
       refresh() {
@@ -174,26 +255,8 @@
             this.loading = false;
           });
       },
-      openJava(p) {
-        const data = p.javaDeps.sort();
-        const title = 'Dépendance Java';
-        this.modalOpt = {
-          data, title
-        };
-        this.modal = true;
-      },
-      openTables(p) {
-        const data = p.tables.sort();
-        const title = 'Tables';
-        this.modalOpt = {
-          data, title
-        };
-        this.modal = true;
-      },
-
-      openApis(p) {
-        const data = p.apis.sort();
-        const title = 'Apis';
+      openInfos(p, title) {
+        const data = p.sort();
         this.modalOpt = {
           data, title
         };
@@ -202,6 +265,9 @@
       filtering() {
         console.log(this.filter)
         this.list = filtering(this.original, this.filter);
+      },
+      link() {
+
       }
     },
     mounted() {

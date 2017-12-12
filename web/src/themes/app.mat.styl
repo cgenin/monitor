@@ -12,6 +12,10 @@
 // Custom App variables must be declared before importing Quasar.
 // Quasar will use its default values when a custom variable isn't provided.
 @import '~quasar-framework/dist/quasar.mat.styl'
+body
+  color $blue-grey-5
+h3
+  font-size 24px
 .layout-page-container
   background $grey-11
 .q-card
@@ -64,6 +68,9 @@
 
 
 .page-list
+  h3
+    margin 0
+    font-weight 400
   .q-data-table
     .q-btn
       background-color $primary
@@ -89,3 +96,8 @@ h4.header-modal-deps
 .btn-close-modal
   width: 100%
 
+
+.q-data-table
+  font-size 100%
+.q-pagination .q-btn
+  margin 10px 2px 8px

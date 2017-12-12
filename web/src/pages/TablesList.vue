@@ -2,7 +2,7 @@
   <div class="tables-page page-list">
     <q-card>
       <q-card-title>
-        <h4>Liste des Tables</h4>
+        <h3>Liste des Tables</h3>
       </q-card-title>
 
       <q-card-separator/>
