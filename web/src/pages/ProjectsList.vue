@@ -1,6 +1,20 @@
 <template>
   <div class="projects-page page-list">
     <q-card>
+      <ul class="breadcrumb">
+        <li>
+          <router-link to="/">
+            <q-icon name="home" />
+          </router-link>
+        </li>
+        <li>
+          <router-link to="" active-class="router-link-active">
+            <q-icon name="view_list" /> Liste des Projets
+          </router-link>
+        </li>
+      </ul>
+    </q-card>
+    <q-card>
       <q-card-title>
         <h3>Liste des Projets</h3>
       </q-card-title>
@@ -17,34 +31,34 @@
               :config="config"
               :columns="columns"
               @refresh="refresh"
-              @selection="link">
-              <template slot="col-javaDeps" slot-scope="cell">
+            >
+              <template v-if="cell.data" slot="col-javaDeps" slot-scope="cell">
                 <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Dépendance Java')" class="tootip">
                   <span>{{cell.data.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
                 <span v-else>{{cell.data.length}}&nbsp;</span>
               </template>
-              <template slot="col-apis" slot-scope="cell">
+              <template v-if="cell.data" slot="col-apis" slot-scope="cell">
                 <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Apis')" class="tootip">
                   <span>{{cell.data.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
                 <span v-else>{{cell.data.length}}&nbsp;</span>
               </template>
-              <template slot="col-tables" slot-scope="cell">
+              <template v-if="cell.data" slot="col-tables" slot-scope="cell">
                 <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Tables')" class="tootip">
                   <span>{{cell.data.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
                 <span v-else>{{cell.data.length}}&nbsp;</span>
               </template>
-              <template slot="col-changelog" slot-scope="cell">
+              <template v-if="cell.data" slot="col-changelog" slot-scope="cell">
                 <changelog-button :content="cell.data"></changelog-button>
               </template>
-              <template slot="selection" slot-scope="props">
-                <q-btn flat color="primary" @click="$router.push(props.rows[0].data.destinationUrl)">
-                  Détail du projet
+              <template v-if="cell.data" slot="col-destinationUrl" slot-scope="cell">
+                <q-btn flat color="tertiary" @click="$router.push(cell.data)" small>
+                  <q-icon name="ion-document-text" />
                 </q-btn>
               </template>
             </q-data-table>
@@ -55,18 +69,24 @@
         </q-inner-loading>
       </q-card-main>
     </q-card>
-    <q-modal v-model="modal" :content-css="{minWidth: '80vw'}">
-      <div>
-        <h4 slot="header" class="header-modal-deps">{{modalOpt.title}}</h4>
-        <div slot="content">
+    <q-modal ref="layoutModal" v-model="modal" :content-css="{minWidth: '55vw', minHeight: '85vh', padding:'1em'}">
+      <q-modal-layout>
+        <q-toolbar slot="header">
+          <div class="q-toolbar-title">
+            {{modalOpt.title}}
+          </div>
+          <q-btn flat @click="$refs.layoutModal.close()">
+            <q-icon name="close" />
+          </q-btn>
+        </q-toolbar>
+        <div>
           <q-list highlight>
             <q-item v-for="d in modalOpt.data" key="d">
-              <q-item-main class="text-secondary">{{d}}</q-item-main>
+              <q-item-main>{{d}}</q-item-main>
             </q-item>
           </q-list>
         </div>
-        <q-btn slot="footer" class="btn-close-modal" color="primary" @click="modal = false">Fermer</q-btn>
-      </div>
+      </q-modal-layout>
     </q-modal>
   </div>
 </template>
@@ -79,14 +99,17 @@
     QInput,
     QBtn,
     QTooltip,
+    QToolbar,
     QModal,
+    QModalLayout,
     QList,
     QItem,
     QItemMain,
     QInnerLoading,
     QTransition,
     QSpinnerGears,
-    QDataTable
+    QDataTable,
+    QIcon
   } from 'quasar';
   import ChangelogButton from '../components/ChangeLogButton'
   import ProjectsStore from '../stores/ProjectsStore';
@@ -126,7 +149,9 @@
       QInput,
       QBtn,
       QTooltip,
+      QToolbar,
       QModal,
+      QModalLayout,
       QList,
       QItem,
       QItemMain,
@@ -134,7 +159,8 @@
       QInnerLoading,
       QTransition,
       QSpinnerGears,
-      QDataTable
+      QDataTable,
+      QIcon
     },
     data() {
       return {
@@ -152,6 +178,7 @@
             maxHeight: '500px'
           },
           rowHeight: '55px',
+          rightStickyColumns: 2,
           responsive: true,
           pagination: {
             rowsPerPage: 15,
@@ -161,7 +188,6 @@
             noData: '<i>Attention</i> aucune donnée disponible.',
             noDataAfterFiltering: '<i>Attention</i> aucun résultat. Veuillez affiner votre recherche.'
           },
-          selection: 'single',
           labels: {
             columns: 'Colonnes',
             allCols: 'Toutes les colonnes',
@@ -239,13 +265,16 @@
             filter: true
           },
           {
-            label: 'Changelog',
+            label: 'Log',
             field: 'changelog',
-            width: '94px',
-            sort: false,
-            format() {
-              return ''
-            }
+            width: '57px',
+            sort: false
+          },
+          {
+            label: 'Détail',
+            field: 'destinationUrl',
+            width: '67px',
+            sort: false
           }
         ]
       };
@@ -282,6 +311,3 @@
     }
   }
 </script>
-<style scoped>
-
-</style>

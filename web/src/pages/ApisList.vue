@@ -1,22 +1,42 @@
 <template>
   <div class="apis-page page-list">
     <q-card>
+      <ul class="breadcrumb">
+        <li>
+          <router-link to="/">
+            <q-icon name="home" />
+          </router-link>
+        </li>
+        <li>
+          <router-link to="" active-class="router-link-active">
+            <q-icon name="explore" /> Liste des Apis
+          </router-link>
+        </li>
+      </ul>
+    </q-card>
+    <q-card>
       <q-card-title>
         <h3>Liste des apis</h3>
       </q-card-title>
       <q-card-separator/>
       <q-card-main>
         <div class="inputs">
-          <q-input v-model="filter" type="text" class="filter" float-label="filter"
-                   @change="filtering"></q-input>
+          <q-field
+            icon="search">
+            <q-input
+              v-model="filter"
+              type="text"
+              class="filter"
+              float-label="Filtrer"
+              @change="filtering" ></q-input>
+          </q-field>
           <div>
-            <q-radio v-model="viewTable" label="Table" color="teal" :val="true"></q-radio>
-            <q-radio v-model="viewTable" label="Card" color="orange" :val="false"></q-radio>
+            <q-toggle v-model="viewTable" label="Affichage table ou card" color="tertiary"></q-toggle>
           </div>
-          <q-btn @click="showOrHideFilterPanel" v-if="!filtersPanel" flat icon="add">&nbsp;filtres</q-btn>
-          <q-btn @click="showOrHideFilterPanel" v-if="filtersPanel" flat icon="close">&nbsp;filtres</q-btn>
+          <q-btn @click="showOrHideFilterPanel" v-if="!filtersPanel" flat icon="add" color="primary">&nbsp;filtres</q-btn>
+          <q-btn @click="showOrHideFilterPanel" v-if="filtersPanel" flat icon="close" color="primary">&nbsp;filtres</q-btn>
         </div>
-        <div v-if="filtersPanel" class="inputs">
+        <div v-if="filtersPanel" class="inputs inputs-panel">
           <q-select float-label="Méthode" v-model="subFilters.method" :options="methodsOptions"
                     @change="filtering" class="field-input"></q-select>
           <q-input @change="filtering" type="text" float-label="Path" v-model="subFilters.path"
@@ -26,9 +46,8 @@
         </div>
         <q-card-separator></q-card-separator>
         <div v-if="viewTable">
-
           <p class="caption">Résultat : {{datas.length}}</p>
-          <table class="table-result q-table highlight responsive ">
+          <table class="table-result q-table vertical-separator bordered striped-odd highlight responsive ">
             <thead>
             <tr>
               <th>Méthode</th>
@@ -51,18 +70,18 @@
             </tbody>
           </table>
         </div>
+        <div v-if="!viewTable">
+          <q-infinite-scroll :handler="loadMore">
+            <div class="card-container">
+              <apis-card :api="api" v-for="api in listCards" key="api.absolutePath"></apis-card>
+            </div>
+            <div class="awaiting" slot="message">
+              <q-spinner-dots color="red" :size="40"></q-spinner-dots>
+            </div>
+          </q-infinite-scroll>
+        </div>
       </q-card-main>
     </q-card>
-    <div v-if="!viewTable">
-      <q-infinite-scroll :handler="loadMore">
-        <div class="card-container">
-          <apis-card :api="api" v-for="api in listCards" key="api.absolutePath"></apis-card>
-        </div>
-        <div class="awaiting" slot="message">
-          <q-spinner-dots color="red" :size="40"></q-spinner-dots>
-        </div>
-      </q-infinite-scroll>
-    </div>
   </div>
 </template>
 <script>
@@ -78,9 +97,11 @@
     QList,
     QItem,
     QItemMain,
-    QRadio,
+    QToggle,
     QInfiniteScroll,
-    QSpinnerDots
+    QSpinnerDots,
+    QIcon,
+    QField
   } from 'quasar';
   import MethodIcon from '../components/MethodIcon'
   import ApisCard from '../components/ApisCard'
@@ -119,11 +140,13 @@
       QList,
       QItem,
       QItemMain,
-      QRadio,
+      QToggle,
       QInfiniteScroll,
       QSpinnerDots,
       MethodIcon,
-      ApisCard
+      ApisCard,
+      QIcon,
+      QField
     },
     data() {
       return {
@@ -196,49 +219,45 @@
 
   }
 </script>
-<style scoped>
-  :root {
-    --api-max-comment-width: 200px;
-  }
-
-  .apis-page .inputs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .apis-page .inputs .filter {
-    width: 60%;
-  }
-
-  .apis-page .field-input {
-    min-width: 20%;
-  }
-
-  .apis-page .awaiting {
-    margin: 1em auto;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  .apis-page .card-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-
-  .api-url {
-    word-break: break-all;
-    width: 35vw;
-  }
-
-  .api-comment {
-    max-width: var(--api-max-comment-width);
-    min-width: var(--api-max-comment-width);
-    width: var(--api-max-comment-width);
-  }
-
+<style lang="stylus" scoped>
+  .apis-page
+    .inputs
+      display flex
+      justify-content space-between
+      align-items center
+      margin-bottom 10px
+      > div
+        padding 0 10px
+      .q-field
+        flex 5
+        margin 0
+    .inputs-panel
+      background #eeeeee
+      padding 15px
+    .q-card-separator
+      margin-bottom 15px
+    .caption
+      font-weight bold
+    .awaiting
+      margin 1em auto
+      width 100%
+      display flex
+      justify-content center
+    .card-container
+      display flex
+      justify-content space-around
+      align-items flex-start
+      flex-flow row wrap
+      align-content space-between
+      width 100%
+      padding 35px 0
+      .apis-card
+        width 35vw
+  .api-url
+    word-break break-all
+    width 35vw
+  .api-comment
+    max-width: $api-max-comments-width;
+    min-width: $api-max-comments-width;
+    width: $api-max-comments-width;
 </style>
