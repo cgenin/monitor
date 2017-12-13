@@ -5,8 +5,12 @@
     </div>
     <div>
       <div class="error-card shadow-4 bg-white column items-center justify-center no-wrap">
-        <q-icon name="error_outline" color="grey-5" />
-        <p class="caption text-center">Oops. Nothing here...</p>
+        <q-icon name="error_outline" color="yellow-8" />
+        <p class="caption text-center">
+          You want more ?<br />
+          Oops. Nothing here...<br />
+          Sinestros killed the page you were searching for !
+        </p>
         <p class="text-center group">
           <q-btn
             v-if="canGoBack"
@@ -54,17 +58,19 @@ export default {
 
 <style lang="stylus">
 .error-page
+  width 100% !important
   .error-code
-    height 50vh
+    background url("../assets/sinestros-mass-recruitment-for-the-sinestro-corps-2.jpg") no-repeat !important
+    background-size cover !important
+    height 55vh
     width 100%
-    padding-top 15vh
-    @media (orientation: landscape) { 
+    @media (orientation: landscape) {
       font-size 30vw
     }
-    @media (orientation: portrait) { 
+    @media (orientation: portrait) {
       font-size 30vh
     }
-    color rgba(255, 255, 255, .2)
+    color rgba(255, 255, 255, .6)
     overflow hidden
   .error-card
     border-radius 2px

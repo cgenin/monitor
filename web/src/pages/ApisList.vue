@@ -50,8 +50,10 @@
                    class="field-input"></q-input>
         </div>
         <q-card-separator></q-card-separator>
-        <div v-if="viewTable">
+        <div class="results-number">
           <p class="caption">Résultat : {{datas.length}}</p>
+        </div>
+        <div v-if="viewTable">
           <table class="table-result q-table vertical-separator bordered striped-odd highlight responsive ">
             <thead>
             <tr>
@@ -165,7 +167,7 @@
         filtersPanel: false,
         subFilters: {},
         methodsOptions: [
-          {label: 'all', value: null},
+          {label: '', value: null},
           {label: 'GET', value: 'GET'},
           {label: 'POST', value: 'POST'},
           {label: 'PUT', value: 'PUT'},
@@ -260,7 +262,6 @@
       flex-flow row wrap
       align-content space-between
       width 100%
-      padding 35px 0
       .apis-card
         width 35vw
   .api-url

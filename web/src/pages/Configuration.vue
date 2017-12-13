@@ -1,8 +1,22 @@
 <template>
   <div class="configuration-page">
     <q-card>
+      <ul class="breadcrumb">
+        <li>
+          <router-link to="/">
+            <q-icon name="home" />
+          </router-link>
+        </li>
+        <li>
+          <router-link to="" active-class="router-link-active">
+            <q-icon name="build" /> Console d'administration
+          </router-link>
+        </li>
+      </ul>
+    </q-card>
+    <q-card>
       <q-card-title>
-        <h4>Console d'adminisration</h4>
+        <h3>Console d'adminisration</h3>
       </q-card-title>
       <q-card-separator></q-card-separator>
       <q-card-main>
@@ -45,7 +59,8 @@
     QItemMain,
     QRadio,
     QInfiniteScroll,
-    QSpinnerDots
+    QSpinnerDots,
+    QIcon
   } from 'quasar';
 
   export default {
@@ -65,7 +80,8 @@
       QItemMain,
       QRadio,
       QInfiniteScroll,
-      QSpinnerDots
+      QSpinnerDots,
+      QIcon
     }
   }
 </script>
