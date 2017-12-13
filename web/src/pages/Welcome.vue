@@ -34,7 +34,6 @@
     methods: {
     },
     mounted() {
-      console.log(this)
       ProjectStore
         .initialize()
         .then((list) => {

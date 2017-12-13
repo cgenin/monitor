@@ -31,21 +31,21 @@
     </q-card>
     <div class="selected-list">
       <q-list separator>
-        <q-collapsible icon="ion-coffee"  label="Librairies Java" :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">
+        <q-collapsible icon="ion-coffee"  label="Librairies Java" v-if="selected.javaDeps" :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">
           <div class="list-table">
             <ul>
-              <li v-for="deps in selected.javaDeps" :disable="selected.tables.length === 0" key="deps">{{deps}}</li>
+              <li v-for="deps in selected.javaDeps" key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="border_all" label="Tables" :disable="selected.tables.length === 0" :sublabel="`Nombre : ${selected.tables.length}`">
+        <q-collapsible icon="border_all" label="Tables" v-if="selected.tables" :disable="selected.tables.length === 0" :sublabel="`Nombre : ${selected.tables.length}`">
           <div class="list-table">
             <ul>
               <li v-for="deps in selected.tables" key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="explore" label="Apis" :disable="selected.apis.length === 0" :sublabel="`Nombre : ${selected.apis.length}`">
+        <q-collapsible icon="explore" label="Apis" v-if="selected.apis" :disable="selected.apis.length === 0" :sublabel="`Nombre : ${selected.apis.length}`">
           <div class="list-table">
             <ul>
               <li v-for="deps in selected.apis" key="deps">{{deps}}</li>
@@ -63,7 +63,17 @@
 </template>
 <script>
   import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QSelect, QBtn, QCollapsible, QList, QItem, QItemMain, QIcon
+    QCard,
+    QCardTitle,
+    QCardSeparator,
+    QCardMain,
+    QSelect,
+    QBtn,
+    QCollapsible,
+    QList,
+    QItem,
+    QItemMain,
+    QIcon
   } from 'quasar';
   import VueMarkdown from 'vue-markdown'
   import ProjectsStore from '../../stores/ProjectsStore';
@@ -72,7 +82,18 @@
   export default {
     name: 'ProjectDetail',
     components: {
-      QCard, QCardTitle, QCardSeparator, QCardMain, QSelect, QBtn, QCollapsible, QList, QItem, QItemMain, VueMarkdown, QIcon
+      QCard,
+      QCardTitle,
+      QCardSeparator,
+      QCardMain,
+      QSelect,
+      QBtn,
+      QCollapsible,
+      QList,
+      QItem,
+      QItemMain,
+      VueMarkdown,
+      QIcon
     },
     data() {
       return {
