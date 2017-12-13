@@ -78,6 +78,8 @@
     QItemSide,
     QItemMain
   } from 'quasar';
+  import Vue from 'vue'
+  import KonamiCode from 'vue-konami-code'
 
   /*
    * Root component
@@ -98,6 +100,10 @@
       QItemMain
     },
   }
+
+  Vue.use(KonamiCode, {callback: function () {
+    console.log('ok')
+  }})
 </script>
 
 <style></style>
