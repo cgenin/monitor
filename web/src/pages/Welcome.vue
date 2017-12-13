@@ -11,6 +11,9 @@
         <div slot="slide" class="slide bg-secondary centered">
           <span class="title">Nb Tables : {{nbTables}}</span>
         </div>
+        <div slot="slide" class="slide bg-tertiary centered">
+          <span class="title">Nb Apis : {{nbEndpoints}}</span>
+        </div>
       </q-carousel>
     </div>
   </div>
@@ -22,6 +25,7 @@
   } from 'quasar'
   import ProjectStore from '../stores/ProjectsStore'
   import TablesStore from '../stores/TablesStore'
+  import EndpointsStore from '../stores/EndpointsStore'
 
   export default {
     name: 'Welcome',
@@ -29,12 +33,10 @@
       QCarousel, QBtn, QIcon
     },
     data() {
-      return {nbProjects: 0, nbTables: 0};
+      return {nbProjects: 0, nbTables: 0, nbEndpoints: 0};
     },
-    methods: {
-    },
+    methods: {},
     mounted() {
-      console.log(this)
       ProjectStore
         .initialize()
         .then((list) => {
@@ -45,6 +47,9 @@
         .then((list) => {
           this.nbTables = list.length
         });
+      EndpointsStore.find({}).then((list) => {
+        this.nbEndpoints = list.length;
+      });
     },
   }
 </script>
