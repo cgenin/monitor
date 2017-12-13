@@ -212,7 +212,11 @@ body.desktop
 
   // BUTTONS
 .q-btn-standard
+  &.open
+    .q-icon
+      transform rotate(45deg)
   .q-icon
+    transition transform .3s ease-in-out
     width 24px
 .q-btn-small
   padding 0 6px
@@ -221,3 +225,6 @@ body.desktop
 .q-item-letter,
 .q-item-icon
   width 24px;
+.btn-flat-primary
+  background-color $primary
+  color $white

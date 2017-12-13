@@ -33,12 +33,17 @@
           <div>
             <q-toggle v-model="viewTable" label="Affichage table ou card" color="tertiary"></q-toggle>
           </div>
-          <q-btn @click="showOrHideFilterPanel" v-if="!filtersPanel" flat icon="add" color="primary">&nbsp;filtres</q-btn>
-          <q-btn @click="showOrHideFilterPanel" v-if="filtersPanel" flat icon="close" color="primary">&nbsp;filtres</q-btn>
+        </div>
+        <div class="inputs">
+          <q-btn class="btn-flat-primary" @click="showOrHideFilterPanel" flat icon="add" v-bind:class="{ open: filtersPanel }">&nbsp;filtres</q-btn>
         </div>
         <div v-if="filtersPanel" class="inputs inputs-panel">
-          <q-select float-label="Méthode" v-model="subFilters.method" :options="methodsOptions"
-                    @change="filtering" class="field-input"></q-select>
+          <q-select
+            float-label="Méthode"
+            v-model="subFilters.method"
+            :options="methodsOptions"
+            @change="filtering"
+            class="field-input"></q-select>
           <q-input @change="filtering" type="text" float-label="Path" v-model="subFilters.path"
                    class="field-input"></q-input>
           <q-input @change="filtering" type="text" float-label="Domaine" v-model="subFilters.domain"
@@ -103,9 +108,9 @@
     QIcon,
     QField
   } from 'quasar';
-  import MethodIcon from '../components/MethodIcon'
-  import ApisCard from '../components/ApisCard'
-  import filtering, {filteringByAttribute} from '../Filters'
+  import MethodIcon from '../components/MethodIcon';
+  import ApisCard from '../components/ApisCard';
+  import filtering, {filteringByAttribute} from '../Filters';
   import EndpointsStore from '../stores/EndpointsStore';
 
   const sortApis = (a, b) => {
@@ -160,7 +165,7 @@
         filtersPanel: false,
         subFilters: {},
         methodsOptions: [
-          {label: '', value: null},
+          {label: 'all', value: null},
           {label: 'GET', value: 'GET'},
           {label: 'POST', value: 'POST'},
           {label: 'PUT', value: 'PUT'},
@@ -227,13 +232,18 @@
       align-items center
       margin-bottom 10px
       > div
-        padding 0 10px
+        padding-right 20px
+        &:last-child
+          padding-right 0
       .q-field
         flex 5
         margin 0
     .inputs-panel
       background #eeeeee
       padding 15px
+      > div
+        flex 1
+        margin 0 10px
     .q-card-separator
       margin-bottom 15px
     .caption
