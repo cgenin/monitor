@@ -11,6 +11,10 @@ class ConfigurationStore {
     instance = this;
   }
 
+  get mysql() {
+    return this._state.mysql;
+  }
+
   get javaFilters() {
     return Array.from(this._state.javaFilters);
   }

@@ -1,6 +1,17 @@
 <template>
   <div class="administration-page">
     <div>
+      <q-toggle v-model="activerMysql" @change="changeMysql" color="teal-8" label="Activer Mysql"></q-toggle>
+    </div>
+    <div v-if="activerMysql">
+      <q-input v-model="mysql.host" float-label="Host"></q-input>
+      <q-input v-model="mysql.port" type="number" float-label="Port"></q-input>
+      <q-input v-model="mysql.user" float-label="Utilisateur"></q-input>
+      <q-input v-model="mysql.password" type="password" float-label="Mot de passe"></q-input>
+      <q-input v-model="mysql.database" float-label="Base de données"></q-input>
+    </div>
+    <hr>
+    <div>
       <p class="caption">Filtres sur les librairies Java : </p>
       <q-chips-input color="green" v-model="javaFilters" placeholder="Ajouter un nouveau filtre"></q-chips-input>
     </div>
@@ -21,28 +32,41 @@
   </div>
 </template>
 <script>
-  import {QChipsInput, QBtn} from 'quasar';
+  import {QChipsInput, QBtn, QToggle, QInput} from 'quasar';
   import {success, error} from '../../Toasts'
   import ConfigurationStore from '../../stores/ConfigurationStore';
 
   export default {
     name: 'ConfigurationAdministration',
-    components: {QChipsInput, QBtn},
+    components: {QChipsInput, QBtn, QToggle, QInput},
     data() {
       return {
+        activerMysql: false,
+        mysql: {},
         javaFilters: [],
         npmFilters: []
       }
     },
     methods: {
+      changeMysql() {
+        if (this.activerMysql) {
+          this.mysql = {host: 'localhost', port: 3306, database: 'antimonitor'};
+        }
+        else {
+          this.mysql = {};
+        }
+      },
       refresh() {
-        const {javaFilters, npmFilters} = ConfigurationStore;
+        const {javaFilters, npmFilters, mysql} = ConfigurationStore;
         this.javaFilters = javaFilters;
-        this.npmFilters = npmFilters
+        this.npmFilters = npmFilters;
+        this.mysql = mysql;
+        this.activerMysql = !!(mysql.host && mysql.port && mysql.user && mysql.password && mysql.database);
       },
       save() {
-        const {javaFilters, npmFilters} = this;
-        const configuration = Object.assign({}, ConfigurationStore.state, {javaFilters, npmFilters});
+        const {javaFilters, npmFilters, activerMysql} = this;
+        const mysql = (activerMysql) ? this.mysql : {};
+        const configuration = Object.assign({}, ConfigurationStore.state, {javaFilters, npmFilters, mysql});
         ConfigurationStore.save(configuration)
           .then(() => success())
           .catch((err) => error(err));

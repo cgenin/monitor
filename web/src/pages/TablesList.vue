@@ -8,8 +8,8 @@
       <q-card-separator/>
       <q-card-main>
         <!--<div class="inputs">-->
-          <!--<q-input v-model="filter" type="text" class="filter" float-label="filter" @change="filtering"></q-input>-->
-          <!--<q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>-->
+        <!--<q-input v-model="filter" type="text" class="filter" float-label="filter" @change="filtering"></q-input>-->
+        <!--<q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>-->
         <!--</div>-->
         <!--<q-card-separator/>-->
         <q-transition
@@ -19,9 +19,6 @@
         >
 
           <div v-if="!loading" style="width:100%">
-            <!--<div class="font-result results-number">-->
-              <!--<strong>Résultats : {{list.length}}</strong>-->
-            <!--</div>-->
             <div>
               <q-data-table
                 :data="list"
@@ -30,32 +27,6 @@
                 @refresh="refresh">
 
               </q-data-table>
-              <!--<table class="font-result q-table striped-odd bordered vertical-separator highlight responsive results">-->
-                <!--<thead>-->
-                <!--<tr>-->
-                  <!--<th>Nom</th>-->
-                  <!--<th>Projet(s) Lié(s)</th>-->
-                  <!--<th>Dernière Mise à jour</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody>-->
-                <!--<tr v-for="table in list">-->
-                  <!--<td>-->
-                    <!--{{table.name}}-->
-                  <!--</td>-->
-                  <!--<td>-->
-                    <!--<ul>-->
-                      <!--<li v-for="s in table.services">-->
-                        <!--{{s}}-->
-                      <!--</li>-->
-                    <!--</ul>-->
-                  <!--</td>-->
-                  <!--<td>-->
-                    <!--{{table.latest}}-->
-                  <!--</td>-->
-                <!--</tr>-->
-                <!--</tbody>-->
-              <!--</table>-->
             </div>
           </div>
         </q-transition>
@@ -176,7 +147,8 @@
               })
               .sort((a, b) => {
                 return a.name.localeCompare(b.name);
-              });;
+              });
+            ;
             this.list = l;
             this.original = l;
             this.filter = '';
