@@ -27,14 +27,18 @@ public class Configuration extends AbstractVerticle {
                 ));
         vertx.eventBus().consumer(GET,
                 msg -> {
-                    ConfigurationDto conf = Optional.ofNullable(Dbs.instance
-                            .repository(ConfigurationDto.class)
-                            .find().firstOrDefault())
-                            .orElseGet(ConfigurationDto::new);
+                    ConfigurationDto conf = get();
                     msg.reply(Schemas.Configuration.toJson(conf));
                 }
 
         );
         logger.info("started");
+    }
+
+    public static ConfigurationDto get() {
+        return Optional.ofNullable(Dbs.instance
+                                .repository(ConfigurationDto.class)
+                                .find().firstOrDefault())
+                                .orElseGet(ConfigurationDto::new);
     }
 }
