@@ -13,6 +13,7 @@ import io.vertx.ext.web.handler.FaviconHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.ext.web.handler.sockjs.SockJSHandler;
+import io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions;
 import net.christophe.genin.domain.server.http.Index;
 import net.christophe.genin.domain.server.http.Services;
 
@@ -38,7 +39,7 @@ public class Http extends AbstractVerticle {
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
         sockJSHandler.bridge(
                 new BridgeOptions()
-                        .addOutboundPermitted(new PermittedOptions().setAddress("console.text"))
+                        .addOutboundPermitted(new PermittedOptions().setAddress(Console.CONSOLE))
         );
         router.route("/eventbus/*").handler(sockJSHandler);
 

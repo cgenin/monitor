@@ -32,6 +32,7 @@
         </div>
         <div class="console">
           <pre>@nti-monitor ~ $ Console</pre>
+          <pre v-for="txt in ConsoleStore.state">{{txt.formattedDate}} - {{txt.msg}}</pre>
         </div>
 
       </div>
@@ -67,6 +68,7 @@
           });
       },
       erase() {
+        ConsoleStore.clear();
       }
     },
     mounted() {
@@ -84,6 +86,11 @@
     justify-content: flex-end;
     padding-right: 15px;
     margin-bottom: -60px;
+
+  }
+
+  .clear-postion button.q-btn {
+    z-index: 5000;
   }
 
   .console {
@@ -101,10 +108,11 @@
     position: relative;
     font-size: 14px;
     padding-left: 30px;
-    padding-bottom: 0;
+    padding-bottom: 5px;
     display: block;
     overflow: hidden;
     margin: 0;
+
   }
 
   .console pre:nth-child(1) {

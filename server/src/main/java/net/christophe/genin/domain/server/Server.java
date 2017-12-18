@@ -19,9 +19,10 @@ public class Server extends AbstractVerticle {
     @Override
     public void start() throws Exception {
         logger.info("start ....");
+        vertx.deployVerticle(new Console());
         vertx.deployVerticle(new Http(), new DeploymentOptions().setConfig(config()));
-        vertx.deployVerticle(new InitializeDb(), new DeploymentOptions().setConfig(config()), as ->{
-            if(as.failed()){
+        vertx.deployVerticle(new InitializeDb(), new DeploymentOptions().setConfig(config()), as -> {
+            if (as.failed()) {
                 throw new IllegalStateException("Error in creating DB", as.cause());
             }
             deployCommand();

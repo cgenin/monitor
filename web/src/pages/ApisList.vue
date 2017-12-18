@@ -62,6 +62,7 @@
         </div>
       </q-infinite-scroll>
     </div>
+
   </div>
 </template>
 <script>

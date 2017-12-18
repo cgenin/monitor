@@ -12,16 +12,30 @@ class ConsoleStore {
     instance = this;
   }
 
+  clear() {
+    this.state = [];
+  }
+
+  addMessage(body) {
+    const dt = new Date(body.date);
+    body.formattedDate = `${dt.getFullYear()}/${dt.getMonth() + 1}/${dt.getDay()} ${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()} ${dt.getMilliseconds()}`;
+    this.state.push(body);
+  }
+
   listen() {
     if (!this.isListening) {
       this.isListening = true;
-      const eb = new EventBus('http://localhost:8280/eventbus', {server:''});
+      const eb = new EventBus('http://localhost:8279/eventbus', {server: ''});
       eb.enableReconnect(true);
       eb.onopen = () => {
-        console.log('eb on open');
+        this.addMessage({date: new Date().getTime(), msg: 'Console connecté'});
         eb.registerHandler('console.text', (error, message) => {
-          console.error(error);
-          console.log('received a message: ' + JSON.stringify(message));
+          if (error) {
+            console.error(error);
+            return;
+          }
+          const {body} = message;
+          this.addMessage(body);
         });
       }
     }

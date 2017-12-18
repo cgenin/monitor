@@ -15,6 +15,7 @@ import rx.Single;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class InitializeDb extends AbstractVerticle {
 
@@ -58,16 +59,18 @@ public class InitializeDb extends AbstractVerticle {
 
         });
         vertx.eventBus().consumer(MYSQL_ON_OFF, msg -> {
+            Consumer<Boolean> toOuput = (active) -> {
+                msg.reply(new JsonObject().put("active", active));
+                String state = (active) ? "Actif" : "Désactivé";
+                vertx.eventBus().send(Console.INFO, "Etat de mysql " + state);
+            };
             if (Mysqls.Instance.get().active()) {
                 // disabled mysql db
-                boolean active = Mysqls.Instance.disabled();
-                msg.reply(new JsonObject().put("active", active));
-                vertx.eventBus().publish("console.text", "mysql " + active);
+                toOuput.accept(Mysqls.Instance.disabled());
             } else {
                 runMysql().subscribe(instance -> {
                     boolean active = instance.active();
-                    msg.reply(new JsonObject().put("active", active));
-                    vertx.eventBus().publish("console.text", "mysql " + active);
+                    toOuput.accept(active);
                 }, err -> {
                     logger.error("error in mysql on/off ", err);
                     msg.fail(500, "error in mysql on/off ");
