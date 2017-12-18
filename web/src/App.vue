@@ -53,7 +53,7 @@
             <q-item-side icon="explore"/>
             <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
           </q-item>
-          <q-item to="/configuration">
+          <q-item to="/configuration/status">
             <q-item-side icon="build"/>
             <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
           </q-item>

@@ -54,7 +54,7 @@ public class Services {
                 .allowedMethod(HttpMethod.OPTIONS)
                 .allowedHeader("Content-Type"));
         router.get("/_health").handler(rc ->
-                new Https.EbCaller(vertx, rc).arrAndReply(InitializeDb.HEALTH)
+                new Https.EbCaller(vertx, rc).jsonAndReply(InitializeDb.HEALTH)
         );
         router.mountSubRouter("/projects", projects());
         router.mountSubRouter("/tables", tables());
@@ -71,9 +71,7 @@ public class Services {
      */
     private Router apis() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> {
-            new Https.EbCaller(vertx, rc).arrAndReply(Endpoints.FIND);
-        });
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Endpoints.FIND));
         return router;
     }
 
@@ -96,6 +94,9 @@ public class Services {
             final JsonObject body = rc.getBodyAsJson();
             new Https.EbCaller(vertx, rc).created(Import.IMPORT, body);
         });
+
+        router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(InitializeDb.MYSQL_ON_OFF));
+
         router.get("/").handler(
                 rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Configuration.GET)
         );

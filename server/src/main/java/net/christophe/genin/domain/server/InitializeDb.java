@@ -21,6 +21,8 @@ public class InitializeDb extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(InitializeDb.class);
 
     public static final String HEALTH = InitializeDb.class.getName() + ".health";
+    public static final String MYSQL_CREATE_SCHEMA = InitializeDb.class.getName() + ".mysql.create.schema";
+    public static final String MYSQL_ON_OFF = InitializeDb.class.getName() + ".mysql.on.off";
 
 
     @Override
@@ -39,21 +41,8 @@ public class InitializeDb extends AbstractVerticle {
 
         logger.info("Updated : " + testCollection.update(init, true).getAffectedCount());
 
-        Single.just(Configuration.get())
-                .map(configurationDto -> {
-                    if (Objects.isNull(configurationDto.getMysqlUser()))
-                        return Mysqls.Instance.get();
-                    JsonObject config = new JsonObject()
-                            .put("host", configurationDto.getMysqlHost())
-                            .put("port", configurationDto.getMysqlPort())
-                            .put("username", configurationDto.getMysqlUser())
-                            .put("password", configurationDto.getMysqlPassword())
-                            .put("database", configurationDto.getMysqlDB());
-                    return Mysqls.Instance.set(vertx, config);
-
-                })
-                .subscribe(instance -> logger.info("Mysql active : " + instance.active()),
-                        err -> logger.error("Error in activating mysql.", err));
+        runMysql().subscribe(instance -> logger.info("Mysql active : " + instance.active()),
+                err -> logger.error("Error in activating mysql.", err));
 
         vertx.eventBus().consumer(HEALTH, msg -> {
             JsonArray health = Dbs.toArray(
@@ -65,7 +54,41 @@ public class InitializeDb extends AbstractVerticle {
             msg.reply(new JsonObject().put("health", health).put("mysql", Mysqls.Instance.get().active()));
 
         });
+        vertx.eventBus().consumer(MYSQL_CREATE_SCHEMA, msg -> {
 
+        });
+        vertx.eventBus().consumer(MYSQL_ON_OFF, msg -> {
+            if (Mysqls.Instance.get().active()) {
+                // disabled mysql db
+                boolean active = Mysqls.Instance.disabled();
+                msg.reply(new JsonObject().put("active", active));
+                vertx.eventBus().publish("console.text", "mysql " + active);
+            } else {
+                runMysql().subscribe(instance -> {
+                    boolean active = instance.active();
+                    msg.reply(new JsonObject().put("active", active));
+                    vertx.eventBus().publish("console.text", "mysql " + active);
+                }, err -> {
+                    logger.error("error in mysql on/off ", err);
+                    msg.fail(500, "error in mysql on/off ");
+                });
+            }
+        });
+    }
+
+    private Single<Mysqls> runMysql() {
+        return Single.just(Configuration.get())
+                .map(configurationDto -> {
+                    if (Objects.isNull(configurationDto.getMysqlUser()))
+                        return Mysqls.Instance.get();
+                    JsonObject config = new JsonObject()
+                            .put("host", configurationDto.getMysqlHost())
+                            .put("port", configurationDto.getMysqlPort())
+                            .put("username", configurationDto.getMysqlUser())
+                            .put("password", configurationDto.getMysqlPassword())
+                            .put("database", configurationDto.getMysqlDB());
+                    return Mysqls.Instance.set(vertx, config);
+                });
     }
 
 }

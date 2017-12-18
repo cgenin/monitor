@@ -33,7 +33,8 @@ export default new VueRouter({
       path: '/configuration',
       component: load('Configuration'),
       children: [
-        {path: '', component: load('configuration/Administration')},
+        {path: 'administration', component: load('configuration/Administration')},
+        {path: 'status', component: load('configuration/Status')},
         {path: 'import', component: load('configuration/Import')},
         {path: 'export', component: load('configuration/Export')},
         {path: 'reset', component: load('configuration/Reset')},

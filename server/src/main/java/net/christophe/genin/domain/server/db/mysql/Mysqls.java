@@ -63,6 +63,11 @@ public interface Mysqls {
         public synchronized static Mysqls get() {
             return instance;
         }
+
+        public synchronized static boolean disabled() {
+            instance = new NullMysql();
+            return instance.active();
+        }
     }
 
     class NullMysql implements Mysqls {

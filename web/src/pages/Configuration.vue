@@ -7,8 +7,12 @@
       <q-card-separator></q-card-separator>
       <q-card-main>
         <q-tabs inverted>
+          <q-route-tab icon="radio" label="Status"
+                       to="/configuration/status"
+                       exact
+                       slot="title"></q-route-tab>
           <q-route-tab icon="radio" label="Traitement"
-                       to="/configuration"
+                       to="/configuration/administration"
                        exact
                        slot="title"></q-route-tab>
           <q-route-tab icon="cloud_upload" label="Import"

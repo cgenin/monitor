@@ -1,8 +1,6 @@
 let instance;
 
 class ConfigurationStore {
-  _
-
   constructor() {
     if (instance) {
       return instance;
@@ -32,6 +30,11 @@ class ConfigurationStore {
     });
   }
 
+  health() {
+    return fetch('/api/_health')
+      .then(res => res.json());
+  }
+
   initialize() {
     return fetch('/api/configuration')
       .then(res => res.json())
@@ -39,6 +42,12 @@ class ConfigurationStore {
         this._state = content;
         return this.state;
       });
+  }
+
+  startOrStopMysql() {
+    return fetch('/api/configuration/db/mysql', {
+      method: 'POST'
+    });
   }
 
   save(configuration) {

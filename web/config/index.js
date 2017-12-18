@@ -48,6 +48,10 @@ module.exports = {
       '/api': {
         target: 'http://localhost:8280',
         changeOrigin: true,
+      },
+      '/eventbus': {
+        target: 'ws://localhost:8280',
+        changeOrigin: true,
       }
     }
   }
