@@ -4,6 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.json.Jsons;
@@ -61,6 +62,7 @@ public class TablesBatch extends AbstractVerticle {
                     .forEach(document -> {
                         logger.info("New data for " + document.getId().getIdValue() + ". Document must be updated.");
                         tablesCollection.update(document, true);
+                        vertx.eventBus().send(Console.INFO, "Update de la table : " + document.get(Schemas.Tables.name.name()));
                     });
 
             collection.update(doc.put(Schemas.RAW_STATE, Treatments.VERSION.getState()));

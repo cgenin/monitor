@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
@@ -26,7 +27,7 @@ public class ProjectBatch extends AbstractVerticle {
         new Treatments.Periodic(this, logger).run(this::periodic);
     }
 
-    private synchronized boolean periodic() {
+    private boolean periodic() {
 
         final NitriteCollection collection = Dbs.instance
                 .getCollection(Schemas.RAW_COLLECTION);
@@ -48,6 +49,7 @@ public class ProjectBatch extends AbstractVerticle {
             );
             updateFromJson(document, json).ifPresent((dc) -> {
                 logger.info("New data for " + artifactId + ". Document must be updated.");
+                vertx.eventBus().send(Console.INFO, "Update du projet " + artifactId);
                 projectCollection.update(dc, true);
             });
             // Dans tous les cas marqués le doc comme traiter.

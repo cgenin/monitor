@@ -31,6 +31,8 @@ public enum Treatments {
         return noise + batch;
     }
 
+
+
     public static class Periodic {
 
         private final AbstractVerticle verticle;

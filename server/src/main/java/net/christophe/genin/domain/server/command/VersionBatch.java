@@ -4,6 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 import org.dizitart.no2.Document;
@@ -56,6 +57,8 @@ public class VersionBatch extends AbstractVerticle {
                 logger.info("New data for " + currentDoc.getId().getIdValue() + ". Document must be updated.");
                 versionCollection.update(rawToVersion(json, currentDoc, version)
                         .put(Schemas.Version.latestUpdate.name(), update), true);
+                vertx.eventBus().send(Console.INFO, "Update dee de la version " + version +
+                        " pour : " + artifactId);
             }
             collection.update(doc.put(Schemas.RAW_STATE, Treatments.URL.getState()));
         });

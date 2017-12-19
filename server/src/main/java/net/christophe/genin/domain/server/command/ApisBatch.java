@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.json.Jsons;
@@ -81,9 +82,10 @@ public class ApisBatch extends AbstractVerticle {
                                         .put(Schemas.Apis.className.name(), methodJson.getString("className"));
                                 apiCollection.update(current, true);
                                 logger.info("Api " + method + " - " + path + " mis à jour");
+
                             }
                         });
-
+                vertx.eventBus().send(Console.INFO, "Update dee api pour : " + artifactId);
 
             }
             collection.update(doc.put(Schemas.RAW_STATE, Treatments.END.getState()));
