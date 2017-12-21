@@ -43,6 +43,7 @@
   import {QIcon, QBtn, QFixedPosition} from 'quasar';
 
   import ConfigurationStore from '../../stores/ConfigurationStore'
+  import MysqlStore from '../../stores/MysqlStore'
   import ConsoleStore from '../../stores/ConsoleStore'
 
   export default {
@@ -62,7 +63,7 @@
         });
       },
       changeMysql() {
-        ConfigurationStore.startOrStopMysql()
+        MysqlStore.startOrStop()
           .then(() => {
             this.initialize();
           });

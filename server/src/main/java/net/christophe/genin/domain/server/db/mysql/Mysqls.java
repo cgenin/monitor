@@ -12,6 +12,7 @@ import io.vertx.rxjava.ext.sql.SQLConnection;
 import rx.Observable;
 import rx.Single;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public interface Mysqls {
         return Observable.<UpdateResult>empty().toSingle();
     }
 
-    default Single<List<Integer>> batch(List<String> batchOperations) {
+    default Single<List<Integer>> batch(String... batchOperations) {
         return Observable.<List<Integer>>empty().toSingle();
     }
 
@@ -119,11 +120,21 @@ public interface Mysqls {
         }
 
         @Override
-        public Single<List<Integer>> batch(List<String> batchOperations) {
-            return connection()
-                    .flatMap((conn) -> conn.rxSetAutoCommit(true)
-                            .flatMap((v) -> conn.rxBatch(batchOperations))
-                    );
+        public Single<List<Integer>> batch(String... batchOperations) {
+            return Observable.from(batchOperations)
+                    .flatMap(op -> connection()
+                            .flatMap((conn) ->
+                                    conn.rxSetAutoCommit(true)
+                                            .flatMap(v -> conn.rxUpdate(op))
+                                            .map(updateResult -> {
+                                                logger.debug(updateResult);
+                                                return updateResult.getUpdated();
+                                            })).toObservable())
+                    .<List<Integer>>reduce(new ArrayList<>(),
+                            (acc, val) -> {
+                                acc.add(val);
+                                return acc;
+                            }).toSingle();
         }
 
         @Override

@@ -33,27 +33,20 @@ public class AntiMonitorSchemas {
                     "  IDPROJECT VARCHAR(1000),\n" +
                     "  NAME      VARCHAR(200),\n" +
                     "  document  JSON\n" +
-                    ")"
-
-    };
-
-    private static String[] DELETE_SCRIPTS = new String[]{
+                    ")",
             "DELETE FROM EVENTS",
             "DELETE FROM  PROJECTS",
             "DELETE FROM TABLES",
             "DELETE FROM API",
             "DELETE FROM VERSIONS"
+
     };
+
 
     public static Single<String> create() {
         return Mysqls.Instance.get()
-                .batch(Arrays.asList(CREATE_SCRIPTS))
+                .batch( CREATE_SCRIPTS)
                 .map(list -> "Creation of EVENTS, PROJECTS, TABLES, API, VERSIONS if not exist :" + list);
     }
 
-    public static Single<String> delete() {
-        return Mysqls.Instance.get()
-                .batch(Arrays.asList(DELETE_SCRIPTS))
-                .map(list -> "Deletion of EVENTS, PROJECTS, TABLES, API, VERSIONS if not exist :" + list);
-    }
 }

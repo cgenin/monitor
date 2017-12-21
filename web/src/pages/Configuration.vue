@@ -7,7 +7,7 @@
       <q-card-separator></q-card-separator>
       <q-card-main>
         <q-tabs inverted>
-          <q-route-tab icon="radio" label="Status"
+          <q-route-tab icon="screen_share" label="Status"
                        to="/configuration/status"
                        exact
                        slot="title"></q-route-tab>

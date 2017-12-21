@@ -44,12 +44,6 @@ class ConfigurationStore {
       });
   }
 
-  startOrStopMysql() {
-    return fetch('/api/configuration/db/mysql', {
-      method: 'POST'
-    });
-  }
-
   save(configuration) {
     const body = JSON.stringify(configuration);
     return fetch('/api/configuration', {

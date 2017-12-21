@@ -95,6 +95,7 @@ public class Services {
             new Https.EbCaller(vertx, rc).created(Import.IMPORT, body);
         });
 
+        router.put("/db/mysql/schemas").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(InitializeDb.MYSQL_CREATE_SCHEMA));
         router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(InitializeDb.MYSQL_ON_OFF));
 
         router.get("/").handler(

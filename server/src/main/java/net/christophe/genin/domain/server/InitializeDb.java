@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
+import net.christophe.genin.domain.server.db.mysql.AntiMonitorSchemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.query.Configuration;
@@ -56,6 +57,21 @@ public class InitializeDb extends AbstractVerticle {
 
         });
         vertx.eventBus().consumer(MYSQL_CREATE_SCHEMA, msg -> {
+            Mysqls mysqls = Mysqls.Instance.get();
+            if (mysqls.active()) {
+                AntiMonitorSchemas.create().subscribe((report) -> {
+                    msg.reply(new JsonObject()
+                            .put("active", true)
+                            .put("creation", true)
+                            .put("report", report)
+                    );
+                }, err -> {
+                    logger.error("Error in creating table", err);
+                    msg.fail(500, "Error in creating table");
+                });
+            } else {
+                msg.reply(new JsonObject().put("active", false).put("creation", false));
+            }
 
         });
         vertx.eventBus().consumer(MYSQL_ON_OFF, msg -> {
