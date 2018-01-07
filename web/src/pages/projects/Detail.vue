@@ -1,8 +1,27 @@
 <template>
   <div class="main">
     <q-card>
+      <ul class="breadcrumb">
+        <li>
+          <router-link to="/">
+            <q-icon name="home" />
+          </router-link>
+        </li>
+        <li>
+          <router-link to="/projects-list">
+            <q-icon name="view_list" /> Liste des projets
+          </router-link>
+        </li>
+        <li>
+          <router-link to="" active-class="router-link-active">
+            <q-icon name="ion-document-text" /> {{title}}
+          </router-link>
+        </li>
+      </ul>
+    </q-card>
+    <q-card>
       <q-card-title>
-        <h4>{{title}}</h4>
+        <h3>{{title}}</h3>
       </q-card-title>
       <q-card-main>
         <p class="caption">Sélectionner une version</p>
@@ -11,24 +30,24 @@
       </q-card-main>
     </q-card>
     <div class="selected-list">
-      <q-list>
-        <q-collapsible icon="build" label="Librairies Java" :sublabel="`Nombre : ${selected.javaDeps.length}`">
-          <div>
-            <ul class="text-secondary">
-              <li v-for="deps in selected.javaDeps" key="deps">{{deps}}</li>
+      <q-list separator>
+        <q-collapsible icon="ion-coffee"  label="Librairies Java" :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">
+          <div class="list-table">
+            <ul>
+              <li v-for="deps in selected.javaDeps" :disable="selected.tables.length === 0" key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="border_all" label="Tables" :sublabel="`Nombre : ${selected.tables.length}`">
-          <div>
-            <ul class="text-secondary">
+        <q-collapsible icon="border_all" label="Tables" :disable="selected.tables.length === 0" :sublabel="`Nombre : ${selected.tables.length}`">
+          <div class="list-table">
+            <ul>
               <li v-for="deps in selected.tables" key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="explore" label="Apis" :sublabel="`Nombre : ${selected.apis.length}`">
-          <div>
-            <ul class="text-secondary">
+        <q-collapsible icon="explore" label="Apis" :disable="selected.apis.length === 0" :sublabel="`Nombre : ${selected.apis.length}`">
+          <div class="list-table">
+            <ul>
               <li v-for="deps in selected.apis" key="deps">{{deps}}</li>
             </ul>
           </div>
@@ -44,7 +63,7 @@
 </template>
 <script>
   import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QSelect, QBtn, QCollapsible, QList, QItem, QItemMain
+    QCard, QCardTitle, QCardSeparator, QCardMain, QSelect, QBtn, QCollapsible, QList, QItem, QItemMain, QIcon
   } from 'quasar';
   import VueMarkdown from 'vue-markdown'
   import ProjectsStore from '../../stores/ProjectsStore';
@@ -53,7 +72,7 @@
   export default {
     name: 'ProjectDetail',
     components: {
-      QCard, QCardTitle, QCardSeparator, QCardMain, QSelect, QBtn, QCollapsible, QList, QItem, QItemMain, VueMarkdown
+      QCard, QCardTitle, QCardSeparator, QCardMain, QSelect, QBtn, QCollapsible, QList, QItem, QItemMain, VueMarkdown, QIcon
     },
     data() {
       return {
@@ -98,7 +117,6 @@
             });
           this.id = this.latest.id;
           this.selected = this.latest;
-          console.log(this.selected)
           this.selectVersions = this.versions
             .map(v => {
               const stamp = (v.isSnapshot) ? 'snapshot' : 'release';
