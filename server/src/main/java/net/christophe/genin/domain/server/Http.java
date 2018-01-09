@@ -23,7 +23,7 @@ public class Http extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        final int port = config().getInteger("server-port", 8280);
+        final int port = config().getInteger("server-port", 8279);
 
         final HttpServer httpServer = vertx.createHttpServer(new HttpServerOptions().setCompressionSupported(true));
 

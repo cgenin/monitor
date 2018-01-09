@@ -15,7 +15,7 @@ public class AntiMonitorSchemas {
             "CREATE TABLE IF NOT EXISTS PROJECTS (\n" +
                     "  ID       VARCHAR(1000) PRIMARY KEY,\n" +
                     "  NAME     VARCHAR(100),\n" +
-                    "  document JSON\n" +
+                    "  document LONGTEXT\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS TABLES (\n" +
                     "  ID       VARCHAR(1000) PRIMARY KEY,\n" +

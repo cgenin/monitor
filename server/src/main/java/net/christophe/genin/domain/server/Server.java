@@ -33,7 +33,7 @@ public class Server extends AbstractVerticle {
 
     private void deployCommand() {
         vertx.deployVerticle(new Raw());
-        vertx.deployVerticle(new ProjectBatch());
+        vertx.deployVerticle(new ProjectBatch(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new TablesBatch());
         vertx.deployVerticle(new VersionBatch());
         vertx.deployVerticle(new Import());
@@ -43,7 +43,7 @@ public class Server extends AbstractVerticle {
     }
 
     private void deployQuery() {
-        vertx.deployVerticle(new Projects());
+        vertx.deployVerticle(new Projects(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Tables());
         vertx.deployVerticle(new Configuration());
         vertx.deployVerticle(new Endpoints());
