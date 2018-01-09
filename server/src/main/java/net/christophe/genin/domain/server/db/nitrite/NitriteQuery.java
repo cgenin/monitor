@@ -7,6 +7,7 @@ import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.json.Jsons;
 import rx.Single;
 
+import java.util.List;
 import java.util.Optional;
 
 public class NitriteQuery implements Queries {
@@ -34,5 +35,24 @@ public class NitriteQuery implements Queries {
                             .put(Schemas.Projects.javaDeps.name(), attributes.toJsonArray(Schemas.Projects.javaDeps.name()));
                 }).collect(Jsons.Collectors.toJsonArray());
         return Single.just(arr);
+    }
+
+    @Override
+    public Single<JsonArray> tables() {
+        final JsonArray l = Dbs.instance.getCollection(Schemas.Tables.collection())
+                .find().toList()
+                .parallelStream()
+                .map(doc -> {
+                    JsonArray services = Optional.ofNullable(doc.get(Schemas.Tables.services.name(), List.class))
+                            .map(JsonArray::new).orElse(new JsonArray());
+
+                    return new JsonObject()
+                            .put(Schemas.Tables.id.name(), doc.getId().getIdValue())
+                            .put(Schemas.Tables.name.name(), doc.get(Schemas.Tables.name.name()))
+                            .put(Schemas.Tables.latestUpdate.name(), doc.get(Schemas.Tables.latestUpdate.name()))
+                            .put(Schemas.Tables.services.name(), services);
+                })
+                .collect(Jsons.Collectors.toJsonArray());
+        return Single.just(l);
     }
 }

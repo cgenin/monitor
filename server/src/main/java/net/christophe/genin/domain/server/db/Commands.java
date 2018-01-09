@@ -2,6 +2,9 @@ package net.christophe.genin.domain.server.db;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import net.christophe.genin.domain.server.db.mysql.MysqlCommand;
+import net.christophe.genin.domain.server.db.mysql.Mysqls;
+import net.christophe.genin.domain.server.db.nitrite.commands.NitriteCommand;
 import net.christophe.genin.domain.server.json.Jsons;
 import rx.Observable;
 import rx.Single;
@@ -11,12 +14,19 @@ import java.util.stream.Collectors;
 
 public interface Commands {
 
+    static Commands get() {
+        return (!Mysqls.Instance.get().active()) ? new NitriteCommand()
+                : new MysqlCommand();
+    }
+
     Observable<String> projects(JsonObject json, String artifactId);
+
+    Observable<String> tables(List<String> tables, String artifactId,long update);
 
     boolean versions(JsonObject json, String artifactId);
 
     class Projects {
-       public static boolean isSnapshot(String version) {
+        public static boolean isSnapshot(String version) {
             return version.contains("SNAPSHOT");
         }
 

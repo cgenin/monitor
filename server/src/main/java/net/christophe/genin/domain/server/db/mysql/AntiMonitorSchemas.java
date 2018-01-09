@@ -12,10 +12,11 @@ public class AntiMonitorSchemas {
                     "  state    INTEGER,\n" +
                     "  document JSON\n" +
                     ")",
-            "CREATE TABLE IF NOT EXISTS PROJECTS (\n" +
-                    "  ID       VARCHAR(1000) PRIMARY KEY,\n" +
-                    "  NAME     VARCHAR(100),\n" +
-                    "  document LONGTEXT\n" +
+            "CREATE TABLE IF NOT EXISTS TABLES\n" +
+                    "(  ID      VARCHAR(100) NOT NULL PRIMARY KEY,\n" +
+                    "  NAME    TEXT NOT NULL,\n" +
+                    "  SERVICE TEXT NOT NULL,\n" +
+                    "  latestUpdate BIGINT\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS TABLES (\n" +
                     "  ID       VARCHAR(1000) PRIMARY KEY,\n" +

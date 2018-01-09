@@ -10,10 +10,7 @@ import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import rx.Observable;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MysqlCommand implements Commands {
@@ -104,6 +101,53 @@ public class MysqlCommand implements Commands {
                             .toObservable();
                 })
                 .map(updateResult -> "Projects '" + artifactId + "' updated : " + updateResult.getUpdated());
+    }
+
+    @Override
+    public Observable<String> tables(List<String> tables, String artifactId, long update) {
+
+
+        Mysqls mysqls = Mysqls.Instance.get();
+        Observable<String> creationTable = mysqls.select("SELECT NAME FROM TABLES WHERE SERVICE=?", new JsonArray().add(artifactId))
+                .flatMap(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return Observable.from(tables);
+                    }
+                    Set<String> collect = rs
+                            .getResults()
+                            .stream()
+                            .map(row -> row.getString(0))
+                            .collect(Collectors.toSet());
+                    HashSet<String> toCreate = new HashSet<>(tables);
+                    toCreate.removeAll(collect);
+                    return Observable.from(toCreate);
+                })
+                .flatMap(tableName -> mysqls.execute(
+                        "INSERT INTO TABLES (ID, NAME, SERVICE, latestUpdate) VALUES (?,?,?, ?)",
+                        new JsonArray().add(UUID.randomUUID().toString()).add(tableName).add(artifactId).add(update))
+                        .map(updateResult -> "Table '" + tableName + "' for '" + artifactId + "' creation " + updateResult.getUpdated())
+                        .toObservable());
+        Observable<String> deletion = mysqls.select("SELECT NAME FROM TABLES WHERE SERVICE=?", new JsonArray().add(artifactId))
+                .flatMap(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return Observable.empty();
+                    }
+                    Set<String> collect = rs
+                            .getResults()
+                            .stream()
+                            .map(row -> row.getString(0))
+                            .collect(Collectors.toSet());
+                    collect.removeAll(tables);
+                    return Observable.from(collect);
+                })
+                .flatMap(tableName ->
+                        mysqls.execute(
+                                "DELETE FROM TALBLES WHERE NAME=? AND SERVICE=?",
+                                new JsonArray().add(tableName).add(artifactId))
+                                .toObservable()
+                                .map(updateResult -> "Table '" + tableName + "' for '" + artifactId + "'  deleted :" + updateResult.getUpdated())
+                );
+        return Observable.concat(deletion, creationTable);
     }
 
     @Override

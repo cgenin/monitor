@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.mysql.MysqlCommand;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
@@ -44,11 +45,8 @@ public class ProjectBatch extends AbstractVerticle {
             final JsonObject json = Dbs.Raws.toJson(doc);
             final String artifactId = json.getString(Schemas.Raw.artifactId.name());
 
-            Observable<String> flux = (!Mysqls.Instance.get().active()) ? new NitriteCommand().projects(json, artifactId)
-                    : new MysqlCommand().projects(json, artifactId);
             // Dans tous les cas marqués le doc comme traiter.
-
-            flux.subscribe(logger::info,
+            Commands.get().projects(json, artifactId).subscribe(logger::info,
                     err -> {
                         logger.error("Error in projects batch", err);
                         collection.update(doc.put(Schemas.RAW_STATE, Treatments.TABLES.getState()));

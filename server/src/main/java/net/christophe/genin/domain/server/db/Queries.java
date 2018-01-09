@@ -14,5 +14,6 @@ public interface Queries {
 
     Single<JsonArray> projects();
 
+    Single<JsonArray> tables();
 
 }
