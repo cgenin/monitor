@@ -128,7 +128,6 @@ public interface Mysqls {
             ).toObservable();
         }
 
-        @Override
         public Single<List<Integer>> batch(List<String> batchOperations) {
             return connection()
                     .flatMap((conn) -> conn.rxSetAutoCommit(true)
