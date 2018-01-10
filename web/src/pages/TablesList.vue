@@ -1,23 +1,32 @@
 <template>
   <div class="tables-page page-list">
     <q-card>
+      <ul class="breadcrumb">
+        <li>
+          <router-link to="/">
+            <q-icon name="home" />
+          </router-link>
+        </li>
+        <li>
+          <router-link to="" active-class="router-link-active">
+            <q-icon name="border_all" /> Liste des Tables
+          </router-link>
+        </li>
+      </ul>
+    </q-card>
+    <q-card>
       <q-card-title>
-        <h4>Liste des Tables</h4>
+        <h3>Liste des Tables</h3>
       </q-card-title>
 
       <q-card-separator/>
       <q-card-main>
-        <!--<div class="inputs">-->
-        <!--<q-input v-model="filter" type="text" class="filter" float-label="filter" @change="filtering"></q-input>-->
-        <!--<q-btn round color="primary" icon="refresh" @click="refresh"></q-btn>-->
-        <!--</div>-->
-        <!--<q-card-separator/>-->
+
         <q-transition
           appear
           enter="fadeIn"
           leave="fadeOut"
         >
-
           <div v-if="!loading" style="width:100%">
             <div>
               <q-data-table
@@ -40,7 +49,7 @@
 <script>
   import {
     QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QInnerLoading, QTransition, QSpinnerGears,
-    QDataTable, QField, QCollapsible
+    QDataTable, QIcon
   } from 'quasar';
   import TablesStore from '../stores/TablesStore';
   import {format} from '../Dates';
@@ -70,8 +79,7 @@
       QTransition,
       QSpinnerGears,
       QDataTable,
-      QField,
-      QCollapsible
+      QIcon
     },
     data() {
       return {
@@ -148,7 +156,6 @@
               .sort((a, b) => {
                 return a.name.localeCompare(b.name);
               });
-            ;
             this.list = l;
             this.original = l;
             this.filter = '';
@@ -166,6 +173,3 @@
     }
   }
 </script>
-<style scoped>
-
-</style>

@@ -4,6 +4,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.sql.ResultSet;
 import io.vertx.ext.sql.UpdateResult;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.ext.asyncsql.AsyncSQLClient;
@@ -11,6 +12,7 @@ import io.vertx.rxjava.ext.asyncsql.MySQLClient;
 import io.vertx.rxjava.ext.sql.SQLConnection;
 import rx.Observable;
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +28,12 @@ public interface Mysqls {
         return Observable.<SQLConnection>empty().toSingle();
     }
 
-    default Single<JsonArray> select(String sql) {
-        return Observable.<JsonArray>empty().toSingle();
+    default Observable<ResultSet> select(String sql) {
+        return Observable.empty();
     }
 
-    default Single<JsonArray> select(String sql, JsonArray params) {
-        return Observable.<JsonArray>empty().toSingle();
+    default Observable<ResultSet> select(String sql, JsonArray params) {
+        return Observable.empty();
     }
 
     default Single<UpdateResult> execute(String sql) {
@@ -103,38 +105,36 @@ public interface Mysqls {
 
         @Override
         public Single<SQLConnection> connection() {
-            return getShared().rxGetConnection();
+            return getShared().rxGetConnection().observeOn(Schedulers.io());
         }
 
         @Override
-        public Single<JsonArray> select(String sql) {
+        public Observable<ResultSet> select(String sql) {
             return select(sql, new JsonArray());
         }
 
         @Override
-        public Single<JsonArray> select(String sql, JsonArray params) {
+        public Observable<ResultSet> select(String sql, JsonArray params) {
             if (params.isEmpty()) {
-                return getShared().rxQuerySingle(sql);
+                return connection().flatMap(conn -> conn.rxSetAutoCommit(true)
+                        .flatMap(v -> conn.rxQuery(sql))
+                        .flatMap(rs -> conn.rxClose().map(v -> rs))
+                ).toObservable();
             }
-            return getShared().rxQuerySingleWithParams(sql, params);
+
+            return connection().flatMap(conn -> conn.rxSetAutoCommit(true)
+                    .flatMap(v -> conn.rxQueryWithParams(sql, params))
+                    .flatMap(rs -> conn.rxClose().map(v -> rs))
+            ).toObservable();
         }
 
         @Override
-        public Single<List<Integer>> batch(String... batchOperations) {
-            return Observable.from(batchOperations)
-                    .flatMap(op -> connection()
-                            .flatMap((conn) ->
-                                    conn.rxSetAutoCommit(true)
-                                            .flatMap(v -> conn.rxUpdate(op))
-                                            .map(updateResult -> {
-                                                logger.debug(updateResult);
-                                                return updateResult.getUpdated();
-                                            })).toObservable())
-                    .<List<Integer>>reduce(new ArrayList<>(),
-                            (acc, val) -> {
-                                acc.add(val);
-                                return acc;
-                            }).toSingle();
+        public Single<List<Integer>> batch(List<String> batchOperations) {
+            return connection()
+                    .flatMap((conn) -> conn.rxSetAutoCommit(true)
+                            .flatMap((v) -> conn.rxBatch(batchOperations))
+                            .flatMap(rs -> conn.rxClose().map(v -> rs))
+                    );
         }
 
         @Override
@@ -142,6 +142,7 @@ public interface Mysqls {
             return connection()
                     .flatMap((conn) -> conn.rxSetAutoCommit(true)
                             .flatMap((v) -> conn.rxBatchWithParams(batchOperations, args))
+                            .flatMap(rs -> conn.rxClose().map(v -> rs))
                     );
         }
 
@@ -153,9 +154,13 @@ public interface Mysqls {
         @Override
         public Single<UpdateResult> execute(String sql, JsonArray params) {
             if (params.isEmpty()) {
-                return getShared().rxUpdate(sql);
+                return getShared()
+                        .rxUpdate(sql)
+                        .observeOn(Schedulers.io());
             }
-            return getShared().rxUpdateWithParams(sql, params);
+            return getShared()
+                    .rxUpdateWithParams(sql, params)
+                    .observeOn(Schedulers.io());
         }
     }
 }

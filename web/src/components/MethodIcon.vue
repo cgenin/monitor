@@ -22,6 +22,8 @@
               return 'delete_forever';
             case 'PUT':
               return 'add_box';
+            case 'HEAD':
+              return 'face'
             default:
               console.error('method unkonwn' + this.method);
           }
@@ -38,6 +40,8 @@
             return 'red';
           case 'PUT':
             return 'green';
+          case 'HEAD':
+            return 'orange';
         }
         return '';
       }

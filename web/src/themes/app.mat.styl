@@ -12,16 +12,37 @@
 // Custom App variables must be declared before importing Quasar.
 // Quasar will use its default values when a custom variable isn't provided.
 @import '~quasar-framework/dist/quasar.mat.styl'
+
+/**
+ * GLOBAL
+ */
+body
+  color $blue-grey-5
+h3
+  font-size 24px
+  margin 0
+  font-weight 400
+
+
+/*
+ * QUASAR COMPONENTS
+ */
+
+  // LAYOUT
 .layout-page-container
   background $grey-11
-.q-card
-  background-color $white
 .logo-container
   width 100%
   height 100%
   min-height: calc(100vh - 50px)
   background url("../assets/splash.jpg") no-repeat
   background-size cover
+.layout-header
+  box-shadow none
+  .q-toolbar
+    background $light
+    color $faded
+    border-bottom 1px solid $grey-5
 .layout-aside-left
   .q-list
     padding-top 0
@@ -39,6 +60,7 @@
           font-weight: 700
           font-size: 11px
           text-transform: uppercase
+          margin 20px 0 10px
       .side-header
         span
           font-size 24px
@@ -55,15 +77,15 @@
       background-color darken($primary, 10%)
 
 
-.layout-header
-  box-shadow none
-  .q-toolbar
-    background $light
-    color $faded
-    border-bottom 1px solid $grey-5
-
-
+/*
+ * PAGE LIST
+ * With data table
+ */
 .page-list
+  .q-data-table
+    .q-btn
+      background-color $primary
+      color $white !important
   table.results
     width: 100%
   .font-result
@@ -78,10 +100,131 @@
     align-items: center
     .q-if
       margin-bottom: 16px
-    .filter
-      width: 50%
-h4.header-modal-deps
-  text-align: center
+
+  // HTML TABLE
+  .q-table
+    thead
+      tr
+        border-bottom 2px solid #eee
+        min-height 56px
+  &:not(.responsive)
+    th
+      border-bottom: 2px solid #bdbdbd !important;
+
+  // MODAL
+.modal
+  .q-modal-layout
+    .layout-header
+      .q-toolbar
+        background-color $primary
+        color $white
+    .q-modal-layout-content
+      padding 15px
+      .q-list
+        padding 0
+        border none
+        .q-item
+          padding 10px
+          border-bottom 1px solid rgba(0,0,0,0.12)
+          .q-item-main
+            color $blue-grey-5
+          &:last-child
+            border none
+          &:nth-child(odd)
+            background-color $grey-3
+          &:hover
+            background-color $neutral
+      h1
+        display none
+      h2
+        font-size 1.5rem
+        padding-bottom 5px
+        border-bottom 1px solid
+      h3
+        font-size 1.2rem
+        color $tertiary
 .btn-close-modal
   width: 100%
 
+  // DATA TABLE
+.q-data-table
+  font-size 100%
+.q-pagination .q-btn
+  margin 10px 2px 8px
+
+  // COLLAPSIBLE - ACCORDION
+.selected-list
+  .q-list
+    padding 0
+    .q-collapsible:hover,
+    .q-collapsible-opened,
+    .q-collapsible-opened:hover
+      .q-item
+        background-color $secondary
+        color $white
+        .q-item-sublabel
+          color rgba(0,0,0,0.54)
+    .q-collapsible
+      .q-collapsible-sub-item
+        .list-table
+          ul
+            list-style none
+            padding-left 0
+            li
+              padding 10px
+              border-bottom 1px solid rgba(0,0,0,0.12)
+              color $blue-grey-5
+              &:last-child
+                border none
+              &:nth-child(odd)
+                background-color $grey-3
+        pre
+          display none
+        h2
+          font-size 1.5rem
+          padding-bottom 5px
+          border-bottom 1px solid
+        h3
+          font-size 1.2rem
+          color $tertiary
+
+  // BREADCRUMB
+body.desktop
+  ul.breadcrumb
+    li
+      a
+        transition background-color .2s linear
+        &:after,
+        &:before
+          transition all .2s linear
+        &:hover
+          background-color $secondary
+          &:after
+            border-left-color $secondary
+          &:before
+            border-color $secondary
+            border-left-color transparent
+      a.router-link-exact-active
+        background-color $secondary
+        &:before
+          border-color $secondary
+          border-left-color transparent
+
+  // BUTTONS
+.q-btn-standard
+  &.open
+    .q-icon
+      transform rotate(45deg)
+  .q-icon
+    transition transform .3s ease-in-out
+    width 24px
+.q-btn-small
+  padding 0 6px
+  .q-icon
+    width 19px
+.q-item-letter,
+.q-item-icon
+  width 24px;
+.btn-flat-primary
+  background-color $primary
+  color $white

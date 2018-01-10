@@ -37,26 +37,26 @@
               <h3>Menu</h3>
             </q-list-header>
           </div>
-          <q-item to="/" exact>
+          <q-side-link item to="/" exact>
             <q-item-side icon="home"/>
             <q-item-main label="Welcome" sublabel="Page de résumé"/>
-          </q-item>
-          <q-item to="/projects-list">
+          </q-side-link>
+          <q-side-link item to="/projects-list">
             <q-item-side icon="view_list"/>
             <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>
-          </q-item>
-          <q-item to="/tables-list">
+          </q-side-link>
+          <q-side-link item to="/tables-list">
             <q-item-side icon="border_all"/>
             <q-item-main label="Liste des tables" sublabel="liaisons entre les services et les tables"/>
-          </q-item>
+          </q-side-link>
           <q-item to="/apis-list">
             <q-item-side icon="explore"/>
             <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
           </q-item>
-          <q-item to="/configuration/status">
+          <q-side-link item to="/configuration/status">
             <q-item-side icon="build"/>
             <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
-          </q-item>
+          </q-side-link>
         </q-list>
       </div>
       <router-view/>
@@ -74,6 +74,7 @@
     QList,
     QListHeader,
     QItem,
+    QSideLink,
     QItemSide,
     QItemMain
   } from 'quasar';
@@ -92,6 +93,7 @@
       QList,
       QListHeader,
       QItem,
+      QSideLink,
       QItemSide,
       QItemMain
     },
