@@ -27,38 +27,25 @@ public class Projects extends AbstractVerticle {
 
     @Override
     public void start() {
-        vertx.eventBus().consumer(LIST, msg -> {
-            Queries.get().projects()
+        vertx.eventBus().consumer(LIST,
+                msg -> Queries.get().projects()
+                        .subscribe(
+                                msg::reply,
+                                err -> {
+                                    logger.error("error in " + LIST, err);
+                                    msg.fail(500, "Error in query");
+                                }
+                        ));
+        vertx.eventBus().consumer(GET, (Handler<Message<JsonObject>>) msg -> {
+            String id = msg.body().getString(ID, "");
+            Queries.get().versions(id)
                     .subscribe(
                             msg::reply,
                             err -> {
-                                logger.error("error in " + LIST, err);
+                                logger.error("error in " + GET, err);
                                 msg.fail(500, "Error in query");
                             }
                     );
-        });
-        vertx.eventBus().consumer(GET, (Handler<Message<JsonObject>>) msg -> {
-            String id = msg.body().getString(ID, "");
-            final JsonArray l = Dbs.instance.getCollection(Schemas.Version.collection(id))
-                    .find().toList()
-                    .parallelStream()
-                    .map(doc -> {
-                        final Dbs.Attributes attributes = new Dbs.Attributes(doc);
-                        JsonObject put = new JsonObject()
-                                .put(Schemas.Version.id.name(), doc.get(Schemas.Version.id.name()))
-                                .put(Schemas.Version.name.name(), doc.get(Schemas.Version.name.name()))
-                                .put(Schemas.Version.isSnapshot.name(), doc.get(Schemas.Version.isSnapshot.name()))
-                                .put(Schemas.Version.changelog.name(), doc.get(Schemas.Version.changelog.name()))
-                                .put(Schemas.Version.latestUpdate.name(), doc.get(Schemas.Version.latestUpdate.name()))
-                                .put(Schemas.Version.tables.name(), attributes.toJsonArray(Schemas.Version.tables.name()))
-                                .put(Schemas.Version.apis.name(), attributes.toJsonArray(Schemas.Version.apis.name()))
-                                .put(Schemas.Version.javaDeps.name(), attributes.toJsonArray(Schemas.Version.javaDeps.name()));
-                        return put;
-                    }).collect(Jsons.Collectors.toJsonArray());
-            if (logger.isDebugEnabled()) {
-                logger.debug("GET : " + id + " -res :" + l.encodePrettily());
-            }
-            msg.reply(l);
         });
 
         logger.info("started");

@@ -11,6 +11,7 @@ import net.christophe.genin.domain.server.db.nitrite.commands.NitriteCommand;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import org.dizitart.no2.filters.Filters;
+import rx.functions.Action0;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,10 +38,18 @@ public class VersionBatch extends AbstractVerticle {
                 .findFirst().ifPresent(doc -> {
             final JsonObject json = Dbs.Raws.toJson(doc);
             final String artifactId = json.getString(Schemas.Raw.artifactId.name());
+            final String version = json.getString(Schemas.Raw.version.name());
 
-            //new NitriteCommand().versions(json, artifactId);
-
-            collection.update(doc.put(Schemas.RAW_STATE, Treatments.URL.getState()));
+            Action0 completed = () -> collection.update(doc.put(Schemas.RAW_STATE, Treatments.URL.getState()));
+            Commands.get()
+                    .versions(json, artifactId, version)
+                    .subscribe(
+                            str -> logger.info(str),
+                            err -> {
+                                logger.error("error in tables for " + json.encode(), err);
+                                completed.call();
+                            },
+                            completed);
         });
 
         return true;

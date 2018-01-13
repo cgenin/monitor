@@ -3,7 +3,6 @@ package net.christophe.genin.domain.server.db.nitrite.commands;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.command.TablesBatch;
 import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
@@ -72,7 +71,16 @@ public class NitriteCommand implements Commands {
     }
 
     @Override
-    public boolean versions(JsonObject json, String artifactId) {
-        return new NitriteVersion(json, artifactId).insert();
+    public Observable<String> versions(JsonObject json, String artifactId, String version) {
+        return Observable
+                .fromCallable(() -> {
+            if (new NitriteVersion(json, artifactId, version).insert())
+                return "Version '" + version +
+                        "' for '" + artifactId +
+                        "' updated";
+            return "Version '" + version +
+                    "' for '" + artifactId +
+                    "' not updated";
+        });
     }
 }

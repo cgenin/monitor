@@ -9,6 +9,7 @@ import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import rx.Observable;
+import rx.Single;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -142,7 +143,7 @@ public class MysqlCommand implements Commands {
                 })
                 .flatMap(tableName ->
                         mysqls.execute(
-                                "DELETE FROM TALBLES WHERE NAME=? AND SERVICE=?",
+                                "DELETE FROM TABLES WHERE NAME=? AND SERVICE=?",
                                 new JsonArray().add(tableName).add(artifactId))
                                 .toObservable()
                                 .map(updateResult -> "Table '" + tableName + "' for '" + artifactId + "'  deleted :" + updateResult.getUpdated())
@@ -151,7 +152,71 @@ public class MysqlCommand implements Commands {
     }
 
     @Override
-    public boolean versions(JsonObject json, String artifactId) {
-        return false;
+    public Observable<String> versions(JsonObject json, String artifactId, String version) {
+
+        Mysqls mysqls = Mysqls.Instance.get();
+        return mysqls.select("SELECT ID from PROJECTS WHERE NAME=?", new JsonArray().add(artifactId))
+                .map(resultSet -> {
+                    if (Objects.isNull(resultSet) || resultSet.getResults().isEmpty()) {
+                        throw new IllegalStateException("No Projects found for " + artifactId);
+                    }
+
+                    JsonArray row = resultSet.getResults().get(0);
+                    return row.getString(0);
+                })
+                .flatMap(idProjects -> {
+                    return mysqls.select("SELECT document from VERSIONS WHERE NAME=? AND IDPROJECT = ?", new JsonArray().add(version).add(idProjects))
+                            .map(rs2 -> {
+                                if (Objects.isNull(rs2) || rs2.getResults().isEmpty()) {
+                                    return new JsonObject()
+                                            .put(Schemas.Version.idproject.name(), idProjects)
+                                            .put(Schemas.Version.name.name(), version)
+                                            .put(Schemas.Version.latestUpdate.name(), 0L);
+                                }
+                                JsonArray firstRow = rs2.getResults().get(0);
+                                String string = firstRow.getString(0);
+                                return new JsonObject(string);
+                            })
+                            .flatMap(currentDoc -> {
+                                long lDate = currentDoc.getLong(Schemas.Version.latestUpdate.name());
+                                long update = json.getLong(Schemas.Raw.update.name());
+                                if (lDate < update) {
+                                    boolean snapshot = Commands.Projects.isSnapshot(version);
+                                    List<String> javaDeps = Commands.Projects.extractJavaDeps(json);
+                                    List<String> tables = Commands.Projects.extractTables(json);
+                                    List<String> urls = Commands.Projects.extractUrls(json);
+                                    Optional.ofNullable(json.getString(Schemas.Projects.changelog.name()))
+                                            .ifPresent(s -> currentDoc.put(Schemas.Projects.changelog.name(), s));
+                                    return Observable.just(currentDoc
+                                            .put(Schemas.Version.isSnapshot.name(), snapshot)
+                                            .put(Schemas.Version.javaDeps.name(), javaDeps)
+                                            .put(Schemas.Version.tables.name(), tables)
+                                            .put(Schemas.Version.apis.name(), urls));
+                                }
+                                return Observable.empty();
+                            })
+                            .flatMap(document -> {
+                                String id = document.getString(Schemas.Version.id.name());
+                                if (Objects.isNull(id)) {
+                                    String newId = UUID.randomUUID().toString();
+
+                                    return mysqls.execute(
+                                            "Insert INTO VERSIONS (ID, IDPROJECT, NAME, document) VALUES (?,?,?,?)",
+                                            new JsonArray()
+                                                    .add(newId)
+                                                    .add(idProjects)
+                                                    .add(version)
+                                                    .add(document.put(Schemas.Version.id.name(), newId).encode()))
+                                            .toObservable();
+                                }
+                                return mysqls.execute("UPDATE VERSIONS SET document=? WHERE ID=?",
+                                        new JsonArray()
+                                                .add(document.encode())
+                                                .add(id))
+                                        .toObservable();
+                            }).map(updateResult -> "Version '" + version +
+                                    "' for artifact '" + artifactId + "' updated : " +
+                                    updateResult.getUpdated());
+                });
     }
 }

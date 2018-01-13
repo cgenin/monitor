@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class MysqlQuery implements Queries {
     @Override
@@ -36,7 +37,7 @@ public class MysqlQuery implements Queries {
     @SuppressWarnings("unchecked")
     @Override
     public Single<JsonArray> tables() {
-       return Mysqls.Instance.get().select("select NAME, SERVICE, latestUpdate FROM TABLES order by 1, 2")
+        return Mysqls.Instance.get().select("select NAME, SERVICE, latestUpdate FROM TABLES order by 1, 2")
                 .map(rs -> {
                     if (Objects.isNull(rs)) {
                         return new JsonArray();
@@ -66,5 +67,23 @@ public class MysqlQuery implements Queries {
                 .switchIfEmpty(Observable.just(new JsonArray()))
                 .toSingle();
 
+    }
+
+    @Override
+    public Single<JsonArray> versions(String idProject) {
+        return Mysqls.Instance.get().select("select document FROM VERSIONS WHERE IDPROJECT=?", new JsonArray().add(idProject))
+                .map(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return new JsonArray();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> {
+                                String doc = row.getString(0);
+                                return new JsonObject(doc);
+                            }).collect(Jsons.Collectors.toJsonArray());
+                })
+                .switchIfEmpty(Observable.just(new JsonArray()))
+                .toSingle();
     }
 }

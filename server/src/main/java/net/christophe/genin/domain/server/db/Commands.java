@@ -23,7 +23,7 @@ public interface Commands {
 
     Observable<String> tables(List<String> tables, String artifactId,long update);
 
-    boolean versions(JsonObject json, String artifactId);
+    Observable<String> versions(JsonObject json, String artifactId, String version);
 
     class Projects {
         public static boolean isSnapshot(String version) {

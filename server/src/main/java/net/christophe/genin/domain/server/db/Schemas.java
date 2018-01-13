@@ -105,7 +105,7 @@ public final class Schemas {
     }
 
     public enum Version {
-        id, name, isSnapshot, tables, javaDeps, npmDeps, latestUpdate, apis, changelog;
+        id, name, idproject, isSnapshot, tables, javaDeps, npmDeps, latestUpdate, apis, changelog;
 
         public static final String PREFIX = "version/";
 

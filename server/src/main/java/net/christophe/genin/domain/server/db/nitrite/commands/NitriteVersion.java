@@ -20,10 +20,12 @@ public class NitriteVersion {
 
     private final String artifactId;
     private final JsonObject json;
+    private final String version;
 
-    NitriteVersion(JsonObject json, String artifactId) {
+    NitriteVersion(JsonObject json, String artifactId, String version) {
         this.json = json;
         this.artifactId = artifactId;
+        this.version = version;
     }
 
     public boolean insert() {
@@ -34,7 +36,6 @@ public class NitriteVersion {
                 .map(d -> d.get(Schemas.Projects.id.name(), String.class))
                 .orElseThrow(() -> new IllegalStateException("No Data found for " + artifactId));
         final NitriteCollection versionCollection = Dbs.instance.getCollection(Schemas.Version.collection(id));
-        final String version = json.getString(Schemas.Raw.version.name());
         Document currentDoc = Optional.ofNullable(versionCollection
                 .find(Filters.eq(Schemas.Version.name.name(), version))
                 .firstOrDefault())
