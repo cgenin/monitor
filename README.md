@@ -1,6 +1,8 @@
 # Anti-Monitor
 
-Un serveur permettant d'agréger des données pour créer un annuaire de micro-service.
+Un serveur permettant d'agréger des données pour créer un annuaire de micro-service pour une enreprise.
+
+![Ecran d'accueil](img/main-monitor.png)
 
 ## Build du projet
 
