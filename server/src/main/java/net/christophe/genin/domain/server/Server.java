@@ -34,18 +34,18 @@ public class Server extends AbstractVerticle {
     private void deployCommand() {
         vertx.deployVerticle(new Raw());
         vertx.deployVerticle(new ProjectBatch(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new TablesBatch());
-        vertx.deployVerticle(new VersionBatch());
+        vertx.deployVerticle(new TablesBatch(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new VersionBatch(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Import());
         vertx.deployVerticle(new ConfigurationCommand());
         vertx.deployVerticle(new Reset());
-        vertx.deployVerticle(new ApisBatch());
+        vertx.deployVerticle(new ApisBatch(), new DeploymentOptions().setWorker(true));
     }
 
     private void deployQuery() {
         vertx.deployVerticle(new Projects(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new Tables());
+        vertx.deployVerticle(new Tables(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Configuration());
-        vertx.deployVerticle(new Endpoints());
+        vertx.deployVerticle(new Endpoints(), new DeploymentOptions().setWorker(true));
     }
 }

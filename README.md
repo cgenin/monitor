@@ -2,7 +2,7 @@
 
 Un serveur permettant d'agréger des données pour créer un annuaire de micro-service pour une enreprise.
 
-![Ecran d'accueil](img/main-monitor.png)
+![Liste des micro services](img/main-monitor.png)
 
 ## Build du projet
 

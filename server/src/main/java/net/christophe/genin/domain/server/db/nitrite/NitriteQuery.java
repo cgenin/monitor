@@ -13,6 +13,9 @@ import rx.Single;
 import java.util.List;
 import java.util.Optional;
 
+import static net.christophe.genin.domain.server.db.Schemas.Apis.*;
+import static net.christophe.genin.domain.server.db.Schemas.Apis.latestUpdate;
+
 public class NitriteQuery implements Queries {
     private static final Logger logger = LoggerFactory.getLogger(Projects.class);
 
@@ -61,6 +64,28 @@ public class NitriteQuery implements Queries {
     }
 
     @Override
+    public Single<JsonArray> apis() {
+        return Single.fromCallable(() -> Dbs.instance
+                .getCollection(Schemas.Apis.collection())
+                .find().toList()
+                .parallelStream()
+                .map(doc -> new JsonObject()
+                        .put(id.name(), doc.get(id.name()))
+                        .put(name.name(), doc.get(name.name()))
+                        .put(artifactId.name(), doc.get(artifactId.name()))
+                        .put(groupId.name(), doc.get(groupId.name()))
+                        .put(method.name(), doc.get(method.name()))
+                        .put(returns.name(), doc.get(returns.name()))
+                        .put(path.name(), doc.get(path.name()))
+                        .put(params.name(), doc.get(params.name()))
+                        .put(comment.name(), doc.get(comment.name()))
+                        .put(since.name(), doc.get(since.name()))
+                        .put(className.name(), doc.get(className.name()))
+                        .put(latestUpdate.name(), doc.get(latestUpdate.name())))
+                .collect(Jsons.Collectors.toJsonArray()));
+    }
+
+    @Override
     public Single<JsonArray> versions(String idProject) {
         final JsonArray l = Dbs.instance.getCollection(Schemas.Version.collection(idProject))
                 .find().toList()
@@ -83,4 +108,6 @@ public class NitriteQuery implements Queries {
         }
         return Single.just(l);
     }
+
+
 }

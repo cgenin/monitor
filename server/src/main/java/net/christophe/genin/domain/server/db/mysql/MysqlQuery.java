@@ -12,12 +12,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class MysqlQuery implements Queries {
+
+
     @Override
     public Single<JsonArray> projects() {
-        return Mysqls.Instance.get().select("SELECT document from PROJECTS")
+        return execute("SELECT document from PROJECTS");
+
+    }
+
+    public Single<JsonArray> execute(String sql) {
+        return Mysqls.Instance.get().select(sql)
                 .map(rs -> {
                     if (Objects.isNull(rs)) {
                         return new JsonArray();
@@ -31,7 +37,6 @@ public class MysqlQuery implements Queries {
                 })
                 .switchIfEmpty(Observable.just(new JsonArray()))
                 .toSingle();
-
     }
 
     @SuppressWarnings("unchecked")
@@ -67,6 +72,11 @@ public class MysqlQuery implements Queries {
                 .switchIfEmpty(Observable.just(new JsonArray()))
                 .toSingle();
 
+    }
+
+    @Override
+    public Single<JsonArray> apis() {
+        return execute("SELECT document FROM APIS");
     }
 
     @Override

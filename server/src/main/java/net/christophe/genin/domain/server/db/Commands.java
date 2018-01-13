@@ -10,7 +10,9 @@ import rx.Observable;
 import rx.Single;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public interface Commands {
 
@@ -21,9 +23,24 @@ public interface Commands {
 
     Observable<String> projects(JsonObject json, String artifactId);
 
-    Observable<String> tables(List<String> tables, String artifactId,long update);
+    Observable<String> tables(List<String> tables, String artifactId, long update);
 
     Observable<String> versions(JsonObject json, String artifactId, String version);
+
+    Observable<String> apis(JsonObject apis, String artifactId, String version, long update, JsonArray services);
+
+    default Observable<JsonObject> servicesToJson(JsonArray services) {
+        Function<JsonObject, Stream<? extends JsonObject>> convert2Json = obj -> {
+            String className = obj.getString(Schemas.Raw.Apis.Services.name.name(), "");
+            JsonArray methods = obj.getJsonArray(Schemas.Raw.Apis.Services.methods.name(), new JsonArray());
+            return Jsons.builder(methods)
+                    .toStream()
+                    .map(o -> o.put("className", className));
+        };
+        return Observable.from(
+                Jsons.builder(services).toStream().flatMap(convert2Json).collect(Collectors.toList())
+        );
+    }
 
     class Projects {
         public static boolean isSnapshot(String version) {

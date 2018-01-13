@@ -1,21 +1,23 @@
 package net.christophe.genin.domain.server.db.nitrite.commands;
 
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
+import net.christophe.genin.domain.server.json.Jsons;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import rx.Observable;
-import rx.Single;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static org.dizitart.no2.filters.Filters.and;
 import static org.dizitart.no2.filters.Filters.eq;
 
 public class NitriteCommand implements Commands {
@@ -74,13 +76,58 @@ public class NitriteCommand implements Commands {
     public Observable<String> versions(JsonObject json, String artifactId, String version) {
         return Observable
                 .fromCallable(() -> {
-            if (new NitriteVersion(json, artifactId, version).insert())
-                return "Version '" + version +
-                        "' for '" + artifactId +
-                        "' updated";
-            return "Version '" + version +
-                    "' for '" + artifactId +
-                    "' not updated";
-        });
+                    if (new NitriteVersion(json, artifactId, version).insert())
+                        return "Version '" + version +
+                                "' for '" + artifactId +
+                                "' updated";
+                    return "Version '" + version +
+                            "' for '" + artifactId +
+                            "' not updated";
+                });
+    }
+
+
+
+    @Override
+    public Observable<String> apis(JsonObject apis, String artifactId, String version, long update, JsonArray services) {
+        final NitriteCollection apiCollection = Dbs.instance
+                .getCollection(Schemas.Apis.collection());
+        return servicesToJson(services)
+                .flatMap(methodJson -> {
+                    String groupId = apis.getString(Schemas.Raw.Apis.groupId.name(), "");
+                    final String method = methodJson.getString("method", "");
+                    final String path = methodJson.getString("path", "");
+                    final Document current = Optional.ofNullable(apiCollection.find(
+                            and(
+                                    eq(Schemas.Apis.method.name(), method),
+                                    eq(Schemas.Apis.path.name(), path),
+                                    eq(Schemas.Apis.artifactId.name(), artifactId),
+                                    eq(Schemas.Apis.groupId.name(), groupId)
+                            )
+                    ).firstOrDefault()).orElseGet(
+                            () -> Document.createDocument(Schemas.Projects.id.name(), Dbs.newId())
+                                    .put(Schemas.Apis.method.name(), method)
+                                    .put(Schemas.Apis.path.name(), path)
+                                    .put(Schemas.Apis.artifactId.name(), artifactId)
+                                    .put(Schemas.Apis.groupId.name(), groupId)
+                                    .put(Schemas.Apis.since.name(), version)
+                                    .put(Schemas.Apis.latestUpdate.name(), 0L));
+
+                    final Long lUpdate = Long.valueOf(current.get(Schemas.Apis.latestUpdate.name()).toString());
+                    if (lUpdate < update) {
+                        current
+                                .put(Schemas.Apis.name.name(), methodJson.getString("name"))
+                                .put(Schemas.Apis.returns.name(), methodJson.getString("returns"))
+                                .put(Schemas.Apis.params.name(), methodJson.getJsonArray("params").encode())
+                                .put(Schemas.Apis.comment.name(), methodJson.getString("comment"))
+                                .put(Schemas.Apis.className.name(), methodJson.getString("className"));
+                        apiCollection.update(current, true);
+                        logger.info("Api " + method + " - " + path + " mis à jour");
+                        Observable.just("URL '" + path +
+                                "' for artifact '" + artifactId +
+                                " updated :1");
+                    }
+                    return Observable.empty();
+                });
     }
 }

@@ -23,11 +23,12 @@ public class AntiMonitorSchemas {
                     "  NAME     VARCHAR(100),\n" +
                     "  document JSON\n" +
                     ")",
-            "CREATE TABLE IF NOT EXISTS API (\n" +
+            "CREATE TABLE IF NOT EXISTS APIS (\n" +
                     "  ID        VARCHAR(1000) PRIMARY KEY,\n" +
+                    "  METHOD   VARCHAR(10),\n" +
                     "  FULLURL   TEXT,\n" +
                     "  IDPROJECT VARCHAR(1000),\n" +
-                    "  document  JSON\n" +
+                    "  document  LONGTEXT\n" +
                     ")",
 
             "CREATE TABLE IF NOT EXISTS PROJECTS (\n" +
@@ -44,7 +45,7 @@ public class AntiMonitorSchemas {
             "DELETE FROM EVENTS",
             "DELETE FROM  PROJECTS",
             "DELETE FROM TABLES",
-            "DELETE FROM API",
+            "DELETE FROM APIS",
             "DELETE FROM VERSIONS"
 
     };

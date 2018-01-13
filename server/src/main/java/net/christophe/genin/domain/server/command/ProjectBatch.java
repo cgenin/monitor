@@ -52,7 +52,7 @@ public class ProjectBatch extends AbstractVerticle {
                         collection.update(doc.put(Schemas.RAW_STATE, Treatments.TABLES.getState()));
                     },
                     () -> {
-                    logger.info("Project complete");
+                        logger.debug("Project complete");
                         collection.update(doc.put(Schemas.RAW_STATE, Treatments.TABLES.getState()));
                     });
             ;

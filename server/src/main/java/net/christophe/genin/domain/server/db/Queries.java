@@ -16,6 +16,8 @@ public interface Queries {
 
     Single<JsonArray> tables();
 
+    Single<JsonArray> apis();
+
     Single<JsonArray> versions(String idProject);
 
 }
