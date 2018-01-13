@@ -8,7 +8,7 @@ Un serveur permettant d'agréger des données pour créer un annuaire de micro-s
 
 - Clone the git repository 
 - Build la partie front du projet en exécutant les commandes suivantes :
-```
+```batchfile
 cd web
 npm install
 npm run build
@@ -17,14 +17,14 @@ npm run build
 ### Partie serveur et jar exécutable
 
 - Build la partie serveur en exécutant dans le répertoire `server` la commande : 
-```
+```batchfile
 mvn clean install
 ```
 
 ### Image Docker (Optionelle)
 
 - Si vous voulez utilliser Docker, alors toujours dans le répertoire `server` lancer la commande :
-```
+```batchfile
 mvn dockerfile:build
 ``` 
 
@@ -37,7 +37,7 @@ Deux manières de lancer le serveur :
 
 Le lancement du serveur s'effectue via la commande suivante : 
 
-```
+```batchfile
 java -jar <fichier JAR> -conf <Fichier de configuration>
 ``` 
 avec`
@@ -48,7 +48,7 @@ avec`
 
 Une fois l'image docker sur la machine ou dans le registry, il suffit de lancer la commande suivante :
 
-``` 
+```batchfile 
 docker run -p <Port Cible>:8080 -v <BD NITRITE>:/nitrite -v <LOG DIR>:/logs -t christophegeninnet/antimonitor
 ``` 
 avec :
