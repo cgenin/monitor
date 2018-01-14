@@ -1,4 +1,4 @@
-package net.christophe.genin.domain.server.db.nitrite.commands;
+package net.christophe.genin.domain.server.db.nitrite;
 
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -6,7 +6,6 @@ import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Schemas;
-import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 

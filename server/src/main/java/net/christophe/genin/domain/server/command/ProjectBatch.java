@@ -1,27 +1,14 @@
 package net.christophe.genin.domain.server.command;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.Commands;
-import net.christophe.genin.domain.server.db.ConfigurationDto;
-import net.christophe.genin.domain.server.db.mysql.MysqlCommand;
-import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
-import net.christophe.genin.domain.server.db.nitrite.commands.NitriteCommand;
-import net.christophe.genin.domain.server.json.Jsons;
-import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
-import rx.Observable;
-import rx.Single;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static org.dizitart.no2.filters.Filters.eq;
 
@@ -46,7 +33,11 @@ public class ProjectBatch extends AbstractVerticle {
             final String artifactId = json.getString(Schemas.Raw.artifactId.name());
 
             // Dans tous les cas marqués le doc comme traiter.
-            Commands.get().projects(json, artifactId).subscribe(logger::info,
+            Commands.get().projects(json, artifactId).subscribe(
+                    str -> {
+                        logger.info(str);
+                        vertx.eventBus().send(Console.INFO, str);
+                    },
                     err -> {
                         logger.error("Error in projects batch", err);
                         collection.update(doc.put(Schemas.RAW_STATE, Treatments.TABLES.getState()));

@@ -4,6 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
@@ -46,7 +47,10 @@ public class TablesBatch extends AbstractVerticle {
             Action0 completed = () -> collection.update(doc.put(Schemas.RAW_STATE, Treatments.VERSION.getState()));
             Commands.get().tables(listTables, artifactId, update)
                     .subscribe(
-                            str -> logger.info(str),
+                            str -> {
+                                logger.info(str);
+                                vertx.eventBus().send(Console.INFO, str);
+                            },
                             err -> {
                                 logger.error("error in tables for "+json.encode(), err);
                                 completed.call();

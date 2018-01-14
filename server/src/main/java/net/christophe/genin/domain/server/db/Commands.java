@@ -4,7 +4,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import net.christophe.genin.domain.server.db.mysql.MysqlCommand;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
-import net.christophe.genin.domain.server.db.nitrite.commands.NitriteCommand;
+import net.christophe.genin.domain.server.db.nitrite.NitriteCommand;
 import net.christophe.genin.domain.server.json.Jsons;
 import rx.Observable;
 import rx.Single;
@@ -20,6 +20,8 @@ public interface Commands {
         return (!Mysqls.Instance.get().active()) ? new NitriteCommand()
                 : new MysqlCommand();
     }
+
+    Single<String> reset();
 
     Observable<String> projects(JsonObject json, String artifactId);
 

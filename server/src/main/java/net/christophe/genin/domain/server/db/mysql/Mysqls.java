@@ -48,9 +48,6 @@ public interface Mysqls {
         return Observable.<List<Integer>>empty().toSingle();
     }
 
-    default Single<List<Integer>> batch(String batchOperations, List<JsonArray> args) {
-        return Observable.<List<Integer>>empty().toSingle();
-    }
 
     final class Instance {
         private static Mysqls instance = new NullMysql();
@@ -128,21 +125,18 @@ public interface Mysqls {
             ).toObservable();
         }
 
-        public Single<List<Integer>> batch(List<String> batchOperations) {
-            return connection()
-                    .flatMap((conn) -> conn.rxSetAutoCommit(true)
-                            .flatMap((v) -> conn.rxBatch(batchOperations))
-                            .flatMap(rs -> conn.rxClose().map(v -> rs))
-                    );
-        }
 
         @Override
-        public Single<List<Integer>> batch(String batchOperations, List<JsonArray> args) {
-            return connection()
-                    .flatMap((conn) -> conn.rxSetAutoCommit(true)
-                            .flatMap((v) -> conn.rxBatchWithParams(batchOperations, args))
-                            .flatMap(rs -> conn.rxClose().map(v -> rs))
-                    );
+        public Single<List<Integer>> batch(String... batchOperations) {
+            List<Integer> initialValue = new ArrayList<>();
+            return Observable.from(batchOperations)
+                    .flatMap(sql -> execute(sql).toObservable())
+                    .map(updateResult -> updateResult.getUpdated())
+                    .reduce(initialValue, (acc, nb) -> {
+                        acc.add(nb);
+                        return acc;
+                    })
+                    .toSingle();
         }
 
         @Override

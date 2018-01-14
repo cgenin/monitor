@@ -4,17 +4,12 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
-import net.christophe.genin.domain.server.db.nitrite.commands.NitriteCommand;
-import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
-import org.dizitart.no2.filters.Filters;
 import rx.functions.Action0;
-
-import java.util.List;
-import java.util.Optional;
 
 import static org.dizitart.no2.filters.Filters.eq;
 
@@ -44,7 +39,10 @@ public class VersionBatch extends AbstractVerticle {
             Commands.get()
                     .versions(json, artifactId, version)
                     .subscribe(
-                            str -> logger.info(str),
+                            str -> {
+                                logger.info(str);
+                                vertx.eventBus().send(Console.INFO, str);
+                            },
                             err -> {
                                 logger.error("error in tables for " + json.encode(), err);
                                 completed.call();

@@ -1,5 +1,7 @@
 package net.christophe.genin.domain.server.db.mysql;
 
+import com.sun.deploy.panel.DeleteFilesDialog;
+import org.relaxng.datatype.DatatypeException;
 import rx.Single;
 
 import java.util.Arrays;
@@ -15,8 +17,8 @@ public class AntiMonitorSchemas {
             "CREATE TABLE IF NOT EXISTS TABLES\n" +
                     "(  ID      VARCHAR(100) NOT NULL PRIMARY KEY,\n" +
                     "  NAME    TEXT NOT NULL,\n" +
-                    "  SERVICE TEXT NOT NULL\n" +
-                    "  latestUpdate BIGINT\n" +
+                    "  SERVICE TEXT NOT NULL,\n" +
+                    "  latestUpdate BIG INT\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS TABLES (\n" +
                     "  ID       VARCHAR(1000) PRIMARY KEY,\n" +
@@ -50,11 +52,24 @@ public class AntiMonitorSchemas {
 
     };
 
+    private static String[] DELETE_SCRIPTS=new String[]{
+            "DELETE FROM  PROJECTS",
+            "DELETE FROM TABLES",
+            "DELETE FROM APIS",
+            "DELETE FROM VERSIONS"
+    };
+
 
     public static Single<String> create() {
         return Mysqls.Instance.get()
                 .batch(CREATE_SCRIPTS)
                 .map(list -> "Creation of EVENTS, PROJECTS, TABLES, API, VERSIONS if not exist :" + list);
+    }
+
+    public static Single<String> delete() {
+        return Mysqls.Instance.get()
+                .batch(DELETE_SCRIPTS)
+                .map(list -> "Suppress of PROJECTS, TABLES, API, VERSIONS :" + list);
     }
 
 }

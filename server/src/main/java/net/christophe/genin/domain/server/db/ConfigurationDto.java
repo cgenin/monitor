@@ -1,16 +1,14 @@
 package net.christophe.genin.domain.server.db;
 
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
-import net.christophe.genin.domain.server.json.Jsons;
 import org.dizitart.no2.objects.Id;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-
+/**
+ * Bean représentant la configuration du serveur.
+ */
 public class ConfigurationDto implements Serializable {
 
 

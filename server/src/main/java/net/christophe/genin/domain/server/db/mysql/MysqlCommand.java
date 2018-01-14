@@ -9,6 +9,7 @@ import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import rx.Observable;
+import rx.Single;
 import rx.functions.Func1;
 
 import java.util.*;
@@ -17,6 +18,11 @@ import java.util.stream.Collectors;
 public class MysqlCommand implements Commands {
     private static final Logger logger = LoggerFactory.getLogger(Mysqls.VertxMysql.class);
 
+
+    @Override
+    public Single<String> reset() {
+        return AntiMonitorSchemas.delete();
+    }
 
     @Override
     public Observable<String> projects(JsonObject json, String artifactId) {
