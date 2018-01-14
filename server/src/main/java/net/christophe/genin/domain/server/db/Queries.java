@@ -43,4 +43,8 @@ public interface Queries {
      */
     Single<JsonArray> versions(String idProject);
 
+
+    Single<JsonArray> listAllResourceDependencies();
+
+    Single<JsonArray> usedBy(String resource);
 }

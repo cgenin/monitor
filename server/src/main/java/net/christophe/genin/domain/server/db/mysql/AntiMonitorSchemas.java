@@ -44,19 +44,26 @@ public class AntiMonitorSchemas {
                     "  NAME      VARCHAR(200),\n" +
                     "  document  LONGTEXT\n" +
                     ")",
+            "CREATE TABLE IF NOT EXISTS DEPENDENCIES (\n" +
+                    "                      RESOURCE VARCHAR(200),\n" +
+                    "                      USED_BY      VARCHAR(200),\n" +
+                    "                      document LONGTEXT,\n" +
+                    "                      PRIMARY KEY (RESOURCE, USED_BY)\n" +
+                    "                    )",
             "DELETE FROM EVENTS",
-            "DELETE FROM  PROJECTS",
+            "DELETE FROM PROJECTS",
             "DELETE FROM TABLES",
             "DELETE FROM APIS",
-            "DELETE FROM VERSIONS"
-
+            "DELETE FROM VERSIONS",
+            "DELETE FROM DEPENDENCIES"
     };
 
     private static String[] DELETE_SCRIPTS=new String[]{
             "DELETE FROM  PROJECTS",
             "DELETE FROM TABLES",
             "DELETE FROM APIS",
-            "DELETE FROM VERSIONS"
+            "DELETE FROM VERSIONS",
+            "DELETE FROM DEPENDENCIES"
     };
 
 

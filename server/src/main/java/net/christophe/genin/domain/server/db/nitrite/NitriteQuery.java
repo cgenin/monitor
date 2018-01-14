@@ -92,7 +92,7 @@ public class NitriteQuery implements Queries {
                 .parallelStream()
                 .map(doc -> {
                     final Dbs.Attributes attributes = new Dbs.Attributes(doc);
-                    JsonObject put = new JsonObject()
+                    return new JsonObject()
                             .put(Schemas.Version.id.name(), doc.get(Schemas.Version.id.name()))
                             .put(Schemas.Version.name.name(), doc.get(Schemas.Version.name.name()))
                             .put(Schemas.Version.isSnapshot.name(), doc.get(Schemas.Version.isSnapshot.name()))
@@ -101,12 +101,23 @@ public class NitriteQuery implements Queries {
                             .put(Schemas.Version.tables.name(), attributes.toJsonArray(Schemas.Version.tables.name()))
                             .put(Schemas.Version.apis.name(), attributes.toJsonArray(Schemas.Version.apis.name()))
                             .put(Schemas.Version.javaDeps.name(), attributes.toJsonArray(Schemas.Version.javaDeps.name()));
-                    return put;
                 }).collect(Jsons.Collectors.toJsonArray());
         if (logger.isDebugEnabled()) {
             logger.debug("GET : " + idProject + " -res :" + l.encodePrettily());
         }
         return Single.just(l);
+    }
+
+    @Override
+    public Single<JsonArray> listAllResourceDependencies() {
+        // TODO Implements
+        return Single.just(new JsonArray());
+    }
+
+    @Override
+    public Single<JsonArray> usedBy(String resource) {
+        // TODO Implements
+        return Single.just(new JsonArray());
     }
 
 

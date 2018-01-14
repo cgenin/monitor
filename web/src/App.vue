@@ -53,6 +53,10 @@
             <q-item-side icon="explore"/>
             <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
           </q-item>
+          <q-item to="/dependencies">
+            <q-item-side icon="explore"/>
+            <q-item-main label="Dépendances" sublabel="Dépendance entre les Micro Services"/>
+          </q-item>
           <q-side-link item to="/configuration/status">
             <q-item-side icon="build"/>
             <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
@@ -100,4 +104,17 @@
   }
 </script>
 
-<style></style>
+<style>
+  @media print {
+    .layout-aside,
+    .layout-header {
+      display: none;
+    }
+
+
+
+    .noprint {
+      display: none;
+    }
+  }
+</style>

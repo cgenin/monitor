@@ -6,6 +6,7 @@ import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Schemas;
+import net.christophe.genin.domain.server.query.Configuration;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 
@@ -62,10 +63,7 @@ class NitriteProject {
             final List<String> tables = Commands.Projects.extractTables(json);
             document.put(Schemas.Projects.tables.name(), tables);
             final List<String> allDeps = Commands.Projects.extractJavaDeps(json);
-            final ConfigurationDto conf = Optional.ofNullable(Dbs.instance
-                    .repository(ConfigurationDto.class)
-                    .find().firstOrDefault())
-                    .orElseGet(ConfigurationDto::new);
+            final ConfigurationDto conf = Configuration.get();
 
             List<String> javaFilters = conf.getJavaFilters();
             final List<String> javaDeps = allDeps.parallelStream()

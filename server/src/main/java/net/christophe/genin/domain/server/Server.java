@@ -5,10 +5,7 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.command.*;
-import net.christophe.genin.domain.server.query.Configuration;
-import net.christophe.genin.domain.server.query.Endpoints;
-import net.christophe.genin.domain.server.query.Projects;
-import net.christophe.genin.domain.server.query.Tables;
+import net.christophe.genin.domain.server.query.*;
 
 /**
  * Main Verticle
@@ -36,9 +33,10 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new ProjectBatch(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new TablesBatch(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new VersionBatch(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new DependenciesBatch(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Import());
         vertx.deployVerticle(new ConfigurationCommand());
-        vertx.deployVerticle(new Reset());
+        vertx.deployVerticle(new Reset(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ApisBatch(), new DeploymentOptions().setWorker(true));
     }
 
@@ -47,5 +45,6 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new Tables(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Configuration());
         vertx.deployVerticle(new Endpoints(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new Dependencies(), new DeploymentOptions().setWorker(true));
     }
 }

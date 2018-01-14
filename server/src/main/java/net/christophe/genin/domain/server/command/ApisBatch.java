@@ -43,7 +43,7 @@ public class ApisBatch extends AbstractVerticle {
             final long update = json.getLong(Schemas.Raw.update.name());
             JsonArray services = apis.getJsonArray(Schemas.Raw.Apis.services.name(), new JsonArray());
 
-            Action0 completed = () -> collection.update(doc.put(Schemas.RAW_STATE, Treatments.END.getState()));
+            Action0 completed = () -> collection.update(doc.put(Schemas.RAW_STATE, Treatments.DEPENDENCIES.getState()));
             Commands.get().apis(apis, artifactId, version, update, services)
                     .subscribe(str -> {
                                 logger.info(str);

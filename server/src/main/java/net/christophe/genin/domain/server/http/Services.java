@@ -6,7 +6,6 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
@@ -14,13 +13,11 @@ import net.christophe.genin.domain.server.InitializeDb;
 import net.christophe.genin.domain.server.command.ConfigurationCommand;
 import net.christophe.genin.domain.server.command.Import;
 import net.christophe.genin.domain.server.command.Reset;
-import net.christophe.genin.domain.server.query.Configuration;
-import net.christophe.genin.domain.server.query.Endpoints;
-import net.christophe.genin.domain.server.query.Projects;
+import net.christophe.genin.domain.server.query.*;
 import net.christophe.genin.domain.server.command.Raw;
-import net.christophe.genin.domain.server.query.Tables;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Api rest builder.
@@ -59,6 +56,7 @@ public class Services {
         router.mountSubRouter("/projects", projects());
         router.mountSubRouter("/tables", tables());
         router.mountSubRouter("/endpoints", apis());
+        router.mountSubRouter("/dependencies", dependencies());
         router.mountSubRouter("/configuration", configuration());
         router.mountSubRouter("/apps", apps());
         return router;
@@ -72,6 +70,22 @@ public class Services {
     private Router apis() {
         Router router = Router.router(vertx);
         router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Endpoints.FIND));
+        return router;
+    }
+
+    private Router dependencies() {
+        Router router = Router.router(vertx);
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Dependencies.FIND));
+
+        router.get("/:resource")
+                .handler(rc -> {
+                    String resource = rc.request().getParam("resource");
+                    if (Objects.isNull(resource) || resource.isEmpty()) {
+                        rc.fail(400);
+                        return;
+                    }
+                    new Https.EbCaller(vertx, rc).arrAndReply(Dependencies.USED_BY, resource);
+                });
         return router;
     }
 

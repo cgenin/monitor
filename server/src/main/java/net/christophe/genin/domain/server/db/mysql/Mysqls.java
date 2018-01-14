@@ -131,7 +131,7 @@ public interface Mysqls {
             List<Integer> initialValue = new ArrayList<>();
             return Observable.from(batchOperations)
                     .flatMap(sql -> execute(sql).toObservable())
-                    .map(updateResult -> updateResult.getUpdated())
+                    .map(UpdateResult::getUpdated)
                     .reduce(initialValue, (acc, nb) -> {
                         acc.add(nb);
                         return acc;

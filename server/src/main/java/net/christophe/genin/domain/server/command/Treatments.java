@@ -12,7 +12,8 @@ public enum Treatments {
     TABLES(1),
     VERSION(2),
     URL(3),
-    END(4);
+    DEPENDENCIES(4),
+    END(5);
 
     private final Integer state;
 

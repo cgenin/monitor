@@ -18,7 +18,7 @@ public class Endpoints extends AbstractVerticle {
     public static final String FIND = Endpoints.class.getName() + ".find";
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         vertx.eventBus().consumer(FIND, msg ->
                 Queries.get().apis()
                         .subscribe(

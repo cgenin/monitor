@@ -96,4 +96,40 @@ public class MysqlQuery implements Queries {
                 .switchIfEmpty(Observable.just(new JsonArray()))
                 .toSingle();
     }
+
+    @Override
+    public Single<JsonArray> listAllResourceDependencies() {
+        return Mysqls.Instance.get().select("SELECT RESOURCE FROM DEPENDENCIES GROUP BY RESOURCE ORDER BY 1")
+                .map(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return new JsonArray();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> row.getString(0))
+                            .collect(Jsons.Collectors.toJsonArray());
+                })
+                .switchIfEmpty(Observable.just(new JsonArray()))
+                .toSingle();
+    }
+
+    @Override
+    public Single<JsonArray> usedBy(String resource) {
+        return Mysqls.Instance.get()
+                .select(
+                        "SELECT USED_BY FROM DEPENDENCIES WHERE RESOURCE=? order by 1",
+                        new JsonArray().add(resource)
+                )
+                .map(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return new JsonArray();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> row.getString(0))
+                            .collect(Jsons.Collectors.toJsonArray());
+                })
+                .switchIfEmpty(Observable.just(new JsonArray()))
+                .toSingle();
+    }
 }

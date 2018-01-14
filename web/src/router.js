@@ -41,7 +41,14 @@ export default new VueRouter({
       ]
     },
     {path: '/projects/:id', component: load('projects/Detail')},
-    {path: '/dependencies', component: load('Dependencies')},
+    {
+      path: '/dependencies',
+      component: load('Dependencies'),
+      children: [
+        {path: 'search/:resource', component: load('dependencies/Search')},
+        {path: '', component: load('dependencies/None')},
+      ]
+    },
     // Always leave this last one
     {path: '*', component: load('Error404')} // Not found
   ]

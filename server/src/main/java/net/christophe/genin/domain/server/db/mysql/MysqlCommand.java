@@ -8,6 +8,7 @@ import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
+import net.christophe.genin.domain.server.query.Configuration;
 import rx.Observable;
 import rx.Single;
 import rx.functions.Func1;
@@ -58,10 +59,7 @@ public class MysqlCommand implements Commands {
                         final List<String> tables = Commands.Projects.extractTables(json);
 
                         final List<String> allDeps = Commands.Projects.extractJavaDeps(json);
-                        final ConfigurationDto conf = Optional.ofNullable(Dbs.instance
-                                .repository(ConfigurationDto.class)
-                                .find().firstOrDefault())
-                                .orElseGet(ConfigurationDto::new);
+                        final ConfigurationDto conf = Configuration.get();
 
                         List<String> javaFilters = conf.getJavaFilters();
                         final List<String> javaDeps = allDeps.parallelStream()
@@ -243,6 +241,48 @@ public class MysqlCommand implements Commands {
                                 }
 
                         ));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Observable<String> dependencies(JsonObject json, String artifactId, ConfigurationDto configuration) {
+        Mysqls mysqls = Mysqls.Instance.get();
+        String usedBy = new DependenciesSanitizer(artifactId).run();
+
+        return mysqls.execute("DELETE FROM DEPENDENCIES WHERE USED_BY=? ", new JsonArray().add(usedBy))
+                .toObservable()
+                .flatMap(updateResult -> {
+                    logger.debug("Delete : " + updateResult.getUpdated());
+                    return mysqls.select("SELECT document from PROJECTS WHERE NAME=?", new JsonArray().add(artifactId))
+                            .map(resultSet -> {
+                                if (Objects.isNull(resultSet) || resultSet.getResults().isEmpty()) {
+                                    throw new IllegalStateException("No Projects found for " + artifactId);
+                                }
+
+                                JsonArray row = resultSet.getResults().get(0);
+                                String string = row.getString(0);
+                                return new JsonObject(string);
+                            })
+                            .flatMap(obj -> {
+                                JsonArray arr = obj.getJsonArray(Schemas.Projects.javaDeps.name(), new JsonArray());
+                                List list = arr.getList();
+                                return Observable.from(list);
+                            });
+
+                })
+                .map(str -> new DependenciesSanitizer(str.toString()).run())
+                .filter(resource -> !"STARTER".equals(resource))
+                .distinct()
+                .flatMap(resource -> {
+                    return mysqls.execute("INSERT INTO DEPENDENCIES (RESOURCE, USED_BY) VALUES (?,?)"
+                            , new JsonArray().add(resource).add(usedBy))
+                            .toObservable()
+                            .map(updateResult -> " resource '" + resource +
+                                    "' used by '" + usedBy +
+                                    "' : " + updateResult.getUpdated());
+                });
+
+
     }
 
     private Func1<JsonObject, Observable<? extends String>> insertInApis(JsonObject apis, String artifactId, String version, long update, String idProject) {

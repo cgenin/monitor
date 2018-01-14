@@ -36,7 +36,7 @@ public class Projects extends AbstractVerticle {
                                     msg.fail(500, "Error in query");
                                 }
                         ));
-        vertx.eventBus().consumer(GET, (Handler<Message<JsonObject>>) msg -> {
+        vertx.eventBus().<JsonObject>consumer(GET,  msg -> {
             String id = msg.body().getString(ID, "");
             Queries.get().versions(id)
                     .subscribe(

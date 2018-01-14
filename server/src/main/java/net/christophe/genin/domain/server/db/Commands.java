@@ -9,8 +9,10 @@ import net.christophe.genin.domain.server.json.Jsons;
 import rx.Observable;
 import rx.Single;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,6 +45,8 @@ public interface Commands {
                 Jsons.builder(services).toStream().flatMap(convert2Json).collect(Collectors.toList())
         );
     }
+
+    Observable<String> dependencies(JsonObject json, String artifactId, ConfigurationDto configuration);
 
     class Projects {
         public static boolean isSnapshot(String version) {
@@ -82,5 +86,35 @@ public interface Commands {
                     .collect(Collectors.toList());
         }
 
+    }
+
+    class DependenciesSanitizer {
+
+        private static Pattern[] PATTERNS = new Pattern[]{
+                Pattern.compile("\\-MANAGER"),
+                Pattern.compile("\\-SERVICE"),
+                Pattern.compile("\\-IMPL"),
+                Pattern.compile("\\-CLIENT"),
+        };
+        private final String str;
+
+        public DependenciesSanitizer(String str) {
+            this.str = str;
+        }
+
+        private String innerRun(String chaine, Pattern[] regexps) {
+            if (regexps.length == 0) {
+                return chaine;
+            }
+            String newChaine = regexps[0].matcher(chaine).replaceAll("");
+            Pattern[] newPatterns = (regexps.length == 1) ? new Pattern[0] : Arrays.copyOfRange(regexps, 1, regexps.length);
+            return innerRun(newChaine, newPatterns);
+
+        }
+
+        public String run() {
+            String US = str.toUpperCase();
+            return innerRun(US, PATTERNS);
+        }
     }
 }

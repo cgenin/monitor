@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Commands;
+import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Schemas;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
@@ -140,5 +141,11 @@ public class NitriteCommand implements Commands {
                     }
                     return Observable.empty();
                 });
+    }
+
+    @Override
+    public Observable<String> dependencies(JsonObject json, String artifactId, ConfigurationDto configuration) {
+        // TODO implements depdencies for nirite.
+        return Observable.empty();
     }
 }
