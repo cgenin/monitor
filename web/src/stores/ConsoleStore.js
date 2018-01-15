@@ -18,7 +18,7 @@ class ConsoleStore {
 
   addMessage(body) {
     const dt = new Date(body.date);
-    body.formattedDate = `${dt.getFullYear()}/${dt.getMonth() + 1}/${dt.getDay()} ${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()} ${dt.getMilliseconds()}`;
+    body.formattedDate = `${dt.getFullYear()}/${dt.getMonth() + 1}/${dt.getUTCDate()} ${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()} ${dt.getMilliseconds()}`;
     this.state.push(body);
   }
 

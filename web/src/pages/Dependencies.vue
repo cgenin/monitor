@@ -9,7 +9,7 @@
         </li>
         <li>
           <router-link to="" active-class="router-link-active">
-            <q-icon name="explore"/>
+            <q-icon name="link"/>
             Dépendance Intra Service
           </router-link>
         </li>
@@ -22,6 +22,9 @@
       <q-card-separator/>
       <q-card-main>
         <div class="noprint row justify-center content-center">
+          <div class="col-sm-3 col-xs-12 label-container">
+            <label>Les projets qui nécessitent :</label>
+          </div>
           <q-field class="col-sm-6 col-xs-12" icon="search">
             <q-input color="secondary" v-model="terms"
                      placeholder="Sélectionner la ressource">
@@ -118,6 +121,13 @@
   }
 </script>
 <style>
+  .dependencies-page .label-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+  }
+
   .dependencies-page .buttons {
     text-align: center;
   }
@@ -126,7 +136,8 @@
     .dependencies-page .breadcrumb {
       display: none;
     }
-    .dependencies-page  .q-card {
+
+    .dependencies-page .q-card {
       box-shadow: none;
     }
 

@@ -1,7 +1,9 @@
 <template>
   <li @click="click" :class="{nopointer:notOpens, withpointer:!notOpens}">
     <p>
-      {{label}}
+      <il v-if="!notOpens && open" class="fa fa-minus-circle"></il>
+      <il v-if="!notOpens && !open" class="fa fa-plus-circle"></il>
+      {{resource}}
     </p>
     <ul v-if="open">
       <sub-tree v-for="sub in subs" :key="sub" :resource="sub"/>
@@ -41,18 +43,6 @@
     },
     mounted() {
       this.notOpens = DependenciesStore.dependencies[this.resource];
-    },
-    computed: {
-      label() {
-        if (this.notOpens) {
-          return this.resource;
-        }
-        if (this.open) {
-          return `${this.resource} -`;
-        }
-        return `${this.resource} +`;
-      }
     }
-
   }
 </script>

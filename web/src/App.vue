@@ -54,7 +54,7 @@
             <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
           </q-item>
           <q-item to="/dependencies">
-            <q-item-side icon="explore"/>
+            <q-item-side icon="link"/>
             <q-item-main label="Dépendances" sublabel="Dépendance entre les Micro Services"/>
           </q-item>
           <q-side-link item to="/configuration/status">

@@ -31,7 +31,7 @@
         </q-card-main>
       </q-card>
       <div class="row justify-center">
-        <div class="col-xs-12 col-sm-11 shadow-2 bg-white" style="padding: 10px;display: flex;justify-content: center">
+        <div class="shadow-2 bg-white graph-container">
           <div class="ul-tree  fix " :class="{horizontal:vertical, vertical:!vertical}">
             <ul>
               <li>
@@ -97,6 +97,13 @@
   .dependencies-search-page .print-button {
     margin-left: 1em;
     margin-top: .5em;
+  }
+
+  .dependencies-search-page .graph-container {
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    min-width: 98%;
   }
 
   .dependencies-search-page .nopointer {
