@@ -117,16 +117,15 @@
     }
   }
 </script>
-<style scoped>
+<style>
   .dependencies-page .buttons {
     text-align: center;
   }
 
   @media print {
-    .breadcrumb {
+    .dependencies-page .breadcrumb {
       display: none;
     }
-
     .dependencies-page  .q-card {
       box-shadow: none;
     }
