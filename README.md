@@ -4,6 +4,22 @@ Un serveur permettant d'agréger des données pour créer un annuaire de micro-s
 
 ![Liste des micro services](img/main-monitor.png)
 
+
+## Fonctionnalités 
+
+- Liste de l'ensemble des projets Micro-Services Java par version.
+- Liste de l'ensemble des tables utilisées par projet Si le projet utilise Hibernate / Spring DAO.
+- Liste de l'ensemble des apis REST que fournissent le projet.
+- Interface de recherche par dépendances d'appel entre micro-services.
+
+## Ajout de données
+
+L'ajout de données s'effectue via l'exposition d'un EndPoint REST  `/api/apps` va une méthode POST.
+
+// TODO Exemple de format d'entrée.
+
+Le cas d'utilisation est l'envoi de ces données lors des phases de build du projet. L'aggrégation des informations s'effectue de manière asyncrhrone.  
+
 ## Build du projet
 
 Deux moyens possibles pour lancer le projet : 
@@ -63,3 +79,14 @@ avec :
 - __BD NITRITE__ : Répertoire pour la base de données Nitrite.
 - __LOG DIR__ : Répertoire des logs de l'application.
 
+## Technologies utilisées
+
+* [Vertx](http://vertx.io/)
+* [Nitrite database](https://github.com/dizitart/nitrite-database)
+* [VueJs](https://vuejs.org/)
+* [Quasar Framework](http://quasar-framework.org)
+* [Yarn](https://yarnpkg.com/lang/en/)
+
+## License
+
+[MIT](License)
