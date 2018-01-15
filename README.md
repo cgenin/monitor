@@ -6,28 +6,33 @@ Un serveur permettant d'agréger des données pour créer un annuaire de micro-s
 
 ## Build du projet
 
-### Partie front
+Deux moyens possibles pour lancer le projet : 
+- La création d'un jar exécutable.
+- Un container Docker. 
 
-- Clone the git repository 
-- Build la partie front du projet en exécutant les commandes suivantes :
-```batchfile
-cd web
-npm install
-npm run build
-```
+### Pré requis
+Ce projet nécessite les dépendances suivantes pour être construis :
+- __Jdk 1.8__
+- __Maven >= 3.5.2__
+- __Nodejs >=8.5__
+- __yarn__
+- __Docker__ : Dépendance Optionnelle. Uniquement si vous voulez utilisez docker pour lancer le projet.    
+ 
 
-### Partie serveur et jar exécutable
+### Jar exécutable
 
+- Clone the git repository. 
 - Build la partie serveur en exécutant dans le répertoire `server` la commande : 
 ```batchfile
-mvn clean install
+make 
 ```
 
 ### Image Docker (Optionelle)
 
+- Clone the git repository.
 - Si vous voulez utilliser Docker, alors toujours dans le répertoire `server` lancer la commande :
 ```batchfile
-mvn dockerfile:build
+make docker
 ``` 
 
 ## lancer le serveur

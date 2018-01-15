@@ -2,16 +2,22 @@
 # Anti-Monitor
 #
 
-web:
+.PHONY: server/target/*.jar
+
+clean:
+		@echo "clean All distributions"
+		@rm -Rf web/dist
+		@rm -Rf server/target
+
+web/dist: clean
 	@echo "package web"
-	@cd web
-	npm install && npm run build
+	cd web && yarn install && yarn build
 
-server: web
-	@cd ../server
-	@echo "package server"
-	mvn clean install dockerfile:build
+server/target/*.jar: web/dist
+	@echo "package Fat Jar"
+	cd server && mvn clean install
 
-build: server
-	@echo "package all"
+docker: server/target/*.jar
+	@echo "package Docker Image"
+	cd server && mvn dockerfile:build
 

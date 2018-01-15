@@ -1,10 +1,7 @@
 package net.christophe.genin.domain.server.db.mysql;
 
-import com.sun.deploy.panel.DeleteFilesDialog;
-import org.relaxng.datatype.DatatypeException;
 import rx.Single;
 
-import java.util.Arrays;
 
 public class AntiMonitorSchemas {
 
