@@ -9,9 +9,10 @@
       <q-toolbar slot="header">
         <q-btn
           flat
-          @click="$refs.layout.toggleLeft()"
+          @click="menuExpand()"
+          class="burger-icon"
+          :icon="opened ? 'close' : 'menu'"
         >
-          <q-icon name="menu"/>
         </q-btn>
 
         <q-toolbar-title>
@@ -103,6 +104,22 @@
       QItemSide,
       QItemMain
     },
+    data () {
+      return {
+        opened: true
+      }
+    },
+    methods: {
+      menuExpand() {
+        this.$refs.layout.toggleLeft()
+        if (!this.opened) {
+          this.opened = true
+        }
+        else {
+          this.opened = false
+        }
+      }
+    }
   }
 
   Vue.use(KonamiCode, {callback: function () {
@@ -110,17 +127,5 @@
   }})
 </script>
 
-<style>
-  @media print {
-    .layout-aside,
-    .layout-header {
-      display: none;
-    }
-
-
-
-    .noprint {
-      display: none;
-    }
-  }
+<style lang="stylus" scoped>
 </style>
