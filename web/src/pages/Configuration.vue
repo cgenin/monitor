@@ -1,20 +1,18 @@
 <template>
   <div class="configuration-page">
-    <q-card>
-      <ul class="breadcrumb">
-        <li>
-          <router-link to="/">
-            <q-icon name="home" />
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" active-class="router-link-active">
-            <q-icon name="build" /> Console d'administration
-          </router-link>
-        </li>
-      </ul>
-    </q-card>
-    <q-card>
+    <ul class="breadcrumb">
+      <li>
+        <router-link to="/">
+          <q-icon name="home" />
+        </router-link>
+      </li>
+      <li>
+        <router-link to="" active-class="router-link-active">
+          <q-icon name="build" /> Console d'administration
+        </router-link>
+      </li>
+    </ul>
+    <q-card class="container">
       <q-card-title>
         <h3>Console d'adminisration</h3>
       </q-card-title>
@@ -89,3 +87,7 @@
     }
   }
 </script>
+
+<style lang="stylus" scoped>
+  @import "configuration/configuration"
+</style>

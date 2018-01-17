@@ -23,6 +23,13 @@ h3
   margin 0
   font-weight 400
 
+.container
+  margin 0 30px 30px
+
+.background-positive
+  background-color $positive
+.background-negative
+  background-color $negative
 
 /*
  * QUASAR COMPONENTS
@@ -83,6 +90,33 @@ h3
     .q-item:focus,
     .q-item:hover
       background-color darken($primary, 10%)
+
+
+// CARD
+.q-card
+  box-shadow none
+  border 1px solid $border
+  background white
+  &.sm-card
+  &.row
+    margin 0
+    .q-card-main
+      flex-grow 1
+      align-items center
+      .q-icon
+        padding 1.4rem
+      h5
+        font-size 1.4em
+        color black
+        justify-self center
+        flex-grow 1
+    q-card-actions
+      display flex
+      flex-grow 0
+      border-left 1px solid $border
+      .q-btn
+        align-self stretch
+
 
 
 /*
@@ -201,7 +235,9 @@ h3
   // BREADCRUMB
 body.desktop
   ul.breadcrumb
+    margin 30px
     li
+      margin-bottom 0
       a
         transition background-color .2s linear
         &:after,
