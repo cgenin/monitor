@@ -3,7 +3,7 @@
     <q-list>
       <q-list-header>Status BDD</q-list-header>
         <q-item class="row sm-gutter">
-            <div class="col-md-4 col-xs-6">
+            <div class="col-md-3 col-xs-6">
               <q-card class="sm-card">
                 <q-card-main class="no-padding row">
                   <q-icon class="background-positive" v-if="nitrite" name="check" color="white" size="2rem"></q-icon>
@@ -12,7 +12,7 @@
                 </q-card-main>
               </q-card>
             </div>
-            <div class="col-md-4 col-xs-6">
+            <div class="col-md-3 col-xs-6">
             <q-card class="sm-card row">
               <q-card-main class="no-padding row">
                 <q-icon class="background-positive" v-if="mysql" name="check" color="white" size="2rem"></q-icon>

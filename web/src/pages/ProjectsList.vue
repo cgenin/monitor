@@ -1,20 +1,18 @@
 <template>
   <div class="projects-page page-list">
-    <q-card>
-      <ul class="breadcrumb">
-        <li>
-          <router-link to="/">
-            <q-icon name="home" />
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" active-class="router-link-active">
-            <q-icon name="view_list" /> Liste des Projets
-          </router-link>
-        </li>
-      </ul>
-    </q-card>
-    <q-card>
+    <ul class="breadcrumb">
+      <li>
+        <router-link to="/">
+          <q-icon name="home" />
+        </router-link>
+      </li>
+      <li>
+        <router-link to="" active-class="router-link-active">
+          <q-icon name="view_list" /> Liste des Projets
+        </router-link>
+      </li>
+    </ul>
+    <q-card class="container">
       <q-card-title>
         <h3>Liste des Projets</h3>
       </q-card-title>

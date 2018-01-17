@@ -1,21 +1,19 @@
 <template>
   <div class="dependencies-page page-list">
-    <q-card>
-      <ul class="breadcrumb noprint">
-        <li>
-          <router-link to="/">
-            <q-icon name="home"/>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" active-class="router-link-active">
-            <q-icon name="link"/>
-            Dépendance Intra Service
-          </router-link>
-        </li>
-      </ul>
-    </q-card>
-    <q-card>
+    <ul class="breadcrumb noprint">
+      <li>
+        <router-link to="/">
+          <q-icon name="home"/>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="" active-class="router-link-active">
+          <q-icon name="link"/>
+          Dépendance Intra Service
+        </router-link>
+      </li>
+    </ul>
+    <q-card class="container">
       <q-card-title>
         <h3>Dépendance Intra Service</h3>
       </q-card-title>
