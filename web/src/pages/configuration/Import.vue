@@ -1,10 +1,14 @@
 <template>
   <div class="import-page">
-    <div class="inputs">
-      <input @change="fileSelected" class="q-input-target" ref="file" type="file">
+    <div class="q-if row no-wrap items-center relative-position q-input text-primary">
+      <div class="q-if-inner col row no-wrap items-center relative-position">
+        <label class="label-file q-btn row inline flex-center q-focusable q-hoverable relative-position q-btn-rectangle q-btn-standard q-btn-flat" for="file">
+          Choisir un fichier
+        </label>
+        <input id="file" @change="fileSelected" class="col q-input-target input-file text-left" ref="file" type="file">
+      </div>
     </div>
-    <hr>
-    <q-btn class="btn-fullwidth" color="primary" icon="file_upload" @click="doImport">Importer</q-btn>
+    <q-btn color="primary" icon="file_upload" @click="doImport">Importer</q-btn>
   </div>
 </template>
 <script>
@@ -47,13 +51,5 @@
 <style scoped>
   .import-page {
     margin-top: 2em;
-  }
-
-  .inputs {
-    margin-bottom: 1em;
-  }
-
-  .btn-fullwidth {
-    width: 100%
   }
 </style>
