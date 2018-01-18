@@ -37,8 +37,6 @@
             <q-btn class="btn-flat-primary" @click="reset" flat>Reset</q-btn>
           </div>
         </div>
-
-
       </q-card-main>
     </q-card>
 

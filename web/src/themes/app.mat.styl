@@ -44,7 +44,7 @@ h3
 
   // LAYOUT
 .layout-page-container
-  background #f2f4f8
+  background $background
 .logo-container
   width 100%
   height 100%
@@ -57,15 +57,19 @@ h3
     background $light
     color $faded
     border-bottom 1px solid $grey-5
-    .burger-icon
+    .q-btn
       width 45px
       height 45px
-      position relative
       transition all .5s ease-in-out
+    .burger-icon
+      position relative
       cursor pointer
       .q-icon
         margin-right 0
 .layout-aside-left
+  &.fixed
+    &.on-layout
+      box-shadow none
   .q-list
     padding-top 0
     .sidebar-header
@@ -84,8 +88,9 @@ h3
           text-transform: uppercase
           margin 20px 0 10px
       .side-header
-        padding 9px
+        padding 9px 9px 9px 16px
         background-color $secondary
+        border-bottom 1px solid #1d4a41
         span
           font-size 22px
           padding-left 15px
@@ -98,7 +103,13 @@ h3
     .q-item.router-link-active,
     .q-item:focus,
     .q-item:hover
-      background-color darken($primary, 10%)
+      background-color $background
+      border-left 6px solid $secondary
+      transition all .2s ease-out
+      .q-item-section
+        color: $grey-10
+        .q-item-sublabel
+          color: $grey-8
 
 
 // CARD
@@ -132,7 +143,7 @@ h3
     background-color $light
     .q-card-title
       h3
-        color $grey-8
+        color $grey-10
 /*
  * PAGE LIST
  * With data table
@@ -271,6 +282,8 @@ body.desktop
           border-left-color transparent
 
   // BUTTONS
+.q-btn
+  box-shadow none
 .q-btn-standard
   &.open
     .q-icon

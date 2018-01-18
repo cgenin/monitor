@@ -19,15 +19,12 @@
           Anti-monitor
           <div slot="subtitle">Récapitualtif des projets Micro services</div>
         </q-toolbar-title>
+        <!--<q-btn flat class="grey-9" @click="$router.push('/configuration/status')">-->
+          <!--<q-icon name="build" />-->
+        <!--</q-btn>-->
       </q-toolbar>
 
       <div slot="left">
-        <!--
-          Use <q-side-link> component
-          instead of <q-item> for
-          internal vue-router navigation
-        -->
-
         <q-list no-border link inset-delimiter>
           <div class="sidebar-header">
             <q-list-header class="side-header">
