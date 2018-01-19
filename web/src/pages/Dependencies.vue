@@ -116,6 +116,6 @@
     }
   }
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
   @import "dependencies/dependencies.styl"
 </style>

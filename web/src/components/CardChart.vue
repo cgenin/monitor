@@ -7,7 +7,7 @@ import Chart from 'chart.js'
 export default {
   data () {
     return {
-      type: 'pie',
+      type: 'bar',
       chart: ''
     }
   },

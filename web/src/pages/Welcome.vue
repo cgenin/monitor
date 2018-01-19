@@ -4,19 +4,11 @@
     <div class="layout-padding slide-container">
       <q-card class="container">
         <q-card-title>
-          <h3>Nombre de projets, tables, apis</h3>
+          <h3>{{label}}</h3>
         </q-card-title>
         <q-card-separator/>
         <q-card-main>
-        <!--<q-carousel arrows autoplay infinite dots class="text-white">-->
-          <!--<div slot="slide" class="slide bg-primary centered">-->
-            <!--<span class="title">Nb Projects : {{nbProjects}}-->
-            <!--</span>-->
-          <!--</div>-->
-          <!--<div slot="slide" class="slide bg-secondary centered">-->
-            <!--<span class="title">Nb Tables : {{nbTables}}</span>-->
-          <!--</div>-->
-        <!--</q-carousel>-->
+
           <card-chart
             card-title="Nombre de Projets, Tables, Apis"
             :data="datacollection"
@@ -39,6 +31,7 @@
   } from 'quasar'
   import ProjectStore from '../stores/ProjectsStore'
   import TablesStore from '../stores/TablesStore'
+  import EndpointsStore from '../stores/EndpointsStore'
   import CardChart from '../components/CardChart'
 
   export default {
@@ -70,6 +63,11 @@
         }
       }
     },
+    computed: {
+      label() {
+        return `Projets ${this.nbProjects}, Tables : ${this.nbTables}, Apis: ${this.nbApis}`;
+      }
+    },
     mounted() {
       let promiseProject = ProjectStore
         .initialize()
@@ -81,8 +79,12 @@
         .then((list) => {
           this.nbTables = list.length
         });
+      let promiseApis = EndpointsStore.find({})
+        .then((list) => {
+          this.nbApis = list.length
+        });
 
-      Promise.all([promiseProject, promiseTables]).then(this.fillData);
+      Promise.all([promiseProject, promiseTables, promiseApis]).then(this.fillData);
     },
   }
 </script>

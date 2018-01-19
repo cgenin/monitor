@@ -32,9 +32,9 @@
     <q-card>
         <div class="shadow-2 bg-white graph-container">
           <div class="ul-tree  fix " :class="{horizontal:vertical, vertical:!vertical}">
-            <ul>
-              <li>
-                <p>{{resource}}</p>
+            <ul class="root">
+              <li >
+                <p class="root">{{resource}}</p>
                 <ul>
                   <sub-tree v-for="u in usedBy" :resource="u" :key="u"></sub-tree>
                 </ul>
