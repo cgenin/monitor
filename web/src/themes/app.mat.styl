@@ -23,6 +23,20 @@ h3
   margin 0
   font-weight 400
 
+.container
+  margin 0 30px 30px
+
+.background-positive
+  background-color $positive
+.background-negative
+  background-color $negative
+
+// INPUT FILE
+.label-file
+  cursor pointer
+
+.input-file
+  display none
 
 /*
  * QUASAR COMPONENTS
@@ -30,7 +44,7 @@ h3
 
   // LAYOUT
 .layout-page-container
-  background $grey-11
+  background $background
 .logo-container
   width 100%
   height 100%
@@ -43,12 +57,24 @@ h3
     background $light
     color $faded
     border-bottom 1px solid $grey-5
+    .q-btn
+      width 45px
+      height 45px
+      transition all .5s ease-in-out
+    .burger-icon
+      position relative
+      cursor pointer
+      .q-icon
+        margin-right 0
 .layout-aside-left
+  &.fixed
+    &.on-layout
+      box-shadow none
   .q-list
     padding-top 0
     .sidebar-header
       .q-list-header
-        line-height 50px
+        line-height 25px
         background-color $primary
         display flex
         justify-content flex-start
@@ -62,8 +88,11 @@ h3
           text-transform: uppercase
           margin 20px 0 10px
       .side-header
+        padding 9px 9px 9px 16px
+        background-color $secondary
+        border-bottom 1px solid #1d4a41
         span
-          font-size 24px
+          font-size 22px
           padding-left 15px
     .q-item
       .q-item-section
@@ -74,9 +103,47 @@ h3
     .q-item.router-link-active,
     .q-item:focus,
     .q-item:hover
-      background-color darken($primary, 10%)
+      background-color $background
+      border-left 6px solid $secondary
+      transition all .2s ease-out
+      .q-item-section
+        color: $grey-10
+        .q-item-sublabel
+          color: $grey-8
 
 
+// CARD
+.q-card
+  box-shadow none
+  border 1px solid $border
+  background white
+  &.sm-card
+  &.row
+    margin 0
+    .q-card-main
+      flex-grow 1
+      align-items center
+      .q-icon
+        padding .8rem
+      h5
+        font-size 1.4em
+        color black
+        justify-self center
+        flex-grow 1
+    q-card-actions
+      display flex
+      flex-grow 0
+      border-left 1px solid $border
+      .q-btn
+        align-self stretch
+
+
+
+  .q-card-primary
+    background-color $light
+    .q-card-title
+      h3
+        color $grey-10
 /*
  * PAGE LIST
  * With data table
@@ -165,6 +232,8 @@ h3
         .q-item-sublabel
           color rgba(0,0,0,0.54)
     .q-collapsible
+      .q-item
+        transition all .2s linear
       .q-collapsible-sub-item
         .list-table
           ul
@@ -191,7 +260,9 @@ h3
   // BREADCRUMB
 body.desktop
   ul.breadcrumb
+    margin 30px
     li
+      margin-bottom 0
       a
         transition background-color .2s linear
         &:after,
@@ -211,6 +282,8 @@ body.desktop
           border-left-color transparent
 
   // BUTTONS
+.q-btn
+  box-shadow none
 .q-btn-standard
   &.open
     .q-icon

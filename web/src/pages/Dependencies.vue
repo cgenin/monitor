@@ -1,31 +1,29 @@
 <template>
   <div class="dependencies-page page-list">
-    <q-card>
-      <ul class="breadcrumb noprint">
-        <li>
-          <router-link to="/">
-            <q-icon name="home"/>
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" active-class="router-link-active">
-            <q-icon name="link"/>
-            Dépendance Intra Service
-          </router-link>
-        </li>
-      </ul>
-    </q-card>
-    <q-card>
+    <ul class="breadcrumb noprint">
+      <li>
+        <router-link to="/">
+          <q-icon name="home"/>
+        </router-link>
+      </li>
+      <li>
+        <router-link to="" active-class="router-link-active">
+          <q-icon name="link"/>
+          Dépendance Intra Service
+        </router-link>
+      </li>
+    </ul>
+    <q-card class="container">
       <q-card-title>
         <h3>Dépendance Intra Service</h3>
       </q-card-title>
       <q-card-separator/>
       <q-card-main>
-        <div class="noprint row justify-center content-center">
-          <div class="col-sm-3 col-xs-12 label-container">
+        <div class="noprint row inputs">
+          <div class="label-container col-sm-2 col-xs-12">
             <label>Les projets qui nécessitent :</label>
           </div>
-          <q-field class="col-sm-6 col-xs-12" icon="search">
+          <q-field class="col-sm-7 col-xs-12" icon="search">
             <q-input color="secondary" v-model="terms"
                      placeholder="Sélectionner la ressource">
               <q-autocomplete
@@ -35,12 +33,10 @@
               />
             </q-input>
           </q-field>
-          <div class="col-sm-2 col-xs-12 buttons">
-            <q-btn @click="reset" round color="blue">Reset</q-btn>
+          <div class="col-sm-2 col-xs-12">
+            <q-btn class="btn-flat-primary" @click="reset" flat>Reset</q-btn>
           </div>
         </div>
-
-
       </q-card-main>
     </q-card>
 
@@ -120,29 +116,6 @@
     }
   }
 </script>
-<style>
-  .dependencies-page .label-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 10px;
-  }
-
-  .dependencies-page .buttons {
-    text-align: center;
-  }
-
-  @media print {
-    .dependencies-page .breadcrumb {
-      display: none;
-    }
-
-    .dependencies-page .q-card {
-      box-shadow: none;
-    }
-
-    .dependencies-page .q-card-main {
-      display: none;
-    }
-  }
+<style lang="stylus" scoped>
+  @import "dependencies/dependencies.styl"
 </style>

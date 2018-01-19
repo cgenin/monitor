@@ -1,7 +1,6 @@
 <template>
   <div class="dependencies-search-page">
-    <div style="display: flex;flex-direction: column">
-      <q-card>
+    <q-card>
         <q-card-main>
           <div class="row justify-around">
             <div>
@@ -30,7 +29,7 @@
           </div>
         </q-card-main>
       </q-card>
-      <div class="row justify-center">
+    <q-card>
         <div class="shadow-2 bg-white graph-container">
           <div class="ul-tree  fix " :class="{horizontal:vertical, vertical:!vertical}">
             <ul>
@@ -44,9 +43,7 @@
           </div>
 
         </div>
-      </div>
-    </div>
-
+      </q-card>
   </div>
 </template>
 <script>
@@ -87,213 +84,3 @@
 
   }
 </script>
-
-<style>
-
-  .dependencies-search-page ul.no-bullet {
-    list-style-type: none;
-  }
-
-  .dependencies-search-page .print-button {
-    margin-left: 1em;
-    margin-top: .5em;
-  }
-
-  .dependencies-search-page .graph-container {
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    min-width: 98%;
-  }
-
-  .dependencies-search-page .nopointer {
-    cursor: not-allowed;
-  }
-
-  .dependencies-search-page .withpointer {
-    cursor: pointer;
-  }
-
-  .ul-tree.horizontal ul {
-    position: relative;
-    margin: 0;
-    padding: 0 0 0 1em;
-    list-style: none;
-  }
-
-  .ul-tree.horizontal ul:before {
-    position: absolute;
-    content: '';
-    top: 50%;
-    left: 0;
-    width: 1em;
-    border-top: 1px solid #999;
-  }
-
-  .ul-tree.horizontal li {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0 0 0 1em;
-  }
-
-  .ul-tree.horizontal li:before {
-    position: absolute;
-    content: '';
-    top: 0;
-    left: 0;
-    bottom: 0;
-    border-left: 1px solid #999;
-  }
-
-  .ul-tree.horizontal li:first-child:before {
-    top: 50%;
-  }
-
-  .ul-tree.horizontal li:last-child:before {
-    bottom: 50%;
-  }
-
-  .ul-tree.horizontal li p {
-    display: inline-block;
-    position: relative;
-    background-color: #eee;
-    border: 1px solid #999;
-    margin: 1em 0;
-    padding: 0.5em;
-    text-align: center;
-  }
-
-  .ul-tree.horizontal li p:before {
-    position: absolute;
-    content: '';
-    top: 50%;
-    left: -1em;
-    width: 1em;
-    border-top: 1px solid #999;
-  }
-
-  .ul-tree.horizontal > ul {
-    padding: 0;
-  }
-
-  .ul-tree.horizontal > ul:before {
-    display: none;
-  }
-
-  .ul-tree.horizontal > ul > li:before {
-    display: none;
-  }
-
-  .ul-tree.horizontal > ul > li > p:before {
-    display: none;
-  }
-
-  .ul-tree.horizontal.fix p {
-    min-width: 7em;
-    display: block;
-  }
-
-  .ul-tree.vertical ul {
-    position: relative;
-    margin: 0;
-
-    padding: 1em 0 0 0;
-    list-style: none;
-    display: flex;
-    flex-direction: row;
-  }
-
-  .ul-tree.vertical ul:before {
-    position: absolute;
-    content: '';
-    left: 50%;
-    top: 0;
-    height: 1em;
-    border-left: 1px solid #999;
-  }
-
-  .ul-tree.vertical li {
-    display: inline-block;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1em 0 0 0;
-  }
-
-  .ul-tree.vertical li:before {
-    position: absolute;
-    content: '';
-    top: 0;
-    left: 0;
-    right: 0;
-    border-top: 1px solid #999;
-  }
-
-  .ul-tree.vertical li:first-child:before {
-    left: 50%;
-  }
-
-  .ul-tree.vertical li:last-child:before {
-    right: 50%;
-  }
-
-  .ul-tree.vertical li p {
-    display: inline-block;
-    position: relative;
-    background-color: #eee;
-    border: 1px solid #999;
-    margin: 0 1em;
-    padding: 0.5em;
-    text-align: center;
-  }
-
-  .ul-tree.vertical li p:before {
-    position: absolute;
-    content: '';
-    left: 50%;
-    top: -1em;
-    height: 1em;
-    border-left: 1px solid #999;
-  }
-
-  .ul-tree.vertical > ul {
-    padding: 0;
-  }
-
-  .ul-tree.vertical > ul:before {
-    display: none;
-  }
-
-  .ul-tree.vertical > ul > li:before {
-    display: none;
-  }
-
-  .ul-tree.vertical > ul > li > p:before {
-    display: none;
-  }
-
-  .ul-tree.vertical.fix p {
-    min-width: 6em;
-    min-height: 2.5em;
-  }
-
-  @media print {
-    ul.no-bullet,
-    .dependencies-search-page .print-button {
-      display: none;
-    }
-
-    .dependencies-search-page .q-card {
-      box-shadow: none;
-    }
-
-    .dependencies-search-page .shadow-2 {
-      box-shadow: none;
-    }
-
-  }
-
-</style>

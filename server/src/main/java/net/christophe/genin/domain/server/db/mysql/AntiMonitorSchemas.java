@@ -9,29 +9,29 @@ public class AntiMonitorSchemas {
             "CREATE TABLE IF NOT EXISTS EVENTS (\n" +
                     "  ID       BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
                     "  state    INTEGER,\n" +
-                    "  document JSON\n" +
+                    "  document LONGTEXT\n" +
                     ")",
-            "CREATE TABLE IF NOT EXISTS TABLES\n" +
-                    "(  ID      VARCHAR(100) NOT NULL PRIMARY KEY,\n" +
+            "CREATE TABLE IF NOT EXISTS TABLES (\n" +
+                    "  ID      VARCHAR(100) NOT NULL PRIMARY KEY,\n" +
                     "  NAME    TEXT NOT NULL,\n" +
                     "  SERVICE TEXT NOT NULL,\n" +
                     "  latestUpdate BIG INT\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS TABLES (\n" +
-                    "  ID       VARCHAR(1000) PRIMARY KEY,\n" +
+                    "  ID       VARCHAR(767) PRIMARY KEY,\n" +
                     "  NAME     VARCHAR(100),\n" +
-                    "  document JSON\n" +
+                    "  document LONGTEXT\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS APIS (\n" +
-                    "  ID        VARCHAR(1000) PRIMARY KEY,\n" +
+                    "  ID        VARCHAR(767) PRIMARY KEY,\n" +
                     "  METHOD   VARCHAR(10),\n" +
                     "  FULLURL   TEXT,\n" +
                     "  IDPROJECT VARCHAR(1000),\n" +
-                    "  document  LONGTEXT\n" +
+                    "  document LONGTEXT\n" +
                     ")",
 
             "CREATE TABLE IF NOT EXISTS PROJECTS (\n" +
-                    "  ID        VARCHAR(1000) PRIMARY KEY,\n" +
+                    "  ID        VARCHAR(767) PRIMARY KEY,\n" +
                     "  NAME      VARCHAR(200),\n" +
                     "  document  LONGTEXT\n" +
                     ")",
@@ -42,11 +42,11 @@ public class AntiMonitorSchemas {
                     "  document  LONGTEXT\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS DEPENDENCIES (\n" +
-                    "                      RESOURCE VARCHAR(200),\n" +
-                    "                      USED_BY      VARCHAR(200),\n" +
-                    "                      document LONGTEXT,\n" +
-                    "                      PRIMARY KEY (RESOURCE, USED_BY)\n" +
-                    "                    )",
+                    "  RESOURCE VARCHAR(200),\n" +
+                    "  USED_BY  VARCHAR(200),\n" +
+                    "  document LONGTEXT,\n" +
+                    "  PRIMARY KEY (RESOURCE, USED_BY)\n" +
+                    ")",
             "DELETE FROM EVENTS",
             "DELETE FROM PROJECTS",
             "DELETE FROM TABLES",

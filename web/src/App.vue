@@ -9,24 +9,22 @@
       <q-toolbar slot="header">
         <q-btn
           flat
-          @click="$refs.layout.toggleLeft()"
+          @click="menuExpand()"
+          class="burger-icon"
+          :icon="opened ? 'close' : 'menu'"
         >
-          <q-icon name="menu"/>
         </q-btn>
 
         <q-toolbar-title>
           Anti-monitor
           <div slot="subtitle">Récapitualtif des projets Micro services</div>
         </q-toolbar-title>
+        <!--<q-btn flat class="grey-9" @click="$router.push('/configuration/status')">-->
+          <!--<q-icon name="build" />-->
+        <!--</q-btn>-->
       </q-toolbar>
 
       <div slot="left">
-        <!--
-          Use <q-side-link> component
-          instead of <q-item> for
-          internal vue-router navigation
-        -->
-
         <q-list no-border link inset-delimiter>
           <div class="sidebar-header">
             <q-list-header class="side-header">
@@ -101,20 +99,24 @@
       QItemSide,
       QItemMain
     },
+    data () {
+      return {
+        opened: true
+      }
+    },
+    methods: {
+      menuExpand() {
+        this.$refs.layout.toggleLeft()
+        if (!this.opened) {
+          this.opened = true
+        }
+        else {
+          this.opened = false
+        }
+      }
+    }
   }
 </script>
 
-<style>
-  @media print {
-    .layout-aside,
-    .layout-header {
-      display: none;
-    }
-
-
-
-    .noprint {
-      display: none;
-    }
-  }
+<style lang="stylus" scoped>
 </style>

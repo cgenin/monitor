@@ -1,20 +1,18 @@
 <template>
   <div class="apis-page page-list">
-    <q-card>
-      <ul class="breadcrumb">
-        <li>
-          <router-link to="/">
-            <q-icon name="home" />
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" active-class="router-link-active">
-            <q-icon name="explore" /> Liste des Apis
-          </router-link>
-        </li>
-      </ul>
-    </q-card>
-    <q-card>
+    <ul class="breadcrumb">
+      <li>
+        <router-link to="/">
+          <q-icon name="home" />
+        </router-link>
+      </li>
+      <li>
+        <router-link to="" active-class="router-link-active">
+          <q-icon name="explore" /> Liste des Apis
+        </router-link>
+      </li>
+    </ul>
+    <q-card class="container">
       <q-card-title>
         <h3>Liste des apis</h3>
       </q-card-title>
@@ -50,8 +48,10 @@
                    class="field-input"></q-input>
         </div>
         <q-card-separator></q-card-separator>
-        <div v-if="viewTable">
+        <div class="results-number">
           <p class="caption">Résultat : {{datas.length}}</p>
+        </div>
+        <div v-if="viewTable">
           <table class="table-result q-table vertical-separator bordered striped-odd highlight responsive ">
             <thead>
             <tr>
@@ -165,7 +165,7 @@
         filtersPanel: false,
         subFilters: {},
         methodsOptions: [
-          {label: 'all', value: null},
+          {label: '', value: null},
           {label: 'GET', value: 'GET'},
           {label: 'POST', value: 'POST'},
           {label: 'PUT', value: 'PUT'},
@@ -260,7 +260,6 @@
       flex-flow row wrap
       align-content space-between
       width 100%
-      padding 35px 0
       .apis-card
         width 35vw
   .api-url

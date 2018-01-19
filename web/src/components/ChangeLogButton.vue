@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-btn @click="modal= true" color="secondary" v-if="content" small>
+    <q-btn @click="modal= true" color="tertiary" v-if="content" small>
       <q-icon name="change_history"></q-icon>
     </q-btn>
     <q-modal ref="layoutModal" v-model="modal" :content-css="{minWidth: '55vw', minHeight: '85vh', padding:'1em'}">

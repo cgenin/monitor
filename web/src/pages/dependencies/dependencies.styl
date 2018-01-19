@@ -1,0 +1,174 @@
+// Global page
+.dependencies-page
+  .label-container
+    display flex
+    justify-content flex-start
+    align-items center
+  .buttons
+    text-align center
+
+// Search results page
+.dependencies-search-page
+  ul.no-bullet
+    list-style-type none
+  .print-button
+    margin-left 1em
+    margin-top .5em
+  .graph-container
+    padding 10px
+    display flex
+    justify-content flex-start
+    overflow-y auto
+  .nopointer
+    cursor not-allowed
+  .withpointer
+    cursor pointer
+
+  // Dependencies tree styling
+  .ul-tree
+    &.horizontal
+      & > ul
+        padding 0
+        &:before
+          display none
+        & > li
+          &:before
+            display none
+          & > p
+            &:before
+              display none
+
+      ul
+        position relative
+        margin 0
+        padding 0 0 0 1em
+        list-style none
+        &:before
+          position absolute
+          content ''
+          top 50%
+          left 0
+          width 1em
+          border-top 1px solid #999
+        li
+          position relative
+          display flex
+          flex-direction row
+          align-items center
+          padding 0 0 0 1em
+          &:before
+            position absolute
+            content ''
+            top 0
+            left 0
+            bottom 0
+            border-left 1px solid #999
+          &:first-child
+            &:before
+              top 50%
+          &:last-child
+            &:before
+              bottom 50%
+          p
+            display inline-block
+            position relative
+            background-color #eee
+            border 1px solid #999
+            margin 1em 0
+            padding 0.5em
+            text-align center
+            &:before
+              position absolute
+              content: ''
+              top 50%
+              left -1em
+              width 1em
+              border-top 1px solid #999
+
+
+      &.fix
+        p
+          min-width 7em
+          display block
+    &.vertical
+      ul
+        position relative
+        margin 0
+        padding 1em 0 0 0
+        list-style none
+        display flex
+        flex-direction: row
+        & > ul
+          padding 0
+          &:before
+            display none
+          & > li
+            &:before
+              display none
+            & > p
+              &:before
+                display none
+        &:before
+          position absolute
+          content ''
+          left 50%
+          top 0
+          height 1em
+          border-left 1px solid #999
+        &.fix
+          p
+            min-width: 6em
+            min-height: 2.5em
+        li
+          position relative
+          display flex
+          flex-direction column
+          align-items center
+          padding 1em 0 0 0
+          &:before
+            position absolute
+            content ''
+            top 0
+            left 0
+            right 0
+            border-top 1px solid #999
+          &:first-child
+            &:before
+              left 50%
+          &:last-child
+            &:before
+              right 50%
+          p
+            display inline-block
+            position relative
+            background-color #eee
+            border 1px solid #999
+            margin 0 1em
+            padding 0.5em
+            text-align center
+            &:before
+              position absolute
+              content ''
+              left 50%
+              top -1em
+              height 1em
+              border-left 1px solid #999
+
+// Style for printing
+@media print
+  .dependencies-page
+    .breadcrumb
+      display none
+    .q-card
+      box-shadow none
+    .q-card-main
+      display none
+
+  ul.no-bullet
+    display none
+  .dependencies-search-page
+    .print-button
+      display none
+    .q-card,
+    .shadow-2
+      box-shadow none

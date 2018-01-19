@@ -1,44 +1,70 @@
 <template>
   <div class="administration-page">
-    <div>
-      <q-toggle v-model="activerMysql" @change="changeMysql" color="teal-8" label="Activer Mysql"></q-toggle>
-    </div>
-    <div v-if="activerMysql">
-      <q-input v-model="mysql.host" float-label="Host"></q-input>
-      <q-input v-model="mysql.port" type="number" float-label="Port"></q-input>
-      <q-input v-model="mysql.user" float-label="Utilisateur"></q-input>
-      <q-input v-model="mysql.password" type="password" float-label="Mot de passe"></q-input>
-      <q-input v-model="mysql.database" float-label="Base de données"></q-input>
-    </div>
-    <hr>
-    <div>
-      <p class="caption">Filtres sur les librairies Java : </p>
-      <q-chips-input color="green" v-model="javaFilters" placeholder="Ajouter un nouveau filtre"></q-chips-input>
-    </div>
-    <hr>
-    <div>
-      <p class="caption">Filtres sur les dépendences Npm :</p>
-      <q-chips-input color="blue-grey" v-model="npmFilters" placeholder="Ajouter un nouveau filtre"></q-chips-input>
-    </div>
-    <hr>
-    <div class="buttons">
-      <div class="button">
-        <q-btn flat color="black" @click="refresh" icon="refresh">Rafraîchir</q-btn>
-      </div>
-      <div class="button">
-        <q-btn color="primary" @click="save" icon="save">Sauvegarder</q-btn>
-      </div>
-    </div>
+    <q-list>
+      <q-list-header>Configuration Mysql</q-list-header>
+      <q-item class="column items-start">
+        <div>
+          <q-toggle v-model="activerMysql" @change="changeMysql" color="teal-8" label="Activer Mysql"></q-toggle>
+        </div>
+        <div v-if="activerMysql">
+          <q-input v-model="mysql.host" float-label="Host"></q-input>
+          <q-input v-model="mysql.port" type="number" float-label="Port"></q-input>
+          <q-input v-model="mysql.user" float-label="Utilisateur"></q-input>
+          <q-input v-model="mysql.password" type="password" float-label="Mot de passe"></q-input>
+          <q-input v-model="mysql.database" float-label="Base de données"></q-input>
+        </div>
+      </q-item>
+      <q-item-separator />
+      <q-list-header>Filtres sur les librairies Java</q-list-header>
+      <q-item class="column items-stretch">
+        <div>
+          <q-chips-input color="green" v-model="javaFilters" placeholder="Ajouter un nouveau filtre"></q-chips-input>
+        </div>
+      </q-item>
+      <q-item-separator />
+      <q-list-header>Filtres sur les dépendences Npm</q-list-header>
+      <q-item class="column items-stretch">
+        <div>
+          <q-chips-input color="blue-grey" v-model="npmFilters" placeholder="Ajouter un nouveau filtre"></q-chips-input>
+        </div>
+        <hr>
+        <div class="buttons">
+          <div class="button">
+            <q-btn flat color="black" @click="refresh" icon="refresh">Rafraîchir</q-btn>
+          </div>
+          <div class="button">
+            <q-btn color="primary" @click="save" icon="save">Sauvegarder</q-btn>
+          </div>
+        </div>
+      </q-item>
+    </q-list>
   </div>
 </template>
 <script>
-  import {QChipsInput, QBtn, QToggle, QInput} from 'quasar';
+  import {
+    QChipsInput,
+    QBtn,
+    QToggle,
+    QInput,
+    QList,
+    QListHeader,
+    QItem,
+    QItemSeparator} from 'quasar';
   import {success, error} from '../../Toasts'
   import ConfigurationStore from '../../stores/ConfigurationStore';
 
   export default {
     name: 'ConfigurationAdministration',
-    components: {QChipsInput, QBtn, QToggle, QInput},
+    components: {
+      QChipsInput,
+      QBtn,
+      QToggle,
+      QInput,
+      QList,
+      QListHeader,
+      QItem,
+      QItemSeparator
+    },
     data() {
       return {
         activerMysql: false,
