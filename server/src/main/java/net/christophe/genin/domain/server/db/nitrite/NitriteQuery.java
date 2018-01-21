@@ -120,5 +120,11 @@ public class NitriteQuery implements Queries {
         return Single.just(new JsonArray());
     }
 
+    @Override
+    public Single<JsonObject> tablesByProjects() {
+        // TODO Implements
+        return Single.just(new JsonObject());
+    }
+
 
 }

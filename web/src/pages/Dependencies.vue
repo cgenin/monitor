@@ -1,18 +1,6 @@
 <template>
   <div class="dependencies-page page-list">
-    <ul class="breadcrumb noprint">
-      <li>
-        <router-link to="/">
-          <q-icon name="home"/>
-        </router-link>
-      </li>
-      <li>
-        <router-link to="" active-class="router-link-active">
-          <q-icon name="link"/>
-          Dépendance Intra Service
-        </router-link>
-      </li>
-    </ul>
+    <bread-crumb :datas="[{icon:'link', label:'Dépendance Intra Service'}]"></bread-crumb>
     <q-card class="container">
       <q-card-title>
         <h3>Dépendance Intra Service</h3>
@@ -62,10 +50,12 @@
     filter
   } from 'quasar';
   import DependenciesStore from '../stores/DependenciesStore'
+  import BreadCrumb from '../components/BreadCrumb'
 
   export default {
     name: 'Configuration',
     components: {
+      BreadCrumb,
       QCard,
       QCardTitle,
       QCardSeparator,

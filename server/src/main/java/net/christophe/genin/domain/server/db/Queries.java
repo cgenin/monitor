@@ -1,6 +1,7 @@
 package net.christophe.genin.domain.server.db;
 
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import net.christophe.genin.domain.server.db.mysql.MysqlQuery;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.NitriteQuery;
@@ -47,4 +48,6 @@ public interface Queries {
     Single<JsonArray> listAllResourceDependencies();
 
     Single<JsonArray> usedBy(String resource);
+
+    Single<JsonObject> tablesByProjects();
 }

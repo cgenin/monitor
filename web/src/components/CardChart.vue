@@ -7,7 +7,6 @@ import Chart from 'chart.js'
 export default {
   data () {
     return {
-      type: 'bar',
       chart: ''
     }
   },
@@ -15,6 +14,9 @@ export default {
     data: {
       type: Object,
       required: true
+    },
+    type: {
+      default () { return 'bar' }
     },
     cardTitle: {
       default () { return 'Graph' }

@@ -1,25 +1,7 @@
 <template>
-  <div class="tables-page page-list">
-    <ul class="breadcrumb">
-      <li>
-        <router-link to="/">
-          <q-icon name="home" />
-        </router-link>
-      </li>
-      <li>
-        <router-link to="" active-class="router-link-active">
-          <q-icon name="border_all" /> Liste des Tables
-        </router-link>
-      </li>
-    </ul>
+  <div class="page-list">
     <q-card class="container">
-      <q-card-title>
-        <h3>Liste des Tables</h3>
-      </q-card-title>
-
-      <q-card-separator/>
       <q-card-main>
-
         <q-transition
           appear
           enter="fadeIn"
@@ -32,13 +14,12 @@
                 :config="config"
                 :columns="columns"
                 @refresh="refresh">
-
               </q-data-table>
             </div>
           </div>
         </q-transition>
         <q-inner-loading :visible="loading">
-          <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
+          <q-spinner-gears size="50px" color="primary"/>
         </q-inner-loading>
       </q-card-main>
     </q-card>
@@ -46,12 +27,12 @@
 </template>
 <script>
   import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QInput, QBtn, QInnerLoading, QTransition, QSpinnerGears,
-    QDataTable, QIcon
+    QCard, QCardTitle, QCardSeparator, QCardMain, QInnerLoading, QTransition, QSpinnerGears,
+    QDataTable
   } from 'quasar';
-  import TablesStore from '../stores/TablesStore';
-  import {format} from '../Dates';
-  import filtering from '../Filters'
+  import TablesStore from '../../stores/TablesStore';
+  import {format} from '../../Dates';
+  import filtering from '../../Filters'
 
   const toServicesStr = (services) => {
     if (!services || services.length === 0) {
@@ -71,13 +52,10 @@
       QCardTitle,
       QCardSeparator,
       QCardMain,
-      QInput,
-      QBtn,
       QInnerLoading,
       QTransition,
       QSpinnerGears,
-      QDataTable,
-      QIcon
+      QDataTable
     },
     data() {
       return {

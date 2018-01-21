@@ -1,46 +1,35 @@
 <template>
   <div class="configuration-page">
-    <ul class="breadcrumb">
-      <li>
-        <router-link to="/">
-          <q-icon name="home" />
-        </router-link>
-      </li>
-      <li>
-        <router-link to="" active-class="router-link-active">
-          <q-icon name="build" /> Console d'administration
-        </router-link>
-      </li>
-    </ul>
+    <bread-crumb :datas="[{icon:'build', label:'Console d\'administration'}]"></bread-crumb>
     <q-card class="container">
       <q-card-title>
         <h3>Console d'adminisration</h3>
       </q-card-title>
-      <q-card-separator></q-card-separator>
+      <q-card-separator/>
       <q-card-main>
         <q-tabs inverted>
           <q-route-tab icon="screen_share" label="Status"
                        to="/configuration/status"
                        exact
-                       slot="title"></q-route-tab>
+                       slot="title"/>
           <q-route-tab icon="radio" label="Traitement"
                        to="/configuration/administration"
                        exact
-                       slot="title"></q-route-tab>
+                       slot="title"/>
           <q-route-tab icon="cloud_upload" label="Import"
                        to="/configuration/import"
                        exact
-                       slot="title"></q-route-tab>
+                       slot="title"/>
           <q-route-tab icon="send" label="Export"
                        to="/configuration/export"
                        exact
-                       slot="title"></q-route-tab>
+                       slot="title"/>
           <q-route-tab icon="history" label="Reset"
                        to="/configuration/reset"
                        exact
-                       slot="title"></q-route-tab>
+                       slot="title"/>
         </q-tabs>
-        <router-view></router-view>
+        <router-view/>
       </q-card-main>
     </q-card>
   </div>
@@ -64,10 +53,12 @@
     QSpinnerDots,
     QIcon
   } from 'quasar';
+  import BreadCrumb from '../components/BreadCrumb'
 
   export default {
     name: 'Configuration',
     components: {
+      BreadCrumb,
       QCard,
       QCardTitle,
       QCardSeparator,

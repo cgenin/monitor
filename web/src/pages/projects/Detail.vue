@@ -1,24 +1,7 @@
 <template>
   <div class="main">
-    <q-card>
-      <ul class="breadcrumb">
-        <li>
-          <router-link to="/">
-            <q-icon name="home" />
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/projects-list">
-            <q-icon name="view_list" /> Liste des projets
-          </router-link>
-        </li>
-        <li>
-          <router-link to="" active-class="router-link-active">
-            <q-icon name="ion-document-text" /> {{title}}
-          </router-link>
-        </li>
-      </ul>
-    </q-card>
+    <bread-crumb
+      :datas="[{icon:'view_list', label:'Liste des Projets', path : '/projects-list'},{icon:'ion-document-text', label:title}]"/>
     <q-card>
       <q-card-title>
         <h3>{{title}}</h3>
@@ -30,29 +13,32 @@
       </q-card-main>
     </q-card>
     <div class="selected-list">
-      <q-list separator>
-        <q-collapsible icon="ion-coffee"  label="Librairies Java" v-if="selected.javaDeps" :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">
+      <q-list separator class="bg-white">
+        <q-collapsible icon="ion-coffee" label="Librairies Java" v-if="selected.javaDeps"
+                       :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">
           <div class="list-table">
             <ul>
               <li v-for="deps in selected.javaDeps" key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="border_all" label="Tables" v-if="selected.tables" :disable="selected.tables.length === 0" :sublabel="`Nombre : ${selected.tables.length}`">
+        <q-collapsible icon="border_all" label="Tables" v-if="selected.tables" :disable="selected.tables.length === 0"
+                       :sublabel="`Nombre : ${selected.tables.length}`">
           <div class="list-table">
             <ul>
               <li v-for="deps in selected.tables" key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="explore" label="Apis" v-if="selected.apis" :disable="selected.apis.length === 0" :sublabel="`Nombre : ${selected.apis.length}`">
+        <q-collapsible icon="explore" label="Apis" v-if="selected.apis" :disable="selected.apis.length === 0"
+                       :sublabel="`Nombre : ${selected.apis.length}`">
           <div class="list-table">
             <ul>
               <li v-for="deps in selected.apis" key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="change_history" label="Change Log" >
+        <q-collapsible icon="change_history" label="Change Log">
           <vue-markdown>
             {{selected.changelog}}
           </vue-markdown>
@@ -75,6 +61,7 @@
     QItemMain,
     QIcon
   } from 'quasar';
+  import BreadCrumb from '../../components/BreadCrumb'
   import VueMarkdown from 'vue-markdown'
   import ProjectsStore from '../../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../../Dates';
@@ -82,6 +69,7 @@
   export default {
     name: 'ProjectDetail',
     components: {
+      BreadCrumb,
       QCard,
       QCardTitle,
       QCardSeparator,
@@ -153,9 +141,10 @@
   };
 </script>
 <style scoped>
-  .main{
+  .main {
     background: inherit;
   }
+
   .selected-list {
     padding: 10px;
     background: none;

@@ -27,7 +27,15 @@ export default new VueRouter({
   routes: [
     {path: '/', component: load('Welcome')},
     {path: '/projects-list', component: load('ProjectsList')},
-    {path: '/tables-list', component: load('TablesList')},
+    {
+      path: '/tables',
+      component: load('Tables'),
+      children: [
+        {path: 'list', component: load('tables/List')},
+        {path: 'chart', component: load('tables/Chart')},
+        {path: '', redirect: 'list'},
+      ]
+    },
     {path: '/apis-list', component: load('ApisList')},
     {
       path: '/configuration',
@@ -38,6 +46,7 @@ export default new VueRouter({
         {path: 'import', component: load('configuration/Import')},
         {path: 'export', component: load('configuration/Export')},
         {path: 'reset', component: load('configuration/Reset')},
+        {path: '', redirect: 'status'},
       ]
     },
     {path: '/projects/:id', component: load('projects/Detail')},

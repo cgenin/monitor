@@ -1,17 +1,6 @@
 <template>
   <div class="projects-page page-list">
-    <ul class="breadcrumb">
-      <li>
-        <router-link to="/">
-          <q-icon name="home" />
-        </router-link>
-      </li>
-      <li>
-        <router-link to="" active-class="router-link-active">
-          <q-icon name="view_list" /> Liste des Projets
-        </router-link>
-      </li>
-    </ul>
+    <bread-crumb :datas="[{icon:'view_list', label:'Liste des Projets'}]"/>
     <q-card class="container">
       <q-card-title>
         <h3>Liste des Projets</h3>
@@ -31,21 +20,24 @@
               @refresh="refresh"
             >
               <template v-if="cell.data" slot="col-javaDeps" slot-scope="cell">
-                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Dépendance Java')" class="tootip">
+                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Dépendance Java')"
+                   class="tootip">
                   <span>{{cell.data.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
                 <span v-else>{{cell.data.length}}&nbsp;</span>
               </template>
               <template v-if="cell.data" slot="col-apis" slot-scope="cell">
-                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Apis')" class="tootip">
+                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Apis')"
+                   class="tootip">
                   <span>{{cell.data.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
                 <span v-else>{{cell.data.length}}&nbsp;</span>
               </template>
               <template v-if="cell.data" slot="col-tables" slot-scope="cell">
-                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Tables')" class="tootip">
+                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Tables')"
+                   class="tootip">
                   <span>{{cell.data.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
@@ -56,7 +48,7 @@
               </template>
               <template v-if="cell.data" slot="col-destinationUrl" slot-scope="cell">
                 <q-btn flat color="tertiary" @click="$router.push(cell.data)" small>
-                  <q-icon name="ion-document-text" />
+                  <q-icon name="ion-document-text"/>
                 </q-btn>
               </template>
             </q-data-table>
@@ -74,7 +66,7 @@
             {{modalOpt.title}}
           </div>
           <q-btn flat @click="$refs.layoutModal.close()">
-            <q-icon name="close" />
+            <q-icon name="close"/>
           </q-btn>
         </q-toolbar>
         <div>
@@ -110,6 +102,7 @@
     QIcon
   } from 'quasar';
   import ChangelogButton from '../components/ChangeLogButton'
+  import BreadCrumb from '../components/BreadCrumb'
   import ProjectsStore from '../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../Dates';
   import filtering from '../Filters'
@@ -158,7 +151,8 @@
       QTransition,
       QSpinnerGears,
       QDataTable,
-      QIcon
+      QIcon,
+      BreadCrumb
     },
     data() {
       return {
@@ -228,7 +222,7 @@
             label: 'Java',
             field: 'javaDeps',
             width: '73px',
-            sort (a, b) {
+            sort(a, b) {
               return (a.length - b.length);
             },
             type: 'number',
@@ -238,7 +232,7 @@
             label: 'Apis',
             field: 'apis',
             width: '73px',
-            sort (a, b) {
+            sort(a, b) {
               return (a.length - b.length);
             },
             type: 'number',
@@ -248,7 +242,7 @@
             label: 'Table',
             field: 'table',
             width: '73px',
-            sort (a, b) {
+            sort(a, b) {
               return (a.length - b.length);
             },
             type: 'number',

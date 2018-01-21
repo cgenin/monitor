@@ -43,7 +43,7 @@
             <q-item-side icon="view_list"/>
             <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>
           </q-side-link>
-          <q-side-link item to="/tables-list">
+          <q-side-link item to="/tables">
             <q-item-side icon="border_all"/>
             <q-item-main label="Liste des tables" sublabel="liaisons entre les services et les tables"/>
           </q-side-link>
@@ -55,7 +55,7 @@
             <q-item-side icon="link"/>
             <q-item-main label="Dépendances" sublabel="Dépendance entre les Micro Services"/>
           </q-item>
-          <q-side-link item to="/configuration/status">
+          <q-side-link item to="/configuration">
             <q-item-side icon="build"/>
             <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
           </q-side-link>

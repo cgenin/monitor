@@ -129,6 +129,7 @@ public class Services {
      */
     private Router tables() {
         Router router = Router.router(vertx);
+        router.get("/projects").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Tables.BY_PROJECT));
         router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Tables.LIST));
         return router;
     }

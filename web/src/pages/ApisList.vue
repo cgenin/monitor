@@ -1,17 +1,7 @@
 <template>
   <div class="apis-page page-list">
-    <ul class="breadcrumb">
-      <li>
-        <router-link to="/">
-          <q-icon name="home" />
-        </router-link>
-      </li>
-      <li>
-        <router-link to="" active-class="router-link-active">
-          <q-icon name="explore" /> Liste des Apis
-        </router-link>
-      </li>
-    </ul>
+    <bread-crumb :datas="[{icon:'explore', label:'Liste des Apis'}]"/>
+
     <q-card class="container">
       <q-card-title>
         <h3>Liste des apis</h3>
@@ -26,14 +16,16 @@
               type="text"
               class="filter"
               float-label="Filtrer"
-              @change="filtering" ></q-input>
+              @change="filtering"></q-input>
           </q-field>
           <div>
             <q-toggle v-model="viewTable" label="Affichage table ou card" color="tertiary"></q-toggle>
           </div>
         </div>
         <div class="inputs">
-          <q-btn class="btn-flat-primary" @click="showOrHideFilterPanel" flat icon="add" v-bind:class="{ open: filtersPanel }">&nbsp;filtres</q-btn>
+          <q-btn class="btn-flat-primary" @click="showOrHideFilterPanel" flat icon="add"
+                 v-bind:class="{ open: filtersPanel }">&nbsp;filtres
+          </q-btn>
         </div>
         <div v-if="filtersPanel" class="inputs inputs-panel">
           <q-select
@@ -105,9 +97,9 @@
     QToggle,
     QInfiniteScroll,
     QSpinnerDots,
-    QIcon,
     QField
   } from 'quasar';
+  import BreadCrumb from '../components/BreadCrumb'
   import MethodIcon from '../components/MethodIcon';
   import ApisCard from '../components/ApisCard';
   import filtering, {filteringByAttribute} from '../Filters';
@@ -134,6 +126,7 @@
   export default {
     name: 'ApisList',
     components: {
+      BreadCrumb,
       QCard,
       QCardTitle,
       QCardSeparator,
@@ -150,7 +143,6 @@
       QSpinnerDots,
       MethodIcon,
       ApisCard,
-      QIcon,
       QField
     },
     data() {
@@ -262,9 +254,11 @@
       width 100%
       .apis-card
         width 35vw
+
   .api-url
     word-break break-all
     width 35vw
+
   .api-comment
     max-width: $api-max-comments-width;
     min-width: $api-max-comments-width;

@@ -9,6 +9,11 @@ class TablesStore {
     instance = this;
   }
 
+  groupByProjects() {
+    return fetch('/api/tables/projects')
+      .then((res) => res.json());
+  }
+
   initialize() {
     return fetch('/api/tables')
       .then((res) => res.json())

@@ -1,20 +1,39 @@
 <template>
-  <div class="logo-container">
-    <!--<img src="~assets/splash.jpg" class="splash">-->
-    <div class="layout-padding slide-container">
-      <q-card class="container">
-        <q-card-title>
-          <h3>{{label}}</h3>
-        </q-card-title>
-        <q-card-separator/>
-        <q-card-main>
+  <div class="welcome-container logo-container">
 
-          <card-chart
-            card-title="Nombre de Projets, Tables, Apis"
-            :data="datacollection"
-          ></card-chart>
-        </q-card-main>
-      </q-card>
+    <div class="panel-information column items-stretch text-white">
+      <div class="row col">
+        <div class="row justify-center items-center  col">
+          <h2>
+            <q-icon name="view_list"/>
+          </h2>
+          <q-side-link to="/projects-list">
+            <h2 class="link">
+               Projets : {{nbProjects}}
+            </h2>
+          </q-side-link>
+        </div>
+        <div class="row justify-center items-center col">
+          <h2>
+            <q-icon name="border_all"/>
+          </h2>
+          <q-side-link to="/tables/list">
+            <h2 class="link">
+               Tables : {{nbTables}}
+            </h2>
+          </q-side-link>
+        </div>
+      </div>
+      <div class="col row justify-center items-center ">
+        <h2>
+          <q-icon name="explore"/>
+        </h2>
+        <q-side-link to="/apis-list">
+          <h2 class="link">
+            &nbsp;Apis : {{nbApis}}
+          </h2>
+        </q-side-link>
+      </div>
     </div>
   </div>
 </template>
@@ -23,6 +42,7 @@
   import {
     QCarousel,
     QBtn,
+    QSideLink,
     QIcon,
     QCard,
     QCardTitle,
@@ -39,6 +59,7 @@
     components: {
       QCarousel,
       QBtn,
+      QSideLink,
       QIcon,
       QCard,
       QCardTitle,
@@ -89,25 +110,27 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
   .welcome-container
     display flex
     align-items center
     justify-content center
     width 100%
 
-  img.splash
-    display block
-    margin auto
-
-  .slide > .title
-    font-size 36px
-    margin-bottom .5em
-
   .pie-container
     display flex
     justify-content center
     > div
       width 40%
+
+  .panel-information
+    min-height 75vh
+    min-width 75vw
+    background-color: rgba(6, 6, 6, 0.67);
+    h2.link
+      text-decoration underline
+      cursor pointer
+      text-align center
+
 
 </style>

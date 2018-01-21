@@ -132,4 +132,23 @@ public class MysqlQuery implements Queries {
                 .switchIfEmpty(Observable.just(new JsonArray()))
                 .toSingle();
     }
+
+    @Override
+    public Single<JsonObject> tablesByProjects() {
+        return Mysqls.Instance.get()
+                .select(
+                        "SELECT SERVICE, count(*) FROM TABLES GROUP BY SERVICE"
+                )
+                .map(rs->{
+                    if (Objects.isNull(rs)) {
+                        return new JsonObject();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> new JsonObject().put(row.getString(0), row.getLong(1)))
+                            .reduce(new JsonObject(), (acc, obj)-> obj.mergeIn(acc));
+                })
+                .switchIfEmpty(Observable.just(new JsonObject()))
+                .toSingle();
+    }
 }

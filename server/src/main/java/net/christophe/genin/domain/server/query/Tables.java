@@ -18,6 +18,7 @@ public class Tables extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(Raw.class);
 
     public static final String LIST = Tables.class.getName() + ".list";
+    public static final String BY_PROJECT = Tables.class.getName() + ".by.project";
 
     @Override
     public void start() {
@@ -31,6 +32,18 @@ public class Tables extends AbstractVerticle {
                                 msg.fail(500, "Error in query");
                             }
                     );
+
+        });
+
+        vertx.eventBus().consumer(BY_PROJECT, msg->{
+           Queries.get().tablesByProjects()
+                   .subscribe(
+                           msg::reply,
+                           err -> {
+                               logger.error("error in " + BY_PROJECT, err);
+                               msg.fail(500, "Error in query");
+                           }
+                   );
         });
 
         logger.info("started");
