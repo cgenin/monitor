@@ -1,6 +1,7 @@
 <template>
   <div class="projects-page page-list">
-    <bread-crumb :datas="[{icon:'view_list', label:'Liste des Projets'}]"/>
+    <header-app :help="txtHelp" :bc-datas="[{icon:'view_list', label:'Liste des Projets'}]"></header-app>
+
     <q-card class="container">
       <q-card-title>
         <h3>Liste des Projets</h3>
@@ -101,11 +102,12 @@
     QDataTable,
     QIcon
   } from 'quasar';
+  import txtHelp from './projects/help.md'
   import ChangelogButton from '../components/ChangeLogButton'
-  import BreadCrumb from '../components/BreadCrumb'
   import ProjectsStore from '../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../Dates';
   import filtering from '../Filters'
+  import HeaderApp from '../components/HeaderApp';
 
   const depTootip = (attr) => {
     if (!attr || attr.length === 0) {
@@ -133,6 +135,7 @@
   export default {
     name: 'ProjectsList',
     components: {
+      HeaderApp,
       QCard,
       QCardTitle,
       QCardSeparator,
@@ -151,11 +154,11 @@
       QTransition,
       QSpinnerGears,
       QDataTable,
-      QIcon,
-      BreadCrumb
+      QIcon
     },
     data() {
       return {
+        txtHelp,
         list: [],
         original: [],
         filter: '',

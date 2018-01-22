@@ -1,6 +1,6 @@
 <template>
   <div class="dependencies-page page-list">
-    <bread-crumb :datas="[{icon:'link', label:'Dépendance Intra Service'}]"></bread-crumb>
+    <header-app :bc-datas="[{icon:'link', label:'Dépendance Intra Service'}]"></header-app>
     <q-card class="container">
       <q-card-title>
         <h3>Dépendance Intra Service</h3>
@@ -50,12 +50,12 @@
     filter
   } from 'quasar';
   import DependenciesStore from '../stores/DependenciesStore'
-  import BreadCrumb from '../components/BreadCrumb'
+  import HeaderApp from '../components/HeaderApp';
 
   export default {
     name: 'Configuration',
     components: {
-      BreadCrumb,
+      HeaderApp,
       QCard,
       QCardTitle,
       QCardSeparator,

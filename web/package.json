@@ -17,6 +17,7 @@
     "debounce": "^1.1.0",
     "quasar-extras": "0.x",
     "quasar-framework": "^0.14.4",
+    "raw-loader": "^0.5.1",
     "vertx3-eventbus-client": "^3.5.0",
     "vue": "^2.5.0",
     "vue-markdown": "^2.2.4",

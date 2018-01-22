@@ -1,6 +1,6 @@
 <template>
   <div class="configuration-page">
-    <bread-crumb :datas="[{icon:'build', label:'Console d\'administration'}]"></bread-crumb>
+    <header-app :datas="[{icon:'build', label:'Console d\'administration'}]" />
     <q-card class="container">
       <q-card-title>
         <h3>Console d'adminisration</h3>
@@ -53,12 +53,12 @@
     QSpinnerDots,
     QIcon
   } from 'quasar';
-  import BreadCrumb from '../components/BreadCrumb'
+  import HeaderApp from '../components/HeaderApp';
 
   export default {
     name: 'Configuration',
     components: {
-      BreadCrumb,
+      HeaderApp,
       QCard,
       QCardTitle,
       QCardSeparator,

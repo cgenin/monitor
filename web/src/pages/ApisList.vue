@@ -1,6 +1,6 @@
 <template>
   <div class="apis-page page-list">
-    <bread-crumb :datas="[{icon:'explore', label:'Liste des Apis'}]"/>
+    <header-app :bc-datas="[{icon:'explore', label:'Liste des Apis'}]"/>
 
     <q-card class="container">
       <q-card-title>
@@ -99,11 +99,11 @@
     QSpinnerDots,
     QField
   } from 'quasar';
-  import BreadCrumb from '../components/BreadCrumb'
   import MethodIcon from '../components/MethodIcon';
   import ApisCard from '../components/ApisCard';
   import filtering, {filteringByAttribute} from '../Filters';
   import EndpointsStore from '../stores/EndpointsStore';
+  import HeaderApp from '../components/HeaderApp';
 
   const sortApis = (a, b) => {
     return a.absolutePath.localeCompare(b.absolutePath);
@@ -126,7 +126,7 @@
   export default {
     name: 'ApisList',
     components: {
-      BreadCrumb,
+      HeaderApp,
       QCard,
       QCardTitle,
       QCardSeparator,

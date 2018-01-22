@@ -1,6 +1,6 @@
 <template>
   <div class="tables-page">
-    <bread-crumb :datas="[{icon:'border_all', label:'Tables'}]"/>
+    <header-app :bc-datas="[{icon:'border_all', label:'Tables'}]"></header-app>
     <div class="tabs-container container bg-light">
       <q-tabs color="light">
         <q-route-tab icon="fa-list" label="Liste des tables"
@@ -20,12 +20,12 @@
   import {
     QTabs, QRouteTab, QCard, QCardMain
   } from 'quasar';
-  import BreadCrumb from '../components/BreadCrumb'
+  import HeaderApp from '../components/HeaderApp';
 
   export default {
     name: 'Tables',
     components: {
-      QTabs, QRouteTab, QCard, QCardMain, BreadCrumb
+      HeaderApp, QTabs, QRouteTab, QCard, QCardMain
     }
   }
 </script>
