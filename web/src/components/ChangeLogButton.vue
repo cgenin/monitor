@@ -10,7 +10,7 @@
             Change Log
           </div>
           <q-btn flat @click="$refs.layoutModal.close()">
-            <q-icon name="close" />
+            <q-icon name="close"/>
           </q-btn>
         </q-toolbar>
         <vue-markdown>{{content}}</vue-markdown>
@@ -27,7 +27,10 @@
     data() {
       return {modal: false};
     },
-    props: ['content'],
-    components: {QBtn, QIcon, QToolbar, QModal, QModalLayout, VueMarkdown}
+    props: ['content', 'id'],
+    components: {QBtn, QIcon, QToolbar, QModal, QModalLayout, VueMarkdown},
+    mounted() {
+      console.log(this.id);
+    }
   }
 </script>

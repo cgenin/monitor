@@ -45,7 +45,7 @@
                 <span v-else>{{cell.data.length}}&nbsp;</span>
               </template>
               <template v-if="cell.data" slot="col-changelog" slot-scope="cell">
-                <changelog-button :content="cell.data"></changelog-button>
+                <changelog-button :key="cell.row.id" :content="cell.data" ></changelog-button>
               </template>
               <template v-if="cell.data" slot="col-destinationUrl" slot-scope="cell">
                 <q-btn flat color="tertiary" @click="$router.push(cell.data)" small>
@@ -242,8 +242,8 @@
             filter: true
           },
           {
-            label: 'Table',
-            field: 'table',
+            label: 'Tables',
+            field: 'tables',
             width: '73px',
             sort(a, b) {
               return (a.length - b.length);
