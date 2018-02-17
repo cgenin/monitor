@@ -101,7 +101,7 @@
   } from 'quasar';
   import MethodIcon from '../components/MethodIcon';
   import ApisCard from '../components/ApisCard';
-  import filtering, {filteringByAttribute} from '../Filters';
+  import filtering, {filteringByAttribute} from '../FiltersAndSorter';
   import EndpointsStore from '../stores/EndpointsStore';
   import HeaderApp from '../components/HeaderApp';
 

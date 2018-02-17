@@ -106,7 +106,7 @@
   import ChangelogButton from '../components/ChangeLogButton'
   import ProjectsStore from '../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../Dates';
-  import filtering from '../Filters'
+  import filtering from '../FiltersAndSorter'
   import HeaderApp from '../components/HeaderApp';
 
   const depTootip = (attr) => {

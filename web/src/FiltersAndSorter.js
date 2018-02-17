@@ -35,3 +35,15 @@ export default function filtering(original, filter) {
       return data.indexOf(upFilter) !== -1;
     });
 }
+
+export function sortString(str1, str2) {
+  if (str1 < str2) {
+    return -1;
+  }
+
+  if (str1 > str2) {
+    return 1;
+  }
+
+  return 0;
+}

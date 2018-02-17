@@ -13,6 +13,8 @@
       </q-card-main>
     </q-card>
     <div class="selected-list">
+      <div>
+      </div>
       <q-list separator class="bg-white">
         <q-collapsible icon="ion-coffee" label="Librairies Java" v-if="selected.javaDeps"
                        :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">

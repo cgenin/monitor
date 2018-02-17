@@ -14,6 +14,11 @@
                 :config="config"
                 :columns="columns"
                 @refresh="refresh">
+                <template slot="col-services" slot-scope="cell">
+                  <ul>
+                    <li v-for="s in cell.data">{{s}}</li>
+                  </ul>
+                </template>
               </q-data-table>
             </div>
           </div>
@@ -32,18 +37,7 @@
   } from 'quasar';
   import TablesStore from '../../stores/TablesStore';
   import {format} from '../../Dates';
-  import filtering from '../../Filters'
-
-  const toServicesStr = (services) => {
-    if (!services || services.length === 0) {
-      return '';
-    }
-    if (services.length === 1) {
-      return services[0];
-    }
-
-    return services.reduce((a, b) => a + ', ' + b);
-  };
+  import filtering, {sortString} from '../../FiltersAndSorter'
 
   export default {
     name: 'TablesList',
@@ -101,11 +95,15 @@
           },
           {
             label: 'Projet(s) lié(s)',
-            field: 'serviceStr',
+            field: 'services',
             width: '380px',
-            sort: true,
-            type: 'string',
-            filter: true
+            filter: true,
+            sort(a, b) {
+              if (a.length === b.length) {
+                return sortString(a[0], b[0]);
+              }
+              return a.length - b.length;
+            }
           },
           {
             label: 'Dernière Mise à jour',
@@ -126,8 +124,7 @@
             const l = res
               .map(o => {
                 const latest = format(o.latestUpdate);
-                const serviceStr = toServicesStr(o.services);
-                return Object.assign({}, o, {latest, serviceStr});
+                return Object.assign({}, o, {latest});
               })
               .sort((a, b) => {
                 return a.name.localeCompare(b.name);

@@ -30,9 +30,6 @@
     },
     data() {
       return {modal: false};
-    },
-    mounted() {
-      console.log(this.text)
     }
   }
 </script>
