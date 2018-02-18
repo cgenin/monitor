@@ -126,5 +126,9 @@ public class NitriteQuery implements Queries {
         return Single.just(new JsonObject());
     }
 
-
+    @Override
+    public Single<JsonObject> dump() {
+        // TODO Implements
+        return Single.just(new JsonObject());
+    }
 }

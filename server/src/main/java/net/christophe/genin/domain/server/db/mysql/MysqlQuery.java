@@ -4,9 +4,11 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import net.christophe.genin.domain.server.db.Queries;
 import net.christophe.genin.domain.server.db.Schemas;
+import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.json.Jsons;
 import rx.Observable;
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,16 +141,119 @@ public class MysqlQuery implements Queries {
                 .select(
                         "SELECT SERVICE, count(*) FROM TABLES GROUP BY SERVICE"
                 )
-                .map(rs->{
+                .map(rs -> {
                     if (Objects.isNull(rs)) {
                         return new JsonObject();
                     }
                     return rs.getResults()
                             .stream()
                             .map(row -> new JsonObject().put(row.getString(0), row.getLong(1)))
-                            .reduce(new JsonObject(), (acc, obj)-> obj.mergeIn(acc));
+                            .reduce(new JsonObject(), (acc, obj) -> obj.mergeIn(acc));
                 })
                 .switchIfEmpty(Observable.just(new JsonObject()))
+                .toSingle();
+    }
+
+    @Override
+    public Single<JsonObject> dump() {
+        Observable<JsonObject> apis = Mysqls.Instance.get()
+                .select("SELECT ID, METHOD, FULLURL, IDPROJECT, document from APIS")
+                .map(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return new JsonArray();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> new JsonObject()
+                                    .put("ID", row.getString(0))
+                                    .put("METHOD", row.getString(1))
+                                    .put("FULLURL", row.getString(2))
+                                    .put("IDPROJECT", row.getString(3))
+                                    .put("document", row.getString(4)))
+                            .collect(Jsons.Collectors.toJsonArray());
+                })
+                .map(arr -> new JsonObject().put("apis", arr));
+
+        Observable<JsonObject> projects = Mysqls.Instance.get()
+                .select("SELECT ID, NAME, document from PROJECTS")
+                .map(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return new JsonArray();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> new JsonObject()
+                                    .put("ID", row.getString(0))
+                                    .put("NAME", row.getString(1))
+                                    .put("document", row.getString(2)))
+                            .collect(Jsons.Collectors.toJsonArray());
+                })
+                .map(arr -> new JsonObject().put("projects", arr));
+
+        Observable<JsonObject> tables = Mysqls.Instance.get()
+                .select("SELECT ID, NAME,SERVICE, latestUpdate from TABLES")
+                .map(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return new JsonArray();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> new JsonObject()
+                                    .put("ID", row.getString(0))
+                                    .put("NAME", row.getString(1))
+                                    .put("SERVICE", row.getString(2))
+                                    .put("latestUpdate", row.getLong(3))
+                            )
+                            .collect(Jsons.Collectors.toJsonArray());
+                })
+                .map(arr -> new JsonObject().put("tables", arr));
+
+
+        Observable<JsonObject> versions = Mysqls.Instance.get()
+                .select("SELECT ID, NAME, IDPROJECT, document from VERSIONS")
+                .map(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return new JsonArray();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> new JsonObject()
+                                    .put("ID", row.getString(0))
+                                    .put("NAME", row.getString(1))
+                                    .put("IDPROJECT", row.getString(2))
+                                    .put("document", row.getString(3)))
+                            .collect(Jsons.Collectors.toJsonArray());
+                })
+                .map(arr -> new JsonObject().put("versions", arr));
+
+        Observable<JsonObject> dependencies = Mysqls.Instance.get()
+                .select("SELECT RESOURCE, USED_BY, document from DEPENDENCIES")
+                .map(rs -> {
+                    if (Objects.isNull(rs)) {
+                        return new JsonArray();
+                    }
+                    return rs.getResults()
+                            .stream()
+                            .map(row -> new JsonObject()
+                                    .put("RESOURCE", row.getString(0))
+                                    .put("USED_BY", row.getString(1))
+                                    .put("document", row.getString(2)))
+                            .collect(Jsons.Collectors.toJsonArray());
+                })
+                .map(arr -> new JsonObject().put("dependencies", arr));
+        Observable<JsonObject> raws = Observable.fromCallable(
+                () -> Dbs.instance
+                        .getCollection(Schemas.RAW_COLLECTION)
+                        .find()
+                        .toList()
+                        .stream()
+                        .map(doc -> Dbs.Raws.toJson(doc).put("state", doc.get("state")))
+                        .collect(Jsons.Collectors.toJsonArray()))
+                .map(arr -> new JsonObject().put("raws", arr))
+                .observeOn(Schedulers.io());
+
+        return Observable.concat(apis, projects, dependencies, versions, tables, raws)
+                .reduce(new JsonObject(), JsonObject::mergeIn)
                 .toSingle();
     }
 }

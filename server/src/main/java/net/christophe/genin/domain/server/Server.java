@@ -44,6 +44,7 @@ public class Server extends AbstractVerticle {
     private void deployQuery() {
         vertx.deployVerticle(new Projects(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Tables(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new Backup(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Configuration());
         vertx.deployVerticle(new Endpoints(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Dependencies(), new DeploymentOptions().setWorker(true));

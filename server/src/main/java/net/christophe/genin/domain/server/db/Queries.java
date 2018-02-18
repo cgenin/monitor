@@ -50,4 +50,7 @@ public interface Queries {
     Single<JsonArray> usedBy(String resource);
 
     Single<JsonObject> tablesByProjects();
+
+
+    Single<JsonObject> dump();
 }

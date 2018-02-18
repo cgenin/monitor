@@ -57,6 +57,7 @@ public class Services {
         router.mountSubRouter("/endpoints", apis());
         router.mountSubRouter("/dependencies", dependencies());
         router.mountSubRouter("/configuration", configuration());
+        router.mountSubRouter("/dump", dump());
         router.mountSubRouter("/apps", apps());
         router.mountSubRouter("/fronts", fronts());
         return router;
@@ -151,6 +152,13 @@ public class Services {
         return router;
     }
 
+    private Router dump() {
+        Router router = Router.router(vertx);
+        router.get("/").handler(rc -> {
+            new Https.EbCaller(vertx, rc).jsonAndReply(Backup.DUMP);
+        });
+        return router;
+    }
 
     /**
      * Endpoint for getting raw data.
@@ -169,6 +177,7 @@ public class Services {
 
         return router;
     }
+
 
     /**
      * Projects api
