@@ -8,7 +8,7 @@
       </q-card-title>
       <q-card-main>
         <p class="caption">Sélectionner une version</p>
-        <q-select v-model="id" :options="selectVersions">
+        <q-select v-model="id" :options="selectVersions"  @change="changeVersion">
         </q-select>
       </q-card-main>
     </q-card>
@@ -18,7 +18,7 @@
                        :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">
           <div class="list-table">
             <ul>
-              <li v-for="deps in selected.javaDeps" key="deps">{{deps}}</li>
+              <li v-for="deps in selected.javaDeps" :key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
@@ -26,7 +26,7 @@
                        :sublabel="`Nombre : ${selected.tables.length}`">
           <div class="list-table">
             <ul>
-              <li v-for="deps in selected.tables" key="deps">{{deps}}</li>
+              <li v-for="deps in selected.tables" :key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
@@ -34,13 +34,12 @@
                        :sublabel="`Nombre : ${selected.apis.length}`">
           <div class="list-table">
             <ul>
-              <li v-for="deps in selected.apis" key="deps">{{deps}}</li>
+              <li v-for="deps in selected.apis" :key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
         <q-collapsible icon="change_history" label="Change Log">
-          <vue-markdown>
-            {{selected.changelog}}
+          <vue-markdown :source="selected.changelog">
           </vue-markdown>
         </q-collapsible>
       </q-list>
@@ -65,6 +64,7 @@
   import VueMarkdown from 'vue-markdown'
   import ProjectsStore from '../../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../../Dates';
+  import {sortString} from '../../Filters'
 
   export default {
     name: 'ProjectDetail',
@@ -94,8 +94,7 @@
       }
     },
     methods: {
-      changeVersion(evt) {
-        const id = evt.target.value;
+      changeVersion(id) {
         this.selected = this.versions.find(v => v.id === id);
       }
     },
@@ -134,7 +133,9 @@
                 value: v.id,
                 stamp
               }
-            });
+            })
+            .sort(sortString((a) => a.label));
+          console.log(this.selectVersions)
         })
         .catch(err => console.error(err));
     }

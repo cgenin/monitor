@@ -49,7 +49,8 @@ public class MysqlCommand implements Commands {
                     if (lUpdate < update) {
 
                         final String version = json.getString(Schemas.Raw.version.name());
-                        if (Commands.Projects.isSnapshot(version)) {
+                        boolean snapshot = Projects.isSnapshot(version);
+                        if (snapshot) {
                             document.put(Schemas.Projects.snapshot.name(), version);
                         } else {
                             document.put(Schemas.Projects.release.name(), version);

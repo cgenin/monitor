@@ -1,3 +1,11 @@
+export function sortString(converter = (a) => a) {
+  return (a, b) => {
+    const strA = converter(a) || '';
+    const strB = converter(b) || '';
+    return strA.localeCompare(strB);
+  };
+}
+
 export function filteringByAttribute(attr) {
   if (!attr) {
     return (l) => l;
