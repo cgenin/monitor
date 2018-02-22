@@ -176,8 +176,8 @@
           rightStickyColumns: 2,
           responsive: true,
           pagination: {
-            rowsPerPage: 15,
-            options: [5, 10, 15, 30, 50, 500]
+            rowsPerPage: 30,
+            options: [30, 50, 80, 500]
           },
           messages: {
             noData: '<i>Attention</i> aucune donnée disponible.',
@@ -294,7 +294,6 @@
         this.modal = true;
       },
       filtering() {
-        console.log(this.filter)
         this.list = filtering(this.original, this.filter);
       },
       link() {

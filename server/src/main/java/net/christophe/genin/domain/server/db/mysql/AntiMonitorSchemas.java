@@ -47,20 +47,29 @@ public class AntiMonitorSchemas {
                     "  document LONGTEXT,\n" +
                     "  PRIMARY KEY (RESOURCE, USED_BY)\n" +
                     ")",
+            "CREATE TABLE front_apps (\n" +
+                    "    ID VARCHAR(1000) PRIMARY KEY,\n" +
+                    "    NAME VARCHAR(1000),\n" +
+                    "    LATEST LONG,\n" +
+                    "    VERSION VARCHAR(1000),\n" +
+                    "    document LONGTEXT\n" +
+                    ")",
             "DELETE FROM EVENTS",
             "DELETE FROM PROJECTS",
             "DELETE FROM TABLES",
             "DELETE FROM APIS",
             "DELETE FROM VERSIONS",
-            "DELETE FROM DEPENDENCIES"
+            "DELETE FROM DEPENDENCIES",
+            "DELETE FROM front_apps",
     };
 
-    private static String[] DELETE_SCRIPTS=new String[]{
+    private static String[] DELETE_SCRIPTS = new String[]{
             "DELETE FROM  PROJECTS",
             "DELETE FROM TABLES",
             "DELETE FROM APIS",
             "DELETE FROM VERSIONS",
-            "DELETE FROM DEPENDENCIES"
+            "DELETE FROM DEPENDENCIES",
+            "DELETE FROM front_apps",
     };
 
 

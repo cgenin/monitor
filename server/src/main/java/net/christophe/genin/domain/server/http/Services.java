@@ -7,14 +7,13 @@ import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import net.christophe.genin.domain.server.InitializeDb;
-import net.christophe.genin.domain.server.command.ConfigurationCommand;
-import net.christophe.genin.domain.server.command.Import;
-import net.christophe.genin.domain.server.command.Reset;
+import net.christophe.genin.domain.server.command.*;
 import net.christophe.genin.domain.server.query.*;
-import net.christophe.genin.domain.server.command.Raw;
 
 import java.util.Date;
 import java.util.Objects;
@@ -23,7 +22,7 @@ import java.util.Objects;
  * Api rest builder.
  */
 public class Services {
-
+    private static final Logger logger = LoggerFactory.getLogger(Services.class);
     private final Vertx vertx;
 
     /**
@@ -59,6 +58,7 @@ public class Services {
         router.mountSubRouter("/dependencies", dependencies());
         router.mountSubRouter("/configuration", configuration());
         router.mountSubRouter("/apps", apps());
+        router.mountSubRouter("/fronts", fronts());
         return router;
     }
 
@@ -147,6 +147,25 @@ public class Services {
             new Https.EbCaller(vertx, rc).created(Raw.SAVING, body);
         });
         router.delete("/").handler(rc -> new Https.EbCaller(vertx, rc).created(Reset.RUN, new JsonObject()));
+
+        return router;
+    }
+
+
+    /**
+     * Endpoint for getting raw data.
+     *
+     * @return the router
+     */
+    private Router fronts() {
+        Router router = Router.router(vertx);
+        router.post("/").handler(rc -> {
+            final JsonObject body = rc.getBodyAsJson()
+                    .put("update", new Date().getTime());
+
+            new Https.EbCaller(vertx, rc).created(Front.SAVING, body);
+        });
+
 
         return router;
     }

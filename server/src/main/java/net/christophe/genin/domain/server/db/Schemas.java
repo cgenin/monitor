@@ -8,6 +8,7 @@ import net.christophe.genin.domain.server.json.Jsons;
  */
 public final class Schemas {
     public static final String RAW_COLLECTION = "Apps-Store";
+    public static final String FRONT_COLLECTION = "Front-Apps-Store";
     public static final String RAW_STATE = "state";
 
     /**

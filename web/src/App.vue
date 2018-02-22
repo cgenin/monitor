@@ -20,7 +20,7 @@
           <div slot="subtitle">Récapitualtif des projets Micro services</div>
         </q-toolbar-title>
         <!--<q-btn flat class="grey-9" @click="$router.push('/configuration/status')">-->
-          <!--<q-icon name="build" />-->
+        <!--<q-icon name="build" />-->
         <!--</q-btn>-->
       </q-toolbar>
 
@@ -39,22 +39,24 @@
             <q-item-side icon="home"/>
             <q-item-main label="Welcome" sublabel="Page de résumé"/>
           </q-side-link>
-          <q-side-link item to="/projects-list">
-            <q-item-side icon="view_list"/>
-            <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>
-          </q-side-link>
-          <q-side-link item to="/tables">
-            <q-item-side icon="border_all"/>
-            <q-item-main label="Liste des tables" sublabel="liaisons entre les services et les tables"/>
-          </q-side-link>
-          <q-item to="/apis-list">
-            <q-item-side icon="explore"/>
-            <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
-          </q-item>
-          <q-item to="/dependencies">
-            <q-item-side icon="link"/>
-            <q-item-main label="Dépendances" sublabel="Dépendance entre les Micro Services"/>
-          </q-item>
+          <q-collapsible icon="fa-cogs" label="Micro services" opened	>
+            <q-side-link item to="/projects-list">
+              <q-item-side icon="view_list"/>
+              <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>
+            </q-side-link>
+            <q-side-link item to="/tables">
+              <q-item-side icon="border_all"/>
+              <q-item-main label="Liste des tables" sublabel="liaisons entre les services et les tables"/>
+            </q-side-link>
+            <q-item to="/apis-list">
+              <q-item-side icon="explore"/>
+              <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
+            </q-item>
+            <q-item to="/dependencies">
+              <q-item-side icon="link"/>
+              <q-item-main label="Dépendances" sublabel="Dépendance entre les Micro Services"/>
+            </q-item>
+          </q-collapsible>
           <q-side-link item to="/configuration">
             <q-item-side icon="build"/>
             <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
@@ -78,7 +80,8 @@
     QItem,
     QSideLink,
     QItemSide,
-    QItemMain
+    QItemMain,
+    QCollapsible
   } from 'quasar';
 
   /*
@@ -97,9 +100,10 @@
       QItem,
       QSideLink,
       QItemSide,
-      QItemMain
+      QItemMain,
+      QCollapsible
     },
-    data () {
+    data() {
       return {
         opened: true
       }
