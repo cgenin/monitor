@@ -178,23 +178,6 @@ public class Services {
 
         return router;
     }
-    /**
-     * Endpoint for getting raw data.
-     *
-     * @return the router
-     */
-    private Router fronts() {
-        Router router = Router.router(vertx);
-        router.post("/").handler(rc -> {
-            final JsonObject body = rc.getBodyAsJson()
-                    .put("update", new Date().getTime());
-
-            new Https.EbCaller(vertx, rc).created(Front.SAVING, body);
-        });
-
-
-        return router;
-    }
 
 
     /**
