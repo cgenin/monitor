@@ -5,67 +5,51 @@
       <div class="row col">
         <div class="row justify-center items-center  col">
           <h2>
-            <q-icon name="view_list"/>
+            <q-icon name="view_list"></q-icon>
           </h2>
-          <q-side-link to="/projects-list">
+          <q-item to="/projects-list">
             <h2 class="link">
                Projets : {{nbProjects}}
             </h2>
-          </q-side-link>
+          </q-item>
         </div>
         <div class="row justify-center items-center col">
           <h2>
-            <q-icon name="border_all"/>
+            <q-icon name="border_all" ></q-icon>
           </h2>
-          <q-side-link to="/tables/list">
+          <q-item to="/tables/list">
             <h2 class="link">
                Tables : {{nbTables}}
             </h2>
-          </q-side-link>
+          </q-item>
         </div>
       </div>
       <div class="col row justify-center items-center ">
         <h2>
           <q-icon name="explore"/>
         </h2>
-        <q-side-link to="/apis-list">
+        <q-item to="/apis-list">
           <h2 class="link">
             &nbsp;Apis : {{nbApis}}
           </h2>
-        </q-side-link>
+        </q-item>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import {
-    QCarousel,
-    QBtn,
-    QSideLink,
-    QIcon,
-    QCard,
-    QCardTitle,
-    QCardMain,
-    QCardSeparator
-  } from 'quasar'
   import ProjectStore from '../stores/ProjectsStore'
   import TablesStore from '../stores/TablesStore'
   import EndpointsStore from '../stores/EndpointsStore'
   import CardChart from '../components/CardChart'
+  import QItem from "quasar-framework/src/components/list/QItem";
 
   export default {
     name: 'Welcome',
     components: {
-      QCarousel,
-      QBtn,
-      QSideLink,
-      QIcon,
-      QCard,
-      QCardTitle,
-      CardChart,
-      QCardMain,
-      QCardSeparator
+      QItem,
+      CardChart
     },
     data() {
       return {

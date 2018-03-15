@@ -17,20 +17,17 @@
   </div>
 </template>
 <script>
-  import {
-    QTabs, QRouteTab, QCard, QCardMain
-  } from 'quasar';
   import HeaderApp from '../components/HeaderApp';
 
   export default {
     name: 'Tables',
     components: {
-      HeaderApp, QTabs, QRouteTab, QCard, QCardMain
+      HeaderApp
     }
   }
 </script>
 <style lang="stylus">
-  @import "../themes/quasar.variables.styl"
+  //@import "../css/quasar.variables.styl"
   .tables-page
     .tabs-container
       margin: 0 30px

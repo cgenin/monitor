@@ -2,29 +2,32 @@
   <!-- Don't drop "q-app" class -->
   <div id="q-app">
     <q-layout
-      ref="layout"
-      view="lHh Lpr fff"
+      view="lHh Lpr lFf"
       :left-class="{'bg-primary': true}"
     >
-      <q-toolbar slot="header">
-        <q-btn
-          flat
-          @click="menuExpand()"
-          class="burger-icon"
-          :icon="opened ? 'close' : 'menu'"
-        >
-        </q-btn>
+      <q-layout-header>
+        <q-toolbar>
+          <q-btn
+            flat
+            @click="menuExpand()"
+            class="burger-icon"
+            :icon="opened ? 'close' : 'menu'"
+          >
+          </q-btn>
 
-        <q-toolbar-title>
-          Anti-monitor
-          <div slot="subtitle">Récapitualtif des projets Micro services</div>
-        </q-toolbar-title>
-        <!--<q-btn flat class="grey-9" @click="$router.push('/configuration/status')">-->
-        <!--<q-icon name="build" />-->
-        <!--</q-btn>-->
-      </q-toolbar>
-
-      <div slot="left">
+          <q-toolbar-title>
+            Anti-monitor
+            <div slot="subtitle">Récapitualtif des projets Micro services</div>
+          </q-toolbar-title>
+          <!--<q-btn flat class="grey-9" @click="$router.push('/configuration/status')">-->
+          <!--<q-icon name="build" />-->
+          <!--</q-btn>-->
+        </q-toolbar>
+      </q-layout-header>
+      <q-layout-drawer
+        v-model="opened"
+        :content-class="$q.theme === 'mat' ? 'bg-grey-2' : null"
+      >
         <q-list no-border link inset-delimiter>
           <div class="sidebar-header">
             <q-list-header class="side-header">
@@ -35,19 +38,19 @@
               <h3>Menu</h3>
             </q-list-header>
           </div>
-          <q-side-link item to="/" exact>
+          <q-item to="/" exact>
             <q-item-side icon="home"/>
             <q-item-main label="Welcome" sublabel="Page de résumé"/>
-          </q-side-link>
-          <q-collapsible icon="fa-cogs" label="Micro services" opened	>
-            <q-side-link item to="/projects-list">
+          </q-item>
+          <q-collapsible icon="fa-cogs" label="Micro services" opened>
+            <q-item to="/projects-list">
               <q-item-side icon="view_list"/>
               <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>
-            </q-side-link>
-            <q-side-link item to="/tables">
+            </q-item>
+            <q-item to="/tables">
               <q-item-side icon="border_all"/>
               <q-item-main label="Liste des tables" sublabel="liaisons entre les services et les tables"/>
-            </q-side-link>
+            </q-item>
             <q-item to="/apis-list">
               <q-item-side icon="explore"/>
               <q-item-main label="Liste des apis" sublabel="Liste des traitements"/>
@@ -57,60 +60,33 @@
               <q-item-main label="Dépendances" sublabel="Dépendance entre les Micro Services"/>
             </q-item>
           </q-collapsible>
-          <q-side-link item to="/configuration">
+          <q-item to="/configuration">
             <q-item-side icon="build"/>
             <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
-          </q-side-link>
+          </q-item>
         </q-list>
-      </div>
-      <router-view/>
+      </q-layout-drawer>
+      <q-page-container>
+        <router-view/>
+      </q-page-container>
     </q-layout>
   </div>
 </template>
 
 <script>
-  import {
-    QLayout,
-    QToolbar,
-    QToolbarTitle,
-    QBtn,
-    QIcon,
-    QList,
-    QListHeader,
-    QItem,
-    QSideLink,
-    QItemSide,
-    QItemMain,
-    QCollapsible
-  } from 'quasar';
 
   /*
    * Root component
    */
   export default {
     name: 'App',
-    components: {
-      QLayout,
-      QToolbar,
-      QToolbarTitle,
-      QBtn,
-      QIcon,
-      QList,
-      QListHeader,
-      QItem,
-      QSideLink,
-      QItemSide,
-      QItemMain,
-      QCollapsible
-    },
     data() {
       return {
-        opened: true
+        opened: this.$q.platform.is.desktop
       }
     },
     methods: {
       menuExpand() {
-        this.$refs.layout.toggleLeft()
         if (!this.opened) {
           this.opened = true
         }

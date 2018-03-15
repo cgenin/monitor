@@ -25,8 +25,8 @@ export default new VueRouter({
   scrollBehavior: () => ({y: 0}),
 
   routes: [
-    {path: '/', component: load('Welcome')},
-    {path: '/projects-list', component: load('ProjectsList')},
+    {name:'welcome', path: '/', component: load('Welcome')},
+    {name:'projectsList',path: '/projects-list', component: load('ProjectsList')},
     {
       path: '/tables',
       component: load('Tables'),

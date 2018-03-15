@@ -66,7 +66,7 @@
   import VueMarkdown from 'vue-markdown'
   import ProjectsStore from '../../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../../Dates';
-  import {sortString} from '../../Filters'
+  import {sortString} from '../../FiltersAndSorter'
 
   export default {
     name: 'ProjectDetail',

@@ -1,4 +1,4 @@
-export function sortString(converter = (a) => a) {
+export function sortStringForSorter(converter = (a) => a) {
   return (a, b) => {
     const strA = converter(a) || '';
     const strB = converter(b) || '';
