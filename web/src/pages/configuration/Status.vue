@@ -4,11 +4,13 @@
       <q-list-header>Status BDD</q-list-header>
         <q-item class="row sm-gutter">
             <div class="col-md-3 col-xs-6">
-              <q-card class="sm-card">
+              <q-card class="sm-card row">
                 <q-card-main class="no-padding row">
                   <q-icon class="background-positive" v-if="nitrite" name="check" color="white" size="2rem"></q-icon>
                   <q-icon class="background-negative" v-if="!nitrite" name="clear" color="white" size="2rem"></q-icon>
-                  <h5 class="text-center">NITRITRE</h5>
+                  <h5 class="text-center">
+                    NITRITRE
+                  </h5>
                 </q-card-main>
               </q-card>
             </div>

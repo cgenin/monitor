@@ -1,16 +1,15 @@
-// This file is included in the build if src/main.js imports it.
-// Otherwise the default Material CSS file is bundled.
-// Check "DEFAULT / CUSTOM STYLE" in src/main.js
-@import './themes/common.variables'
+@import '~variables'
 
 /**
  * GLOBAL
  */
 body
   color $blue-grey-5
+  background-color $background
 
 h3
   font-size 24px
+  line-height 24px
   margin 0
   font-weight 400
 
@@ -45,72 +44,12 @@ h3
   background url("../assets/splash.jpg") no-repeat
   background-size cover
 
-.layout-header
-  box-shadow none
-  .q-toolbar
-    background $light
-    color $faded
-    border-bottom 1px solid $grey-5
-    .q-btn
-      width 45px
-      height 45px
-      transition all .5s ease-in-out
-    .burger-icon
-      position relative
-      cursor pointer
-      .q-icon
-        margin-right 0
-
-.layout-aside-left
-  box-shadow none
-
-.q-list
-  padding-top 0
-  .sidebar-header
-    &.q-list-header
-      line-height 25px
-      background-color $primary
-      display flex
-      justify-content flex-start
-      align-items center
-      color $white
-      h3
-        text-shadow: 1px 1px $indigo-10
-        letter-spacing: .5px
-        font-weight: 700
-        font-size: 11px
-        text-transform: uppercase
-        margin 20px 0 10px
-    .side-header
-      padding 9px 9px 9px 16px
-      background-color $secondary
-      border-bottom 1px solid #1d4a41
-      span
-        font-size 22px
-        padding-left 15px
-  .q-item
-    .q-item-section
-      color: $white
-      .q-item-sublabel
-        color: $grey-5
-  .q-item.active,
-  .q-item.router-link-active,
-  .q-item:focus,
-  .q-item:hover
-    background-color $background
-    border-left 6px solid $secondary
-    transition all .2s ease-out
-    .q-item-section
-      color: $grey-10
-      .q-item-sublabel
-        color: $grey-8
 
 // CARD
 .q-card
   box-shadow none
   border 1px solid $border
   background white
-  &.sm-card
   &.row
     margin 0
     .q-card-main
@@ -129,9 +68,8 @@ h3
       border-left 1px solid $border
       .q-btn
         align-self stretch
-
   .q-card-primary
-    background-color $light
+    background-color #f4f4f4
     .q-card-title
       h3
         color $grey-10
@@ -144,7 +82,7 @@ h3
   .q-data-table
     .q-btn
       background-color $primary
-      color $white !important
+      color white !important
   table.results
     width: 100%
   .font-result
@@ -176,7 +114,7 @@ h3
     .layout-header
       .q-toolbar
         background-color $primary
-        color $white
+        color white
     .q-modal-layout-content
       padding 15px
       .q-list
@@ -222,7 +160,7 @@ h3
     .q-collapsible-opened:hover
       .q-item
         background-color $secondary
-        color $white
+        color white
         .q-item-sublabel
           color rgba(0, 0, 0, 0.54)
     .q-collapsible
@@ -297,4 +235,4 @@ ul.breadcrumb
 
 .btn-flat-primary
   background-color $primary
-  color $white
+  color white

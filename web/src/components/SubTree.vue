@@ -1,8 +1,8 @@
 <template>
   <li @click="click" :class="{nopointer:notOpens, withpointer:!notOpens}">
     <p>
-      <il v-if="!notOpens && open" class="fa fa-minus-circle"></il>
-      <il v-if="!notOpens && !open" class="fa fa-plus-circle"></il>
+      <i v-if="!notOpens && open" class="fa fa-minus-circle"></i>
+      <i v-if="!notOpens && !open" class="fa fa-plus-circle"></i>
       {{resource}}
     </p>
     <ul v-if="open">

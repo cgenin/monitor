@@ -16,6 +16,7 @@
         <q-alert
           color="error"
           icon="warning"
+          type="warning"
           appear>
           Attention ! Lors d'une opération de rejoue des évènements, l'applicatif sera indisponible. <br />L'action de fin n'est
           visible uniquement dans les logs du serveurs.

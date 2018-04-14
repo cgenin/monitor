@@ -53,7 +53,6 @@
         done(filter(t, {field: 'value', list: this.resources}))
       },
       selected(result) {
-        console.log(result);
         this.$router.push(`/dependencies/search/${result.value.toUpperCase()}`);
       },
       reset() {
@@ -71,8 +70,13 @@
               value: resource.toLowerCase()
             };
           });
+          const resource = this.$router.history.current.params.resource;
+          if (resource) {
+            this.terms = resource;
+          }
         }
       );
+
     }
   }
 </script>

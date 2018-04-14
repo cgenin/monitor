@@ -1,6 +1,6 @@
 <template>
   <div class="help-modal-btn">
-    <q-btn v-if="text" @click="modal=true" icon="help" round/>
+    <q-btn v-if="text" @click="modal=true" icon="help" text-color="primary" color="white" round/>
     <q-modal ref="lModal" v-model="modal"
              :content-css="{minWidth: '90vw', minHeight: '90vh', padding:'1em'}">
       <q-modal-layout>
