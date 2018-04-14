@@ -10,7 +10,7 @@ module.exports = function (ctx) {
     extras: [
       ctx.theme.mat ? 'roboto-font' : null,
       'material-icons',
-      // 'ionicons',
+      'ionicons',
       // 'mdi',
       'fontawesome'
     ],
@@ -27,7 +27,6 @@ module.exports = function (ctx) {
       // extractCSS: false,
       // useNotifier: false,
       extendWebpack(cfg) {
-        console.log(cfg)
         cfg.module.rules.push(
           {
             test: /\.md$/,
@@ -48,6 +47,7 @@ module.exports = function (ctx) {
     },
     // framework: 'all' --- includes everything; for dev only!
     framework: {
+      i18n: 'fr',
       components: [
         'QLayout',
         'QLayoutHeader',
@@ -63,6 +63,7 @@ module.exports = function (ctx) {
         'QItem',
         'QItemMain',
         'QItemSide',
+        'QItemSeparator',
         'QTabs',
         'QRouteTab',
         'QCard',
@@ -70,8 +71,27 @@ module.exports = function (ctx) {
         'QCardMain',
         'QCarousel',
         'QCardSeparator',
-        'QCollapsible'
-
+        'QCollapsible',
+        'QPageSticky', 'QCardActions','QTooltip',
+        'QInput', 'QModal','QModalLayout',
+        'QInnerLoading',
+        'QSpinnerGears',
+        'QSpinnerDots',
+        'QInfiniteScroll',
+        'QTable',
+        'QTh',
+        'QTr',
+        'QTd',
+        'QToggle',
+        'QSelect',
+        'QSearch',
+        'QField',
+        'QChip',
+        'QAlert',
+        'QAutocomplete',
+        'QTableColumns',
+        'QBreadcrumbs',
+        'QBreadcrumbsEl'
       ],
       directives: [
         'Ripple'
@@ -82,7 +102,7 @@ module.exports = function (ctx) {
       ]
     },
     // animations: 'all' --- includes all animations
-    animations: [],
+    animations: 'all',
     pwa: {
       cacheExt: 'js,html,css,ttf,eot,otf,woff,woff2,json,svg,gif,jpg,jpeg,png,wav,ogg,webm,flac,aac,mp4,mp3',
       manifest: {

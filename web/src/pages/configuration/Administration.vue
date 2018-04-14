@@ -41,30 +41,11 @@
   </div>
 </template>
 <script>
-  import {
-    QChipsInput,
-    QBtn,
-    QToggle,
-    QInput,
-    QList,
-    QListHeader,
-    QItem,
-    QItemSeparator} from 'quasar';
   import {success, error} from '../../Toasts'
   import ConfigurationStore from '../../stores/ConfigurationStore';
 
   export default {
     name: 'ConfigurationAdministration',
-    components: {
-      QChipsInput,
-      QBtn,
-      QToggle,
-      QInput,
-      QList,
-      QListHeader,
-      QItem,
-      QItemSeparator
-    },
     data() {
       return {
         activerMysql: false,

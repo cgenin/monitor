@@ -28,27 +28,12 @@
   </div>
 </template>
 <script>
-  import {
-    QBtn,
-    QList,
-    QListHeader,
-    QItem,
-    QItemSeparator,
-    QAlert} from 'quasar';
   import {success, error} from '../../Toasts'
   import AppsStore from '../../stores/AppsStore';
   import MysqlStore from '../../stores/MysqlStore';
 
   export default {
     name: 'ConfigurationReset',
-    components: {
-      QBtn,
-      QList,
-      QListHeader,
-      QItem,
-      QItemSeparator,
-      QAlert
-    },
     methods: {
       doCreateSchemaMysql() {
         MysqlStore.createSchema()

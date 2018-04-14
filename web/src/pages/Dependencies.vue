@@ -32,23 +32,7 @@
   </div>
 </template>
 <script>
-  import {
-    QCard,
-    QCardTitle,
-    QCardSeparator,
-    QCardMain,
-    QInput,
-    QBtn,
-    QList,
-    QItem,
-    QIcon,
-    QAutocomplete,
-    QField,
-    QToggle,
-    QItemMain,
-    QSpinnerDots,
-    filter
-  } from 'quasar';
+  import {filter} from 'quasar';
   import DependenciesStore from '../stores/DependenciesStore'
   import HeaderApp from '../components/HeaderApp';
 
@@ -56,20 +40,6 @@
     name: 'Configuration',
     components: {
       HeaderApp,
-      QCard,
-      QCardTitle,
-      QCardSeparator,
-      QCardMain,
-      QAutocomplete,
-      QInput,
-      QBtn,
-      QList,
-      QItem,
-      QItemMain,
-      QIcon,
-      QField,
-      QToggle,
-      QSpinnerDots
     },
     data() {
       return {

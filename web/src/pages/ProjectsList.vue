@@ -8,71 +8,91 @@
       </q-card-title>
       <q-card-separator/>
       <q-card-main>
-        <q-transition
+        <transition
           appear
-          enter="fadeIn"
-          leave="fadeOut"
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
         >
           <div v-show="!loading">
-            <q-data-table
+            <q-table
               :data="list"
-              :config="config"
               :columns="columns"
+              row-key="field"
+              :filter="filter"
+              :separator="separator"
+              :no-data-label="noData"
+              :pagination.sync="pagination"
+              :no-results-label="noDataAfterFiltering"
+              :rowsPerPageOptions="rowsPerPageOptions"
               @refresh="refresh"
             >
-              <template v-if="cell.data" slot="col-javaDeps" slot-scope="cell">
-                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Dépendance Java')"
+              <template slot="top-left" slot-scope="props">
+                <q-search
+                  v-model="filter"
+                  class="col-auto"
+                />
+              </template>
+              <template slot="top-right" slot-scope="props">
+                <q-select
+                  color="secondary"
+                  v-model="separator"
+                  :options="separatorOptions"
+                  hide-underline
+                />
+              </template>
+              <q-td slot="body-cell-javaDeps" slot-scope="props" :props="props">
+                <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Dépendance Java')"
                    class="tootip">
-                  <span>{{cell.data.length}}&nbsp;</span>
+                  <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
-                <span v-else>{{cell.data.length}}&nbsp;</span>
-              </template>
-              <template v-if="cell.data" slot="col-apis" slot-scope="cell">
-                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Apis')"
+                <span v-else>{{props.value.length}}&nbsp;</span>
+              </q-td>
+              <q-td slot="body-cell-apis" slot-scope="props" :props="props">
+                <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Apis')"
                    class="tootip">
-                  <span>{{cell.data.length}}&nbsp;</span>
+                  <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
-                <span v-else>{{cell.data.length}}&nbsp;</span>
-              </template>
-              <template v-if="cell.data" slot="col-tables" slot-scope="cell">
-                <a href="#" v-if="cell.data.length > 0" v-on:click.prevent="openInfos(cell.data, 'Tables')"
+                <span v-else>{{props.value.length}}&nbsp;</span>
+              </q-td>
+              <q-td slot="body-cell-tables" slot-scope="props" :props="props">
+                <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Tables')"
                    class="tootip">
-                  <span>{{cell.data.length}}&nbsp;</span>
+                  <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
-                <span v-else>{{cell.data.length}}&nbsp;</span>
-              </template>
-              <template v-if="cell.data" slot="col-changelog" slot-scope="cell">
-                <changelog-button :key="cell.row.id" :content="cell.data" ></changelog-button>
-              </template>
-              <template v-if="cell.data" slot="col-destinationUrl" slot-scope="cell">
-                <q-btn flat color="tertiary" @click="$router.push(cell.data)" small>
+                <span v-else>{{props.value.length}}&nbsp;</span>
+              </q-td>
+              <q-td slot="body-cell-changelog" slot-scope="props" :props="props">
+                <changelog-button :key="props.row.id" :content="props.value"></changelog-button>
+              </q-td>
+              <q-td slot="body-cell-destinationUrl" slot-scope="props" :props="props">
+                <q-btn flat color="tertiary" @click="$router.push(props.value)" small>
                   <q-icon name="ion-document-text"/>
                 </q-btn>
-              </template>
-            </q-data-table>
+              </q-td>
+            </q-table>
           </div>
-        </q-transition>
+        </transition>
         <q-inner-loading :visible="loading">
           <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
         </q-inner-loading>
       </q-card-main>
     </q-card>
-    <q-modal ref="layoutModal" v-model="modal" :content-css="{minWidth: '55vw', minHeight: '85vh', padding:'1em'}">
+    <q-modal v-model="modal" :content-css="{minWidth: '55vw', minHeight: '85vh', padding:'1em'}">
       <q-modal-layout>
         <q-toolbar slot="header">
           <div class="q-toolbar-title">
             {{modalOpt.title}}
           </div>
-          <q-btn flat @click="$refs.layoutModal.close()">
+          <q-btn flat @click="modal = false">
             <q-icon name="close"/>
           </q-btn>
         </q-toolbar>
         <div>
           <q-list highlight>
-            <q-item v-for="d in modalOpt.data" key="d">
+            <q-item v-for="d in modalOpt.data" :key="d">
               <q-item-main>{{d}}</q-item-main>
             </q-item>
           </q-list>
@@ -82,32 +102,20 @@
   </div>
 </template>
 <script>
-  import {
-    QCard,
-    QCardTitle,
-    QCardSeparator,
-    QCardMain,
-    QInput,
-    QBtn,
-    QTooltip,
-    QToolbar,
-    QModal,
-    QModalLayout,
-    QList,
-    QItem,
-    QItemMain,
-    QInnerLoading,
-    QTransition,
-    QSpinnerGears,
-    QDataTable,
-    QIcon
-  } from 'quasar';
   import txtHelp from './projects/help.md'
   import ChangelogButton from '../components/ChangeLogButton'
   import ProjectsStore from '../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../Dates';
   import filtering from '../FiltersAndSorter'
   import HeaderApp from '../components/HeaderApp';
+  import {
+    noData,
+    noDataAfterFiltering,
+    separator,
+    separatorOptions,
+    pagination,
+    rowsPerPageOptions
+  } from '../datatable-utils'
 
   const depTootip = (attr) => {
     if (!attr || attr.length === 0) {
@@ -136,25 +144,7 @@
     name: 'ProjectsList',
     components: {
       HeaderApp,
-      QCard,
-      QCardTitle,
-      QCardSeparator,
-      QCardMain,
-      QInput,
-      QBtn,
-      QTooltip,
-      QToolbar,
-      QModal,
-      QModalLayout,
-      QList,
-      QItem,
-      QItemMain,
       ChangelogButton,
-      QInnerLoading,
-      QTransition,
-      QSpinnerGears,
-      QDataTable,
-      QIcon
     },
     data() {
       return {
@@ -165,41 +155,17 @@
         modal: false,
         modalOpt: {},
         loading: false,
-        config: {
-          refresh: true,
-          columnPicker: false,
-          noHeader: false,
-          bodyStyle: {
-            maxHeight: '500px'
-          },
-          rowHeight: '55px',
-          rightStickyColumns: 2,
-          responsive: true,
-          pagination: {
-            rowsPerPage: 30,
-            options: [30, 50, 80, 500]
-          },
-          messages: {
-            noData: '<i>Attention</i> aucune donnée disponible.',
-            noDataAfterFiltering: '<i>Attention</i> aucun résultat. Veuillez affiner votre recherche.'
-          },
-          labels: {
-            columns: 'Colonnes',
-            allCols: 'Toutes les colonnes',
-            rows: 'Résultats',
-            selected: {
-              singular: 'projet sélectionné.',
-              plural: 'projets sélectionnés.'
-            },
-            clear: 'réinitialiser',
-            search: 'Filtrer',
-            all: 'Tous'
-          }
-        },
+        separator,
+        separatorOptions,
+        pagination,
+        noData,
+        noDataAfterFiltering,
+        rowsPerPageOptions,
         columns: [
           {
             label: 'Nom',
             field: 'name',
+            name: 'name',
             width: '270px',
             sort: true,
             type: 'string',
@@ -208,6 +174,7 @@
           {
             label: 'Snapshot',
             field: 'snapshot',
+            name: 'snapshot',
             width: '170px',
             sort: false,
             type: 'string',
@@ -216,6 +183,7 @@
           {
             label: 'Release',
             field: 'release',
+            name: 'release',
             width: '90px',
             sort: false,
             type: 'string',
@@ -224,6 +192,7 @@
           {
             label: 'Java',
             field: 'javaDeps',
+            name: 'javaDeps',
             width: '73px',
             sort(a, b) {
               return (a.length - b.length);
@@ -234,6 +203,7 @@
           {
             label: 'Apis',
             field: 'apis',
+            name: 'apis',
             width: '73px',
             sort(a, b) {
               return (a.length - b.length);
@@ -244,6 +214,7 @@
           {
             label: 'Tables',
             field: 'tables',
+            name: 'tables',
             width: '73px',
             sort(a, b) {
               return (a.length - b.length);
@@ -254,6 +225,7 @@
           {
             label: 'Dernière Mise à jour',
             field: 'latest',
+            name: 'latest',
             width: '175px',
             sort: true,
             type: 'date',
@@ -262,12 +234,14 @@
           {
             label: 'Log',
             field: 'changelog',
+            name: 'changelog',
             width: '57px',
             sort: false
           },
           {
             label: 'Détail',
             field: 'destinationUrl',
+            name: 'destinationUrl',
             width: '67px',
             sort: false
           }
@@ -305,3 +279,8 @@
     }
   }
 </script>
+<style>
+  .projects-page .q-table-control .q-search {
+    min-width: 30vw;
+  }
+</style>

@@ -17,16 +17,13 @@
   </div>
 </template>
 <script>
-  import {
-    QCard, QCardMain
-  } from 'quasar';
   import CardChart from '../../components/CardChart'
   import TablesStore from '../../stores/TablesStore'
 
   export default {
     name: 'TablesChart',
     components: {
-      QCard, QCardMain, CardChart
+      CardChart
     },
     data() {
       return {chart1: {}, median1: 0};

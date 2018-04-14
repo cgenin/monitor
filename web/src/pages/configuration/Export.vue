@@ -6,11 +6,9 @@
   </div>
 </template>
 <script>
-  import {QBtn} from 'quasar';
 
   export default {
     name: 'ConfigurationExport',
-    components: {QBtn},
     methods: {
       doExportJson() {
         this.$refs.link.click();

@@ -15,8 +15,9 @@
               v-model="filter"
               type="text"
               class="filter"
+              :autofocus="true"
               float-label="Filtrer"
-              @change="filtering"></q-input>
+              @input="filtering"></q-input>
           </q-field>
           <div>
             <q-toggle v-model="viewTable" label="Affichage table ou card" color="tertiary"></q-toggle>
@@ -32,11 +33,11 @@
             float-label="Méthode"
             v-model="subFilters.method"
             :options="methodsOptions"
-            @change="filtering"
+            @input="filtering"
             class="field-input"></q-select>
-          <q-input @change="filtering" type="text" float-label="Path" v-model="subFilters.path"
+          <q-input @input="filtering" type="text" float-label="Path" v-model="subFilters.path"
                    class="field-input"></q-input>
-          <q-input @change="filtering" type="text" float-label="Domaine" v-model="subFilters.domain"
+          <q-input @input="filtering" type="text" float-label="Domaine" v-model="subFilters.domain"
                    class="field-input"></q-input>
         </div>
         <q-card-separator></q-card-separator>
@@ -44,28 +45,16 @@
           <p class="caption">Résultat : {{datas.length}}</p>
         </div>
         <div v-if="viewTable">
-          <table class="table-result q-table vertical-separator bordered striped-odd highlight responsive ">
-            <thead>
-            <tr>
-              <th>Méthode</th>
-              <th>path</th>
-              <th>Commentaire</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="api in datas">
-              <td>
-                <method-icon :method="api.method"></method-icon>
-              </td>
-              <td class="api-url">
-                {{api.absolutePath}}
-              </td>
-              <td class="api-comment text-grey-7">
-                {{api.comment}}
-              </td>
-            </tr>
-            </tbody>
-          </table>
+
+            <q-list>
+              <q-item v-for="api in datas" class="list-apis-table" :key="`${api.method}-${api.absolutePath}`">
+                <q-item-side>
+                  <method-icon :method="api.method"></method-icon>
+                </q-item-side>
+                <q-item-main :label="api.path" :sublabel="api.comment">
+                </q-item-main>
+              </q-item>
+            </q-list>
         </div>
         <div v-if="!viewTable">
           <q-infinite-scroll :handler="loadMore">
@@ -82,23 +71,6 @@
   </div>
 </template>
 <script>
-  import {
-    QCard,
-    QCardTitle,
-    QCardSeparator,
-    QCardMain,
-    QInput,
-    QBtn,
-    QSelect,
-    QModal,
-    QList,
-    QItem,
-    QItemMain,
-    QToggle,
-    QInfiniteScroll,
-    QSpinnerDots,
-    QField
-  } from 'quasar';
   import MethodIcon from '../components/MethodIcon';
   import ApisCard from '../components/ApisCard';
   import filtering, {filteringByAttribute} from '../FiltersAndSorter';
@@ -127,23 +99,9 @@
     name: 'ApisList',
     components: {
       HeaderApp,
-      QCard,
-      QCardTitle,
-      QCardSeparator,
-      QCardMain,
-      QInput,
-      QBtn,
-      QSelect,
-      QModal,
-      QList,
-      QItem,
-      QItemMain,
-      QToggle,
-      QInfiniteScroll,
-      QSpinnerDots,
       MethodIcon,
       ApisCard,
-      QField
+
     },
     data() {
       return {
@@ -163,6 +121,29 @@
           {label: 'PUT', value: 'PUT'},
           {label: 'DELETE', value: 'DELETE'},
           {label: 'HEAD', value: 'HEAD'},
+        ],
+        columns: [
+          {
+            label: 'Méthode',
+            name: 'method',
+            field: 'nmethod',
+            align: 'left',
+            sort: true,
+          },
+          {
+            label: 'Path',
+            name: 'path',
+            field: 'path',
+            align: 'left',
+            sort: true,
+          },
+          {
+            label: 'Commentaire',
+            name: 'comment',
+            field: 'comment',
+            align: 'left',
+            sort: true,
+          }
         ]
       };
     },
@@ -174,7 +155,9 @@
           this.filtering();
         }
       },
+
       filtering() {
+        console.log('test')
         const mF = methodFiltering(this.original, this.subFilters.method);
         const aF = absolutePathFiltering(mF, this.subFilters.path);
         const aiF = artifactIdFiltering(aF, this.subFilters.domain);
@@ -182,6 +165,7 @@
         this.listCards = this.datas.filter((o, index) => index < maxLoadedCard);
       },
       loadMore(index, done) {
+        console.log('loadmore')
         if (index < (this.datas.length - 1)) {
           setTimeout(() => {
             if ((index + maxLoadedCard) >= this.datas.length) {
@@ -216,51 +200,76 @@
 
   }
 </script>
-<style lang="stylus" scoped>
-  .apis-page
-    .inputs
-      display flex
-      justify-content space-between
-      align-items center
-      margin-bottom 10px
-      > div
-        padding-right 20px
-        &:last-child
-          padding-right 0
-      .q-field
-        flex 5
-        margin 0
-    .inputs-panel
-      background #eeeeee
-      padding 15px
-      > div
-        flex 1
-        margin 0 10px
-    .q-card-separator
-      margin-bottom 15px
-    .caption
-      font-weight bold
-    .awaiting
-      margin 1em auto
-      width 100%
-      display flex
-      justify-content center
-    .card-container
-      display flex
-      justify-content space-around
-      align-items flex-start
-      flex-flow row wrap
-      align-content space-between
-      width 100%
-      .apis-card
-        width 35vw
+<style >
+  .apis-page .inputs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
 
-  .api-url
-    word-break break-all
-    width 35vw
+  .apis-page .inputs > div {
+    padding-right: 20px;
+  }
 
-  .api-comment
-    max-width: $api-max-comments-width;
-    min-width: $api-max-comments-width;
-    width: $api-max-comments-width;
+  .apis-page .inputs > div:last-child {
+    padding-right: 0;
+  }
+
+  .apis-page .inputs .q-field {
+    flex: 5;
+    margin: 0;
+  }
+
+  .apis-page .inputs-panel {
+    background: #eeeeee;
+    padding: 15px;
+
+  }
+
+  .apis-page .inputs-panel > div {
+    flex: 1;
+    margin: 0 10px;
+  }
+
+  .apis-page .q-card-separator {
+    margin-bottom: 15px;
+
+  }
+
+  .apis-page .caption {
+    font-weight: bold;
+  }
+
+  .apis-page .awaiting {
+    margin: 1em auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .apis-page .card-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-flow: row wrap;
+    align-content: space-between;
+    width: 100%;
+  }
+
+  .apis-page .list-apis-table .q-item-label {
+    word-break: break-all;
+    padding: 5px;
+  }
+
+  .apis-page .list-apis-table .q-item-sublabel {
+    word-break: break-all;
+    padding: 5px;
+  }
+
+  .apis-page .card-container .apis-card {
+    width: 35vw;
+  }
+
+
 </style>

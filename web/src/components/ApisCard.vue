@@ -64,16 +64,13 @@
   </q-card>
 </template>
 <script>
-  import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QBtn, QCollapsible, QList, QItem, QItemMain
-  } from 'quasar';
   import MethodIcon from './MethodIcon'
 
   export default {
     name: 'ApisCard',
     props: ['api'],
     components: {
-      QCard, QCardTitle, QCardSeparator, QCardMain, QBtn, QCollapsible, QList, QItem, QItemMain, MethodIcon
+      MethodIcon
     },
     computed: {
       parameters() {

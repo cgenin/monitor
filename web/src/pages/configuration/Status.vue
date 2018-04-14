@@ -55,19 +55,6 @@
   </div>
 </template>
 <script>
-  import {
-    QIcon,
-    QBtn,
-    QFixedPosition,
-    QCard,
-    QCardMain,
-    QCardActions,
-    QList,
-    QListHeader,
-    QItem,
-    QItemSeparator,
-    QTooltip
-  } from 'quasar';
 
   import ConfigurationStore from '../../stores/ConfigurationStore'
   import MysqlStore from '../../stores/MysqlStore'
@@ -75,19 +62,6 @@
 
   export default {
     name: 'ConfigurationStatus',
-    components: {
-      QIcon,
-      QBtn,
-      QFixedPosition,
-      QCard,
-      QCardMain,
-      QCardActions,
-      QList,
-      QListHeader,
-      QItem,
-      QItemSeparator,
-      QTooltip
-    },
     data() {
       return {health: {}, nitrite: false, mysql: false, ConsoleStore};
     },

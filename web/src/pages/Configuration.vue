@@ -35,46 +35,12 @@
   </div>
 </template>
 <script>
-  import {
-    QCard,
-    QCardTitle,
-    QCardSeparator,
-    QCardMain,
-    QInput,
-    QBtn,
-    QSelect,
-    QTabs,
-    QRouteTab,
-    QList,
-    QItem,
-    QItemMain,
-    QRadio,
-    QInfiniteScroll,
-    QSpinnerDots,
-    QIcon
-  } from 'quasar';
   import HeaderApp from '../components/HeaderApp';
 
   export default {
     name: 'Configuration',
     components: {
       HeaderApp,
-      QCard,
-      QCardTitle,
-      QCardSeparator,
-      QCardMain,
-      QInput,
-      QBtn,
-      QSelect,
-      QTabs,
-      QRouteTab,
-      QList,
-      QItem,
-      QItemMain,
-      QRadio,
-      QInfiniteScroll,
-      QSpinnerDots,
-      QIcon
     }
   }
 </script>

@@ -47,12 +47,6 @@
   </div>
 </template>
 <script>
-  import {
-    QCard,
-    QCardMain,
-    QRadio,
-    QBtn
-  } from 'quasar';
   import DependenciesStore from '../../stores/DependenciesStore';
   import SubTree from '../../components/SubTree';
 
@@ -60,10 +54,6 @@
     name: 'DependenciesSearch',
     components: {
       SubTree,
-      QCard,
-      QCardMain,
-      QRadio,
-      QBtn
     },
     data() {
       return {resource: '', usedBy: [], vertical: false};

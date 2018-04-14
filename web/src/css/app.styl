@@ -1,13 +1,14 @@
 // This file is included in the build if src/main.js imports it.
 // Otherwise the default Material CSS file is bundled.
 // Check "DEFAULT / CUSTOM STYLE" in src/main.js
-
+@import './themes/common.variables'
 
 /**
  * GLOBAL
  */
 body
   color $blue-grey-5
+
 h3
   font-size 24px
   margin 0
@@ -18,6 +19,7 @@ h3
 
 .background-positive
   background-color $positive
+
 .background-negative
   background-color $negative
 
@@ -32,15 +34,17 @@ h3
  * QUASAR COMPONENTS
  */
 
-  // LAYOUT
+// LAYOUT
 .layout-page-container
   background $background
+
 .logo-container
   width 100%
   height 100%
   min-height: calc(100vh - 50px)
   background url("../assets/splash.jpg") no-repeat
   background-size cover
+
 .layout-header
   box-shadow none
   .q-toolbar
@@ -56,51 +60,50 @@ h3
       cursor pointer
       .q-icon
         margin-right 0
-.layout-aside-left
-  &.fixed
-    &.on-layout
-      box-shadow none
-  .q-list
-    padding-top 0
-    .sidebar-header
-      .q-list-header
-        line-height 25px
-        background-color $primary
-        display flex
-        justify-content flex-start
-        align-items center
-        color $white
-        h3
-          text-shadow: 1px 1px $indigo-10
-          letter-spacing: .5px
-          font-weight: 700
-          font-size: 11px
-          text-transform: uppercase
-          margin 20px 0 10px
-      .side-header
-        padding 9px 9px 9px 16px
-        background-color $secondary
-        border-bottom 1px solid #1d4a41
-        span
-          font-size 22px
-          padding-left 15px
-    .q-item
-      .q-item-section
-        color: $white
-        .q-item-sublabel
-          color: $grey-5
-    .q-item.active,
-    .q-item.router-link-active,
-    .q-item:focus,
-    .q-item:hover
-      background-color $background
-      border-left 6px solid $secondary
-      transition all .2s ease-out
-      .q-item-section
-        color: $grey-10
-        .q-item-sublabel
-          color: $grey-8
 
+.layout-aside-left
+  box-shadow none
+
+.q-list
+  padding-top 0
+  .sidebar-header
+    &.q-list-header
+      line-height 25px
+      background-color $primary
+      display flex
+      justify-content flex-start
+      align-items center
+      color $white
+      h3
+        text-shadow: 1px 1px $indigo-10
+        letter-spacing: .5px
+        font-weight: 700
+        font-size: 11px
+        text-transform: uppercase
+        margin 20px 0 10px
+    .side-header
+      padding 9px 9px 9px 16px
+      background-color $secondary
+      border-bottom 1px solid #1d4a41
+      span
+        font-size 22px
+        padding-left 15px
+  .q-item
+    .q-item-section
+      color: $white
+      .q-item-sublabel
+        color: $grey-5
+  .q-item.active,
+  .q-item.router-link-active,
+  .q-item:focus,
+  .q-item:hover
+    background-color $background
+    border-left 6px solid $secondary
+    transition all .2s ease-out
+    .q-item-section
+      color: $grey-10
+      .q-item-sublabel
+        color: $grey-8
 
 // CARD
 .q-card
@@ -127,13 +130,12 @@ h3
       .q-btn
         align-self stretch
 
-
-
   .q-card-primary
     background-color $light
     .q-card-title
       h3
         color $grey-10
+
 /*
  * PAGE LIST
  * With data table
@@ -168,7 +170,7 @@ h3
     th
       border-bottom: 2px solid #bdbdbd !important;
 
-  // MODAL
+// MODAL
 .modal
   .q-modal-layout
     .layout-header
@@ -182,7 +184,7 @@ h3
         border none
         .q-item
           padding 10px
-          border-bottom 1px solid rgba(0,0,0,0.12)
+          border-bottom 1px solid rgba(0, 0, 0, 0.12)
           .q-item-main
             color $blue-grey-5
           &:last-child
@@ -200,16 +202,18 @@ h3
       h3
         font-size 1.2rem
         color $tertiary
+
 .btn-close-modal
   width: 100%
 
-  // DATA TABLE
+// DATA TABLE
 .q-data-table
   font-size 100%
+
 .q-pagination .q-btn
   margin 10px 2px 8px
 
-  // COLLAPSIBLE - ACCORDION
+// COLLAPSIBLE - ACCORDION
 .selected-list
   .q-list
     padding 0
@@ -220,7 +224,7 @@ h3
         background-color $secondary
         color $white
         .q-item-sublabel
-          color rgba(0,0,0,0.54)
+          color rgba(0, 0, 0, 0.54)
     .q-collapsible
       .q-item
         transition all .2s linear
@@ -231,7 +235,7 @@ h3
             padding-left 0
             li
               padding 10px
-              border-bottom 1px solid rgba(0,0,0,0.12)
+              border-bottom 1px solid rgba(0, 0, 0, 0.12)
               color $blue-grey-5
               &:last-child
                 border none
@@ -248,13 +252,12 @@ h3
           color $tertiary
 
   // BREADCRUMB
-body.desktop
-  ul.breadcrumb
-    margin 30px
-    li
-      margin-bottom 0
-      a
-        transition background-color .2s linear
+ul.breadcrumb
+  margin 30px
+  li
+    margin-bottom 0
+    a
+      transition background-color .2s linear
         &:after,
         &:before
           transition all .2s linear
@@ -271,9 +274,10 @@ body.desktop
           border-color $secondary
           border-left-color transparent
 
-  // BUTTONS
+// BUTTONS
 .q-btn
   box-shadow none
+
 .q-btn-standard
   &.open
     .q-icon
@@ -281,13 +285,16 @@ body.desktop
   .q-icon
     transition transform .3s ease-in-out
     width 24px
+
 .q-btn-small
   padding 0 6px
   .q-icon
     width 19px
+
 .q-item-letter,
 .q-item-icon
   width 24px;
+
 .btn-flat-primary
   background-color $primary
   color $white

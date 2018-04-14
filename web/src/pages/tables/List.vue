@@ -2,27 +2,53 @@
   <div class="page-list">
     <q-card class="container">
       <q-card-main>
-        <q-transition
+        <transition
           appear
-          enter="fadeIn"
-          leave="fadeOut"
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
         >
           <div v-if="!loading" style="width:100%">
-            <div>
-              <q-data-table
+            <div class="sql-table-and-project">
+              <q-table
                 :data="list"
-                :config="config"
                 :columns="columns"
+                row-key="name"
+                :visible-columns="visibleColumns"
+                :filter="filter"
+                :separator="separator"
+                :no-data-label="noData"
+                :pagination.sync="pagination"
+                :no-results-label="noDataAfterFiltering"
+                :rowsPerPageOptions="rowsPerPageOptions"
                 @refresh="refresh">
-                <template slot="col-services" slot-scope="cell">
-                  <ul>
-                    <li v-for="s in cell.data">{{s}}</li>
-                  </ul>
+                <template slot="top-left" slot-scope="props">
+                  <q-search
+                    v-model="filter"
+                    class="col-auto"
+                  />
                 </template>
-              </q-data-table>
+                <template slot="top-right" slot-scope="props">
+                  <q-table-columns
+                    class="q-mr-sm"
+                    v-model="visibleColumns"
+                    :columns="columns"
+                  />
+                  <q-select
+                    color="secondary"
+                    v-model="separator"
+                    :options="separatorOptions"
+                    hide-underline
+                  />
+                </template>
+                <q-td slot="body-cell-services" slot-scope="props" :props="props">
+                  <ul>
+                    <li v-for="s in props.value">{{s}}</li>
+                  </ul>
+                </q-td>
+              </q-table>
             </div>
           </div>
-        </q-transition>
+        </transition>
         <q-inner-loading :visible="loading">
           <q-spinner-gears size="50px" color="primary"/>
         </q-inner-loading>
@@ -31,26 +57,14 @@
   </div>
 </template>
 <script>
-  import {
-    QCard, QCardTitle, QCardSeparator, QCardMain, QInnerLoading, QTransition, QSpinnerGears,
-    QDataTable
-  } from 'quasar';
+
   import TablesStore from '../../stores/TablesStore';
   import {format} from '../../Dates';
-  import filtering, {sortString} from '../../FiltersAndSorter'
+  import {sortString} from '../../FiltersAndSorter'
+  import {pagination, separator, separatorOptions, noDataAfterFiltering, noData, rowsPerPageOptions} from '../../datatable-utils'
 
   export default {
     name: 'TablesList',
-    components: {
-      QCard,
-      QCardTitle,
-      QCardSeparator,
-      QCardMain,
-      QInnerLoading,
-      QTransition,
-      QSpinnerGears,
-      QDataTable
-    },
     data() {
       return {
         list: [],
@@ -58,36 +72,19 @@
         original: [],
         filter: '',
         loading: false,
-        config: {
-          title: 'Liste des tables et projets liés',
-          refresh: true,
-          noHeader: false,
-          bodyStyle: {
-            maxHeight: '500px'
-          },
-          rowHeight: '50px',
-          responsive: true,
-          pagination: {
-            rowsPerPage: 15,
-            options: [5, 10, 15, 30, 50, 500]
-          },
-          messages: {
-            noData: '<i>Attention</i> aucune donnée disponible.',
-            noDataAfterFiltering: '<i>Attention</i> aucun résultat. Veuillez affiner votre recherche.'
-          },
-          labels: {
-            columns: 'Colonnes',
-            allCols: 'Toutes les colonnes',
-            rows: 'Résultats',
-            clear: 'réinitialiser',
-            search: 'Filtrer',
-            all: 'Tous'
-          }
-        },
+        pagination,
+        separator,
+        separatorOptions,
+        rowsPerPageOptions,
+        visibleColumns: ['name', 'services', 'latest'],
+        noData,
+        noDataAfterFiltering,
         columns: [
           {
             label: 'Nom',
+            name: 'name',
             field: 'name',
+            align: 'left',
             width: '400px',
             sort: true,
             type: 'string',
@@ -95,7 +92,9 @@
           },
           {
             label: 'Projet(s) lié(s)',
+            name: 'services',
             field: 'services',
+            align: 'left',
             width: '380px',
             filter: true,
             sort(a, b) {
@@ -107,7 +106,9 @@
           },
           {
             label: 'Dernière Mise à jour',
+            name: 'latest',
             field: 'latest',
+            align: 'center',
             width: '230px',
             sort: true,
             type: 'date',
@@ -137,12 +138,14 @@
             }, 300);
           });
       },
-      filtering() {
-        this.list = filtering(this.original, this.filter);
-      }
     },
     mounted() {
       this.refresh();
     }
   }
 </script>
+<style>
+   .page-list .sql-table-and-project .q-table-control .q-search {
+    min-width: 30vw;
+  }
+</style>

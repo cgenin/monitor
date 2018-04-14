@@ -4,12 +4,10 @@
   </q-chip>
 </template>
 <script>
-  import {QChip} from 'quasar';
 
   export default {
     name: 'MethodIcon',
     props: ['method'],
-    components: {QChip},
     computed: {
       icon() {
         if (this.method) {

@@ -11,14 +11,10 @@
   </li>
 </template>
 <script>
-  import {QIcon} from 'quasar';
   import DependenciesStore from '../stores/DependenciesStore';
 
   export default {
     name: 'SubTree',
-    components: {
-      QIcon
-    },
     props: ['resource'],
     data() {
       return {open: false, subs: [], notOpens: false};

@@ -12,13 +12,11 @@
   </div>
 </template>
 <script>
-  import {QBtn} from 'quasar';
   import {success, error} from '../../Toasts';
   import ConfigurationStore from '../../stores/ConfigurationStore'
 
   export default {
     name: 'ConfigurationImport',
-    components: {QBtn},
     data() {
       return {
         jsonImport: null

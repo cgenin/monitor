@@ -9,17 +9,18 @@
           <div class="q-toolbar-title">
             Change Log
           </div>
-          <q-btn flat @click="$refs.layoutModal.close()">
+          <q-btn flat @click="modal= false">
             <q-icon name="close"/>
           </q-btn>
         </q-toolbar>
-        <vue-markdown>{{content}}</vue-markdown>
+        <div class="layout-padding">
+          <vue-markdown :source="content" :show="true"></vue-markdown>
+        </div>
       </q-modal-layout>
     </q-modal>
   </div>
 </template>
 <script>
-  import {QBtn, QIcon, QToolbar, QModal, QModalLayout} from 'quasar';
   import VueMarkdown from 'vue-markdown'
 
   export default {
@@ -28,9 +29,9 @@
       return {modal: false};
     },
     props: ['content', 'id'],
-    components: {QBtn, QIcon, QToolbar, QModal, QModalLayout, VueMarkdown},
+    components: {VueMarkdown},
     mounted() {
-      console.log(this.id);
+      console.log(this.content);
     }
   }
 </script>

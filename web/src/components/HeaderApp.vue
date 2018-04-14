@@ -1,5 +1,5 @@
 <template>
-  <div class="row items-center">
+  <div class="row items-center" style="margin:1.5em">
     <div class="col-10">
       <bread-crumb :datas="bcDatas"/>
     </div>

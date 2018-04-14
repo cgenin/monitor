@@ -19,9 +19,6 @@
             Anti-monitor
             <div slot="subtitle">Récapitualtif des projets Micro services</div>
           </q-toolbar-title>
-          <!--<q-btn flat class="grey-9" @click="$router.push('/configuration/status')">-->
-          <!--<q-icon name="build" />-->
-          <!--</q-btn>-->
         </q-toolbar>
       </q-layout-header>
       <q-layout-drawer
@@ -97,6 +94,3 @@
     }
   }
 </script>
-
-<style lang="stylus" scoped>
-</style>

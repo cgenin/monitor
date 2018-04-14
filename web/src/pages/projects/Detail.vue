@@ -49,41 +49,17 @@
   </div>
 </template>
 <script>
-  import {
-    QCard,
-    QCardTitle,
-    QCardSeparator,
-    QCardMain,
-    QSelect,
-    QBtn,
-    QCollapsible,
-    QList,
-    QItem,
-    QItemMain,
-    QIcon
-  } from 'quasar';
   import BreadCrumb from '../../components/BreadCrumb'
   import VueMarkdown from 'vue-markdown'
   import ProjectsStore from '../../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../../Dates';
-  import {sortString} from '../../FiltersAndSorter'
+  import {sortStringForSorter} from '../../FiltersAndSorter'
 
   export default {
     name: 'ProjectDetail',
     components: {
       BreadCrumb,
-      QCard,
-      QCardTitle,
-      QCardSeparator,
-      QCardMain,
-      QSelect,
-      QBtn,
-      QCollapsible,
-      QList,
-      QItem,
-      QItemMain,
       VueMarkdown,
-      QIcon
     },
     data() {
       return {
@@ -136,7 +112,7 @@
                 stamp
               }
             })
-            .sort(sortString((a) => a.label));
+            .sort(sortStringForSorter((a) => a.label));
           console.log(this.selectVersions)
         })
         .catch(err => console.error(err));
