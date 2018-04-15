@@ -35,7 +35,7 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new TablesBatch(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new VersionBatch(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new DependenciesBatch(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new Import());
+        vertx.deployVerticle(new ImportExport());
         vertx.deployVerticle(new ConfigurationCommand());
         vertx.deployVerticle(new Reset(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ApisBatch(), new DeploymentOptions().setWorker(true));

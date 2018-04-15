@@ -10,6 +10,7 @@ public class AntiMonitorSchemas {
                     "  ID       BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
                     "  state    INTEGER,\n" +
                     "  document LONGTEXT\n" +
+                    "  ARCHIVE BOOLEAN\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS TABLES (\n" +
                     "  ID      VARCHAR(100) NOT NULL PRIMARY KEY,\n" +
