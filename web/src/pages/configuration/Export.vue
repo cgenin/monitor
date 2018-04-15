@@ -1,12 +1,12 @@
 <template>
   <div class="export-page">
     <div class="row sm-gutter">
-      <div class="col-md-6">
+      <div class="col-md-6 row justify-center">
         <a class="none" ref="link" href="/api/configuration/db/export.json" target="_blank">export</a>
         <q-btn @click="doExportJson" icon="file_download"  color="primary">Exporter sous format JSON
         </q-btn>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 row justify-center">
 
         <q-btn @click="doExportToMysqlEvents" icon="file_download" color="positive">Archivage des
           évènements
