@@ -149,6 +149,7 @@ public class Services {
             new Https.EbCaller(vertx, rc).created(Raw.SAVING, body);
         });
         router.delete("/").handler(rc -> new Https.EbCaller(vertx, rc).created(Reset.RUN, new JsonObject()));
+        router.delete("/calculate/datas").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Raw.CLEAR_CALCULATE_DATA, new JsonObject()));
 
         return router;
     }
