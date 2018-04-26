@@ -27,13 +27,16 @@
   }
 </script>
 <style lang="stylus">
-  //@import "../css/quasar.variables.styl"
+  @import '~variables'
   .tables-page
     .tabs-container
       margin: 0 30px
-      padding: 5px
-      border: 1px solid $border
+      border-left: 1px solid $border
+      border-top: 1px solid $border
+      border-right: 1px solid $border
     .q-tabs-normal
+      .q-tabs-head:not(.scrollable)
+        padding 0
       .q-tabs-bar
         color: $primary
 </style>

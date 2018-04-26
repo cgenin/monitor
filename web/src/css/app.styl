@@ -22,6 +22,15 @@ h3
 .background-negative
   background-color $negative
 
+.bg-header
+  background $background-header
+
+.text-header
+  color $color-header
+
+.layout-padding
+  padding 1rem 2rem
+
 // INPUT FILE
 .label-file
   cursor pointer
@@ -34,6 +43,98 @@ h3
  */
 
 // LAYOUT
+  .q-layout-drawer-delimiter
+    box-shadow none
+  .q-layout-header
+    box-shadow none
+  .q-layout-drawer-left
+    background-color $primary
+  .q-toolbar.text-header.bg-header
+    border-bottom 1px solid $border
+    .q-btn
+      width 45px
+      height 45px
+      transition all .5s ease-in-out
+    .burger-icon
+      position relative
+      cursor pointer
+      .q-icon
+        margin-right 0
+  .tool-bar
+    .q-collapsible-sub-item
+      padding-left 0
+      padding-right 0
+    .tool-bar-header
+      .q-list-header
+        display flex
+        justify-content flex-start
+        align-items center
+        color white
+        &.main
+          background-color $secondary
+          justify-content center
+          padding 9px 9px 9px 0
+          border-bottom 1px solid #1d4a41
+          h3
+            line-height 25px
+            letter-spacing: .5px
+            font-weight: 700
+            margin 0
+        h4
+          text-transform: uppercase
+          font-size: 14px
+          font-weight: 500
+          padding-left: 16px
+          margin 0
+    .q-item
+      .q-item-side
+        color: white
+      .q-item-section
+        .q-item-label
+          color: white
+        .q-item-sublabel
+          color: $grey-6
+    .q-item:focus
+    .q-item:hover
+    .q-item.router-link-active
+    .q-item.router-link-active:hover
+    .q-collapsible .q-collapsible-inner > .q-item:hover
+      background-color $background
+      border-left 6px solid $secondary
+      transition all .2s ease-out
+      .q-item-section
+        color: $grey-10
+        .q-item-label
+          color: black
+        .q-item-sublabel
+          color: $grey-8
+
+.q-list
+  padding-top 0
+  .sidebar-header
+    &.q-list-header
+      line-height 25px
+      background-color $primary
+      display flex
+      justify-content flex-start
+      align-items center
+      color $white
+      h3
+        text-shadow: 1px 1px $indigo-10
+        letter-spacing: .5px
+        font-weight: 700
+        font-size: 11px
+        text-transform: uppercase
+        margin 20px 0 10px
+    .side-header
+      padding 9px 9px 9px 16px
+      background-color $secondary
+      border-bottom 1px solid #1d4a41
+      span
+        font-size 22px
+        padding-left 15px
+
+// LAYOUT
 .layout-page-container
   background $background
 
@@ -43,7 +144,6 @@ h3
   min-height: calc(100vh - 50px)
   background url("../assets/splash.jpg") no-repeat
   background-size cover
-
 
 // CARD
 .q-card
@@ -83,10 +183,17 @@ h3
  * With data table
  */
 .page-list
-  .q-data-table
+  .q-table
     .q-btn
       background-color $primary
       color white !important
+    .tooltip
+      color $primary
+      text-decoration none
+      display flex
+      align-items center
+      &:hover
+        color $tertiary
   table.results
     width: 100%
   .font-result
@@ -101,16 +208,6 @@ h3
     align-items: center
     .q-if
       margin-bottom: 16px
-
-  // HTML TABLE
-  .q-table
-    thead
-      tr
-        border-bottom 2px solid #eee
-        min-height 56px
-  &:not(.responsive)
-    th
-      border-bottom: 2px solid #bdbdbd !important;
 
 // MODAL
 .modal
@@ -189,9 +286,62 @@ h3
           font-size 1.2rem
           color $tertiary
 
+// BREADCRUMB
+.q-breadcrumbs
+  div
+    a
+      display block
+      color #FFF !important
+      padding 8px
+      transition background-color .2s linear
+      background-color $primary
+      &:after,
+      &:before
+        content ''
+        position absolute
+        top 0
+        left 100%
+        z-index 1
+        display block
+        width 0
+        height 0
+        border-top 20px solid transparent
+        border-bottom 20px solid transparent
+        border-left 10px solid transparent
+        transition all .2s linear
+      &:after
+        border-left-color $primary
+      &:before
+        left -10px
+        border-top-color: $background
+        border-bottom-color: $background
+      &:hover
+        background-color $secondary
+        &:after
+          border-left-color $secondary
+        &:before
+          border-color $secondary
+          border-left-color transparent
+    .router-link-exact-active
+      background-color $secondary
+      &:before
+        border-color $secondary
+        border-left-color transparent
+    &:first-child
+      a
+        &:before
+          display none
+    &:last-child
+      a
+        &:after
+          display none
+  .q-breadcrumbs-separator
+    width 18px
+
 
 // BUTTONS
-.q-btn
+.q-btn,
+.q-btn-round:not(.q-btn-flat):not(.q-btn-outline)
   box-shadow none
 
 .q-btn-standard
