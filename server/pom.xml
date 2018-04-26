@@ -72,7 +72,7 @@
                             <outputDirectory>${basedir}/target/classes/dist</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/../web/dist</directory>
+                                    <directory>${basedir}/../web/dist/spa-mat</directory>
                                 </resource>
                             </resources>
                         </configuration>
