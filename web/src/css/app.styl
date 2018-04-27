@@ -62,8 +62,7 @@ h3
         margin-right 0
   .tool-bar
     .q-collapsible-sub-item
-      padding-left 0
-      padding-right 0
+      padding 0
     .tool-bar-header
       .q-list-header
         display flex
@@ -152,6 +151,7 @@ h3
   background white
   &.row
     margin 0
+    margin-right 15px
     .q-card-main
       flex-grow 1
       align-items center
@@ -162,12 +162,15 @@ h3
         color black
         justify-self center
         flex-grow 1
-    q-card-actions
+        margin 0
+    .q-card-actions
       display flex
-      flex-grow 0
+      flex-grow 0.5
+      padding 0
       border-left 1px solid $border
       .q-btn
-        align-self stretch
+        width 100%
+        height 100%
   .q-card-primary
     background-color #f4f4f4
     .q-card-title
@@ -183,6 +186,9 @@ h3
  * With data table
  */
 .page-list
+  .q-table-container
+    box-shadow none
+    border: 1px solid $border
   .q-table
     .q-btn
       background-color $primary
@@ -336,7 +342,7 @@ h3
         &:after
           display none
   .q-breadcrumbs-separator
-    width 18px
+    width 12px
 
 
 // BUTTONS

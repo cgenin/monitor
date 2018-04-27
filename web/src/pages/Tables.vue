@@ -3,11 +3,11 @@
     <header-app :bc-datas="[{icon:'border_all', label:'Tables'}]"></header-app>
     <div class="tabs-container container bg-light">
       <q-tabs color="light">
-        <q-route-tab icon="fa-list" label="Liste des tables"
+        <q-route-tab icon="view_list" label="Liste des tables"
                      to="/tables/list" color="primary"
                      slot="title">
         </q-route-tab>
-        <q-route-tab icon="fa-line-chart" label="Graphique"
+        <q-route-tab icon="show_chart" label="Graphique"
                      to="/tables/chart" color="primary"
                      slot="title">
         </q-route-tab>
