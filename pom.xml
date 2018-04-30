@@ -17,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <vertx.version>3.5.0</vertx.version>
+        <vertx.version>3.5.1</vertx.version>
         <elasticsearch.version>6.0.0</elasticsearch.version>
         <docker.image.prefix>christophegeninnet</docker.image.prefix>
     </properties>
@@ -41,7 +41,7 @@
             </dependency>
             <dependency>
                 <groupId>io.vertx</groupId>
-                <artifactId>vertx-rx-java</artifactId>
+                <artifactId>vertx-rx-java2</artifactId>
                 <version>${vertx.version}</version>
             </dependency>
             <dependency>
