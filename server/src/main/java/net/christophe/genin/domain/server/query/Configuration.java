@@ -9,14 +9,29 @@ import net.christophe.genin.domain.server.db.Schemas;
 
 import java.util.Optional;
 
+/**
+ * Read Operation on Configuration.
+ */
 public class Configuration extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
     public static final String EXPORTER = Configuration.class.getName() + ".exporter";
     public static final String GET = Configuration.class.getName() + ".get";
 
+    /**
+     * Getter on Nitrite Configuration Object
+     * @return the current instance or an new instance.
+     */
+    public static ConfigurationDto get() {
+        return Optional.ofNullable(Dbs.instance
+                .repository(ConfigurationDto.class)
+                .find().firstOrDefault())
+                .orElseGet(ConfigurationDto::new);
+    }
+
+
     @Override
-    public void start() throws Exception {
+    public void start() {
         vertx.eventBus().consumer(EXPORTER, msg -> Dbs.instance.exporter()
                 .subscribe(
                         msg::reply,
@@ -35,10 +50,5 @@ public class Configuration extends AbstractVerticle {
         logger.info("started");
     }
 
-    public static ConfigurationDto get() {
-        return Optional.ofNullable(Dbs.instance
-                                .repository(ConfigurationDto.class)
-                                .find().firstOrDefault())
-                                .orElseGet(ConfigurationDto::new);
-    }
+
 }

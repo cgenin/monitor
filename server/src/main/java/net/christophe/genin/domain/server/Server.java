@@ -5,6 +5,8 @@ import io.vertx.core.DeploymentOptions;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.command.*;
+import net.christophe.genin.domain.server.db.Nitrite2Mysql;
+import net.christophe.genin.domain.server.db.migration.MigrateConfiguration;
 import net.christophe.genin.domain.server.query.*;
 
 /**
@@ -12,10 +14,33 @@ import net.christophe.genin.domain.server.query.*;
  */
 public class Server extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
+    private static final String HTTP = "http";
+    private static final String MIGRATION = "migration";
+
 
     @Override
     public void start() throws Exception {
-        logger.info("start ....");
+        String app = config().getString("app", HTTP);
+        switch (app) {
+            case MIGRATION:
+                migration();
+                break;
+            case HTTP:
+            default:
+                server();
+        }
+
+    }
+
+    private void migration() {
+        logger.info("migration start ....");
+        vertx.deployVerticle(new MigrateConfiguration());
+        vertx.deployVerticle(new Nitrite2Mysql(), new DeploymentOptions().setConfig(config()));
+
+    }
+
+    private void server() {
+        logger.info("http start ....");
         vertx.deployVerticle(new Console());
         vertx.deployVerticle(new Http(), new DeploymentOptions().setConfig(config()));
         vertx.deployVerticle(new InitializeDb(), new DeploymentOptions().setConfig(config()), as -> {
@@ -25,7 +50,7 @@ public class Server extends AbstractVerticle {
             deployCommand();
             deployQuery();
         });
-        logger.info("start : OK");
+        logger.info("http verticles launch : OK");
     }
 
     private void deployCommand() {
