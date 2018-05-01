@@ -6,6 +6,7 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.core.eventbus.Message;
 import net.christophe.genin.domain.server.InitializeDb;
+import net.christophe.genin.domain.server.Server;
 import net.christophe.genin.domain.server.db.migration.MigrateConfiguration;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
@@ -19,28 +20,28 @@ public class Nitrite2Mysql extends AbstractVerticle {
 
     @Override
     public void start() {
-
-
         Observable.concat(
                 nitriteLoading(),
                 createMysqlConnections(),
-                vertx.eventBus().<String>rxSend(MigrateConfiguration.LAUNCH, new JsonObject())
-                        .map(Message::body)
-                        .toObservable()
+                toObservable(vertx.eventBus().rxSend(MigrateConfiguration.LAUNCH, new JsonObject()))
+
         ).subscribe(
                 logger::info,
                 err -> {
                     logger.error("Error in migration", err);
-                    System.exit(1);
+                    vertx.eventBus().send(Server.FAIL, new JsonObject());
                 },
                 () -> {
                     logger.info("Completed work !!!");
-
-                }
-
-        );
+                    vertx.eventBus().send(Server.STOP, new JsonObject());
+                });
 
 
+    }
+
+    private Observable<String> toObservable(Single<Message<String>> single) {
+        return single.map(Message::body)
+                .toObservable();
     }
 
     private Observable<String> createMysqlConnections() {

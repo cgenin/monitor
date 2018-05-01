@@ -1,7 +1,8 @@
 {
+  "app": "migration",
   "server-port": 8279,
   "db": {
-    "path": "C:\\cgenin\\perso\\monitor\\test.db",
+    "path": "test.db",
     "user": "user",
     "pwd": "password"
   }

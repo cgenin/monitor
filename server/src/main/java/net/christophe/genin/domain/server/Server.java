@@ -1,13 +1,15 @@
 package net.christophe.genin.domain.server;
 
-import io.vertx.core.AbstractVerticle;
-import io.vertx.core.DeploymentOptions;
+import io.vertx.core.*;
+import io.vertx.core.eventbus.Message;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.command.*;
 import net.christophe.genin.domain.server.db.Nitrite2Mysql;
 import net.christophe.genin.domain.server.db.migration.MigrateConfiguration;
 import net.christophe.genin.domain.server.query.*;
+
+import java.util.ArrayList;
 
 /**
  * Main Verticle
@@ -16,10 +18,12 @@ public class Server extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
     private static final String HTTP = "http";
     private static final String MIGRATION = "migration";
+    public static final String STOP = Server.class.getName() + ".stop";
+    public static final String FAIL = Server.class.getName() + ".fail";
 
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         String app = config().getString("app", HTTP);
         switch (app) {
             case MIGRATION:
@@ -32,11 +36,16 @@ public class Server extends AbstractVerticle {
 
     }
 
+
     private void migration() {
         logger.info("migration start ....");
-        vertx.deployVerticle(new MigrateConfiguration());
-        vertx.deployVerticle(new Nitrite2Mysql(), new DeploymentOptions().setConfig(config()));
 
+        Stopping stopping = new Stopping(vertx);
+        vertx.eventBus().consumer(STOP, stopping.stopping(0));
+        vertx.eventBus().consumer(FAIL, stopping.stopping(1));
+
+        vertx.deployVerticle(new MigrateConfiguration(), stopping.register());
+        vertx.deployVerticle(new Nitrite2Mysql(), new DeploymentOptions().setConfig(config()), stopping.register());
     }
 
     private void server() {
@@ -73,5 +82,31 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new Configuration());
         vertx.deployVerticle(new Endpoints(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Dependencies(), new DeploymentOptions().setWorker(true));
+    }
+
+    private static class Stopping {
+        private final ArrayList<String> deployements = new ArrayList<>();
+        private final Vertx vertx;
+
+        Stopping(Vertx vertx) {
+            this.vertx = vertx;
+        }
+
+        private Handler<AsyncResult<String>> register() {
+            return msg -> {
+                String result = msg.result();
+                logger.info("id " + result + " created");
+                deployements.add(result);
+            };
+        }
+
+        private Handler<Message<Object>> stopping(int exitCode) {
+            return msg -> {
+                deployements.forEach(id -> vertx.undeploy(id, end -> logger.info("destroying " + id)));
+                vertx.close();
+                System.exit(exitCode);
+                logger.info("Main verticle close.");
+            };
+        }
     }
 }
