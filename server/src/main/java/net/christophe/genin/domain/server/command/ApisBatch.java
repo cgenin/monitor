@@ -9,21 +9,16 @@ import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
-import net.christophe.genin.domain.server.json.Jsons;
-import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import rx.functions.Action0;
 
-import java.util.Optional;
-
-import static org.dizitart.no2.filters.Filters.and;
 import static org.dizitart.no2.filters.Filters.eq;
 
 public class ApisBatch extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(ApisBatch.class);
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         new Treatments.Periodic(this, logger).run(this::periodic);
         logger.info("started");
     }

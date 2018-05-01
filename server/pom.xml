@@ -19,6 +19,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.christophe.genin.domain.monitor</groupId>
+            <artifactId>add-on</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
         </dependency>

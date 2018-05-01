@@ -1,4 +1,4 @@
-package net.christophe.genin.domain.server.http;
+package net.christophe.genin.domain.monitor.addon.http;
 
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
@@ -16,15 +16,15 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-final class Https {
+public final class Https {
 
     private static final Logger logger = LoggerFactory.getLogger(Https.class);
 
-    static Integer toStatusCreated(AsyncResult as) {
+    public static Integer toStatusCreated(AsyncResult as) {
         return toStatus(as, 204);
     }
 
-    static Integer toStatus(AsyncResult reply, int okStatus) {
+    public static Integer toStatus(AsyncResult reply, int okStatus) {
         return Optional.of(reply)
                 .filter(AsyncResult::succeeded)
                 .map(r -> okStatus)
@@ -37,16 +37,16 @@ final class Https {
     /**
      * Class for transform event bus result to Http request
      */
-    static class EbCaller {
+    public static class EbCaller {
         private final Vertx vertx;
         private final RoutingContext rc;
 
-        EbCaller(Vertx vertx, RoutingContext rc) {
+        public EbCaller(Vertx vertx, RoutingContext rc) {
             this.vertx = vertx;
             this.rc = rc;
         }
 
-       private <T> void consume(String addr, Object obj, Consumer<T> consumer) {
+        private <T> void consume(String addr, Object obj, Consumer<T> consumer) {
             vertx.eventBus()
                     .send(addr, obj, new DeliveryOptions(), (Handler<AsyncResult<Message<T>>>) (reply) -> {
                         if (reply.succeeded()) {
@@ -59,7 +59,7 @@ final class Https {
                     });
         }
 
-        void created(String addr, JsonObject data) {
+        public void created(String addr, JsonObject data) {
             vertx.eventBus()
                     .send(addr, data, new DeliveryOptions(), (Handler<AsyncResult<Message<JsonArray>>>) (reply) -> {
                         final Integer status = Https.toStatusCreated(reply);
@@ -67,27 +67,27 @@ final class Https {
                     });
         }
 
-        void arrAndReply(String addr) {
+        public void arrAndReply(String addr) {
             arrAndReply(addr, new JsonObject());
         }
 
-        void arrAndReply(String addr, JsonObject data) {
+        public void arrAndReply(String addr, JsonObject data) {
             consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
         }
 
-        void arrAndReply(String addr, String data) {
+        public void arrAndReply(String addr, String data) {
             consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
         }
 
-        void arrAndReply(String addr, Buffer data) {
+        public void arrAndReply(String addr, Buffer data) {
             consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
         }
 
-        void jsonAndReply(String addr, JsonObject data) {
+        public void jsonAndReply(String addr, JsonObject data) {
             consume(addr, data, (Consumer<JsonObject>) (obj) -> new Https.Json(rc).send(obj));
         }
 
-        void jsonAndReply(String addr) {
+        public void jsonAndReply(String addr) {
             jsonAndReply(addr, new JsonObject());
         }
     }
@@ -95,23 +95,23 @@ final class Https {
     /**
      * Manage Json response.
      */
-    static class Json {
+    public static class Json {
         private final RoutingContext rc;
 
 
-        Json(RoutingContext rc) {
+        public Json(RoutingContext rc) {
             this.rc = rc;
         }
 
-        void send(JsonArray array) {
+        public void send(JsonArray array) {
             send(array.encode());
         }
 
-        void send(JsonObject obj) {
+        public void send(JsonObject obj) {
             send(obj.encode());
         }
 
-        void send(String data) {
+        public void send(String data) {
             rc.response()
                     .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
                     .putHeader(HttpHeaders.CACHE_CONTROL, "private, no cache")

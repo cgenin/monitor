@@ -55,6 +55,13 @@ public class AntiMonitorSchemas {
                     "    VERSION VARCHAR(1000),\n" +
                     "    document LONGTEXT\n" +
                     ")",
+            "create table QUEUE\n" +
+                    "(\n" +
+                    "  ID       bigint auto_increment\n" +
+                    "    primary key,\n" +
+                    "  state    int      null,\n" +
+                    "  document longtext null\n" +
+                    ")",
             "DELETE FROM EVENTS",
             "DELETE FROM PROJECTS",
             "DELETE FROM TABLES",
@@ -62,6 +69,7 @@ public class AntiMonitorSchemas {
             "DELETE FROM VERSIONS",
             "DELETE FROM DEPENDENCIES",
             "DELETE FROM front_apps",
+            "DELETE FROM QUEUE",
     };
 
     private static String[] DELETE_SCRIPTS = new String[]{

@@ -2,10 +2,10 @@ package net.christophe.genin.domain.server.db;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import net.christophe.genin.domain.monitor.addon.json.Jsons;
 import net.christophe.genin.domain.server.db.mysql.MysqlCommand;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.NitriteCommand;
-import net.christophe.genin.domain.server.json.Jsons;
 import rx.Observable;
 import rx.Single;
 
@@ -91,10 +91,10 @@ public interface Commands {
     class DependenciesSanitizer {
 
         private static Pattern[] PATTERNS = new Pattern[]{
-                Pattern.compile("\\-MANAGER"),
-                Pattern.compile("\\-SERVICE"),
-                Pattern.compile("\\-IMPL"),
-                Pattern.compile("\\-CLIENT"),
+                Pattern.compile("-MANAGER"),
+                Pattern.compile("-SERVICE"),
+                Pattern.compile("-IMPL"),
+                Pattern.compile("-CLIENT"),
         };
         private final String str;
 

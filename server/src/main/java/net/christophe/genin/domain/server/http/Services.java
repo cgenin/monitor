@@ -11,6 +11,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
+import net.christophe.genin.domain.monitor.addon.http.Https;
 import net.christophe.genin.domain.server.InitializeDb;
 import net.christophe.genin.domain.server.command.*;
 import net.christophe.genin.domain.server.query.*;

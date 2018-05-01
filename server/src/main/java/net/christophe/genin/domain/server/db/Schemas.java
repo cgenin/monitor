@@ -1,7 +1,7 @@
 package net.christophe.genin.domain.server.db;
 
 import io.vertx.core.json.JsonObject;
-import net.christophe.genin.domain.server.json.Jsons;
+import net.christophe.genin.domain.monitor.addon.json.Jsons;
 
 /**
  * description of the datas.

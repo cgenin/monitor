@@ -12,8 +12,8 @@ import net.christophe.genin.domain.server.query.Configuration;
 import rx.Single;
 
 public class MigrateConfiguration extends AbstractVerticle {
-    private static final Logger logger = LoggerFactory.getLogger(MigrateConfiguration.class);
 
+    private static final Logger logger = LoggerFactory.getLogger(MigrateConfiguration.class);
     public static final String LAUNCH = MigrateConfiguration.class.getName() + ".launch";
 
     @Override

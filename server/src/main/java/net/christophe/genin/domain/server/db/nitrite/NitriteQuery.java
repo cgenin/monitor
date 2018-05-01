@@ -4,9 +4,9 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.monitor.addon.json.Jsons;
 import net.christophe.genin.domain.server.db.Queries;
 import net.christophe.genin.domain.server.db.Schemas;
-import net.christophe.genin.domain.server.json.Jsons;
 import net.christophe.genin.domain.server.query.Projects;
 import rx.Single;
 

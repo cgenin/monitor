@@ -65,10 +65,10 @@
                 <span v-else>{{props.value.length}}&nbsp;</span>
               </q-td>
               <q-td slot="body-cell-changelog" slot-scope="props" :props="props">
-                <changelog-button :key="props.row.id" :content="props.value"></changelog-button>
+                <changelog-button :key="props.row.id" :content="props.value"/>
               </q-td>
               <q-td slot="body-cell-destinationUrl" slot-scope="props" :props="props">
-                <q-btn flat color="tertiary" @click="$router.push(props.value)" small>
+                <q-btn flat color="white" style="background: black" @click="$router.push(props.value)" small>
                   <q-icon name="ion-document-text"/>
                 </q-btn>
               </q-td>

@@ -1,13 +1,16 @@
 package net.christophe.genin.domain.server.db;
 
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.core.eventbus.Message;
+import net.christophe.genin.domain.monitor.addon.json.Jsons;
 import net.christophe.genin.domain.server.InitializeDb;
 import net.christophe.genin.domain.server.Server;
 import net.christophe.genin.domain.server.db.migration.MigrateConfiguration;
+import net.christophe.genin.domain.server.db.migration.MigrateInQueue;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import rx.Observable;
@@ -23,7 +26,11 @@ public class Nitrite2Mysql extends AbstractVerticle {
         Observable.concat(
                 nitriteLoading(),
                 createMysqlConnections(),
-                toObservable(vertx.eventBus().rxSend(MigrateConfiguration.LAUNCH, new JsonObject()))
+                toObservable(vertx.eventBus().rxSend(MigrateConfiguration.LAUNCH, new JsonObject())),
+                vertx.eventBus().<JsonArray>rxSend(MigrateInQueue.LAUNCH, new JsonObject())
+                        .map(Message::body)
+                        .toObservable()
+                        .flatMap(arr -> Observable.from(Jsons.builder(arr).toListString()))
 
         ).subscribe(
                 logger::info,

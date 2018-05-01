@@ -1,21 +1,10 @@
 package net.christophe.genin.domain.server.query;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Handler;
-import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Queries;
-import net.christophe.genin.domain.server.db.mysql.MysqlQuery;
-import net.christophe.genin.domain.server.db.mysql.Mysqls;
-import net.christophe.genin.domain.server.db.nitrite.Dbs;
-import net.christophe.genin.domain.server.db.Schemas;
-import net.christophe.genin.domain.server.db.nitrite.NitriteQuery;
-import net.christophe.genin.domain.server.json.Jsons;
-
-import java.util.Optional;
 
 public class Projects extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(Projects.class);

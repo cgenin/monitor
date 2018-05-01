@@ -1,30 +1,40 @@
-package net.christophe.genin.domain.server.json;
+package net.christophe.genin.domain.monitor.addon.json;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Util class for managing the JsonObject / JsonArray of Vertx project.
+ */
 public interface Jsons {
 
-    Stream<JsonObject> toStream();
-    List<String> toListString();
 
-    static Jsons builder(JsonArray arr) {
-        return new JsonsArray(arr);
+    /**
+     * create the instance of JsonArrays.
+      * @param arr the JsonArray.
+     * @return the util class.
+     */
+    static JsonsArray builder(JsonArray arr) {
+        Objects.requireNonNull(arr);
+        return new JsonsArrayImpl(arr);
     }
 
+    /**
+     * Conversion of an object to JsonObject.
+     * @param o an object.
+     * @return an JsonObject
+     */
     @SuppressWarnings("unchecked")
-    static Object objToJson(Object o) {
+    static JsonObject objToJson(Object o) {
         if (o instanceof JsonObject) {
-            return o;
+            return (JsonObject) o;
         }
 
         if (o instanceof Map) {
@@ -40,10 +50,28 @@ public interface Jsons {
         }
     }
 
-    class JsonsArray implements Jsons {
+    /**
+     * JsonArray util class.
+     */
+    interface JsonsArray {
+        /**
+         * Convert an JsonArray which contains only JsonObject to an Stream.
+         * @return the stream.
+         */
+        Stream<JsonObject> toStream();
+
+        /**
+         * Convert an JsonArray which contains only String to an List.
+         * @return an list of string.
+         */
+        List<String> toListString();
+    }
+
+
+    class JsonsArrayImpl implements JsonsArray {
         private final JsonArray arr;
 
-        private JsonsArray(JsonArray arr) {
+        private JsonsArrayImpl(JsonArray arr) {
             this.arr = arr;
         }
 

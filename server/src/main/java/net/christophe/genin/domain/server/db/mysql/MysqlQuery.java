@@ -2,10 +2,10 @@ package net.christophe.genin.domain.server.db.mysql;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import net.christophe.genin.domain.monitor.addon.json.Jsons;
 import net.christophe.genin.domain.server.db.Queries;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
-import net.christophe.genin.domain.server.json.Jsons;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
