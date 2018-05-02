@@ -36,7 +36,7 @@ module.exports = function (ctx) {
     },
     devServer: {
       // https: true,
-      port: 8081,
+      port: 9999,
       open: true, // opens browser window automatically
       proxy: {
         '/api': {
@@ -57,6 +57,7 @@ module.exports = function (ctx) {
         'QToolbar',
         'QToolbarTitle',
         'QBtn',
+        'QBtnGroup',
         'QIcon',
         'QList',
         'QListHeader',
