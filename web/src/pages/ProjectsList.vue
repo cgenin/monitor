@@ -42,7 +42,7 @@
               </template>
               <q-td slot="body-cell-javaDeps" slot-scope="props" :props="props">
                 <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Dépendance Java')"
-                   class="tootip">
+                   class="tooltip">
                   <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
@@ -50,7 +50,7 @@
               </q-td>
               <q-td slot="body-cell-apis" slot-scope="props" :props="props">
                 <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Apis')"
-                   class="tootip">
+                   class="tooltip">
                   <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
@@ -58,7 +58,7 @@
               </q-td>
               <q-td slot="body-cell-tables" slot-scope="props" :props="props">
                 <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Tables')"
-                   class="tootip">
+                   class="tooltip">
                   <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
@@ -69,7 +69,7 @@
               </q-td>
               <q-td slot="body-cell-destinationUrl" slot-scope="props" :props="props">
                 <q-btn flat color="tertiary" @click="$router.push(props.value)" small>
-                  <q-icon name="ion-document-text"/>
+                  <q-icon name="description"/>
                 </q-btn>
               </q-td>
             </q-table>

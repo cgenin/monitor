@@ -1,9 +1,9 @@
 <template>
-  <div class="row items-center" style="margin:1.5em">
+  <div class="row items-center" style="margin: 30px">
     <div class="col-10">
       <bread-crumb :datas="bcDatas"/>
     </div>
-    <div class="col-2">
+    <div class="col-2 row justify-end">
       <help-button :text="help"/>
     </div>
   </div>
