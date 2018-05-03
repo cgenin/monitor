@@ -12,7 +12,8 @@ public enum Treatments {
     TABLES(1),
     VERSION(2),
     URL(3),
-    END(4);
+    DEPENDENCIES(4),
+    END(5);
 
     private final Integer state;
 
@@ -30,6 +31,8 @@ public enum Treatments {
         final Long noise = r.longs(1_000L, 5_001L).findFirst().getAsLong();
         return noise + batch;
     }
+
+
 
     public static class Periodic {
 

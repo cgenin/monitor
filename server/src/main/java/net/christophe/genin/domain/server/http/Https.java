@@ -3,6 +3,7 @@ package net.christophe.genin.domain.server.http;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpHeaders;
@@ -45,7 +46,7 @@ final class Https {
             this.rc = rc;
         }
 
-       private <T> void consume(String addr, JsonObject obj, Consumer<T> consumer) {
+       private <T> void consume(String addr, Object obj, Consumer<T> consumer) {
             vertx.eventBus()
                     .send(addr, obj, new DeliveryOptions(), (Handler<AsyncResult<Message<T>>>) (reply) -> {
                         if (reply.succeeded()) {
@@ -71,6 +72,14 @@ final class Https {
         }
 
         void arrAndReply(String addr, JsonObject data) {
+            consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
+        }
+
+        void arrAndReply(String addr, String data) {
+            consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
+        }
+
+        void arrAndReply(String addr, Buffer data) {
             consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
         }
 

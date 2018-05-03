@@ -4,11 +4,14 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.db.Dbs;
+import net.christophe.genin.domain.server.Console;
+import net.christophe.genin.domain.server.db.Commands;
+import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.json.Jsons;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
+import rx.functions.Action0;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,47 +42,24 @@ public class TablesBatch extends AbstractVerticle {
                     .collect(Collectors.toList());
             final String artifactId = json.getString(Schemas.Raw.artifactId.name());
 
-            final NitriteCollection tablesCollection = Dbs.instance.getCollection(Schemas.Tables.collection());
             final long update = json.getLong(Schemas.Raw.update.name());
 
-            listTables.stream()
-                    .map(tableName ->
-                            Optional.ofNullable(tablesCollection
-                                    .find(eq(Schemas.Tables.name.name(), tableName))
-                                    .firstOrDefault()
-                            ).orElseGet(
-                                    () -> Document.createDocument(Schemas.Projects.latestUpdate.name(), 0L)
-                                            .put(Schemas.Tables.name.name(), tableName)
-                                            .put(Schemas.Tables.id.name(), Dbs.newId())
-                            )
-                    )
-                    .filter(document -> {
-                        final Long lUpdate = Long.valueOf(document.get(Schemas.Projects.latestUpdate.name()).toString());
-                        return lUpdate < update;
-                    })
-                    .map(document -> updateDocument(artifactId, update, document))
-                    .forEach(document -> {
-                        logger.info("New data for " + document.getId().getIdValue() + ". Document must be updated.");
-                        tablesCollection.update(document, true);
-                    });
-
-            collection.update(doc.put(Schemas.RAW_STATE, Treatments.VERSION.getState()));
+            Action0 completed = () -> collection.update(doc.put(Schemas.RAW_STATE, Treatments.VERSION.getState()));
+            Commands.get().tables(listTables, artifactId, update)
+                    .subscribe(
+                            str -> {
+                                logger.info(str);
+                                vertx.eventBus().send(Console.INFO, str);
+                            },
+                            err -> {
+                                logger.error("error in tables for "+json.encode(), err);
+                                completed.call();
+                            },
+                            completed
+                    );
         });
 
         return true;
     }
 
-
-    @SuppressWarnings("unchecked")
-    private Document updateDocument(String artifactId, long update, Document document) {
-        final List<String> list = Optional.ofNullable(document.get(Schemas.Tables.services.name(), List.class))
-                .orElse(new ArrayList<String>());
-        final HashSet<String> strings = new HashSet<>(list);
-        strings.add(artifactId);
-        final ArrayList<String> results = new ArrayList<>(strings);
-        results.sort(String::compareTo);
-        document.put(Schemas.Tables.services.name(), results);
-        document.put(Schemas.Tables.latestUpdate.name(), update);
-        return document;
-    }
 }

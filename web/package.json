@@ -1,0 +1,37 @@
+{
+  "name": "quasar-app",
+  "productName": "Quasar App",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A Quasar App",
+  "author": "Your Name <your@email.com>",
+  "scripts": {
+    "clean": "node build/script.clean.js",
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "lint": "eslint --ext .js,.vue src"
+  },
+  "dependencies": {
+    "chart.js": "^2.7.1",
+    "sockjs-client": "1.1.4",
+    "vertx3-eventbus-client": "^3.5.0",
+    "vue-markdown": "^2.2.4",
+    "vue-router": "^3.0.1",
+    "vued3tree": "^3.4.3"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.7",
+    "quasar-cli": "^0.15.11",
+    "raw-loader": "^0.5.1",
+    "sockjs": "0.3.19"
+  },
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 10"
+  ]
+}

@@ -1,10 +1,14 @@
 .vertx
 **/*.iml
 **/*.ipr
+**/*.log
+**/*.lck
+**/*.1
 **/*.iws
 *.db
 target
 .idea
-log/*.log
 export.json
-log/*.lck
+server/test-docker.sh
+.ideaDataSources
+.shelf

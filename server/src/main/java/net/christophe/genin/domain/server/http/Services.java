@@ -6,27 +6,23 @@ import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
 import net.christophe.genin.domain.server.InitializeDb;
-import net.christophe.genin.domain.server.command.ConfigurationCommand;
-import net.christophe.genin.domain.server.command.Import;
-import net.christophe.genin.domain.server.command.Reset;
-import net.christophe.genin.domain.server.query.Configuration;
-import net.christophe.genin.domain.server.query.Endpoints;
-import net.christophe.genin.domain.server.query.Projects;
-import net.christophe.genin.domain.server.command.Raw;
-import net.christophe.genin.domain.server.query.Tables;
+import net.christophe.genin.domain.server.command.*;
+import net.christophe.genin.domain.server.query.*;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Api rest builder.
  */
 public class Services {
-
+    private static final Logger logger = LoggerFactory.getLogger(Services.class);
     private final Vertx vertx;
 
     /**
@@ -54,13 +50,16 @@ public class Services {
                 .allowedMethod(HttpMethod.OPTIONS)
                 .allowedHeader("Content-Type"));
         router.get("/_health").handler(rc ->
-                new Https.EbCaller(vertx, rc).arrAndReply(InitializeDb.HEALTH)
+                new Https.EbCaller(vertx, rc).jsonAndReply(InitializeDb.HEALTH)
         );
         router.mountSubRouter("/projects", projects());
         router.mountSubRouter("/tables", tables());
         router.mountSubRouter("/endpoints", apis());
+        router.mountSubRouter("/dependencies", dependencies());
         router.mountSubRouter("/configuration", configuration());
+        router.mountSubRouter("/dump", dump());
         router.mountSubRouter("/apps", apps());
+        router.mountSubRouter("/fronts", fronts());
         return router;
     }
 
@@ -71,9 +70,23 @@ public class Services {
      */
     private Router apis() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> {
-            new Https.EbCaller(vertx, rc).arrAndReply(Endpoints.FIND);
-        });
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Endpoints.FIND));
+        return router;
+    }
+
+    private Router dependencies() {
+        Router router = Router.router(vertx);
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Dependencies.FIND));
+
+        router.get("/:resource")
+                .handler(rc -> {
+                    String resource = rc.request().getParam("resource");
+                    if (Objects.isNull(resource) || resource.isEmpty()) {
+                        rc.fail(400);
+                        return;
+                    }
+                    new Https.EbCaller(vertx, rc).arrAndReply(Dependencies.USED_BY, resource);
+                });
         return router;
     }
 
@@ -94,8 +107,13 @@ public class Services {
                 }));
         router.put("/db/import").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson();
-            new Https.EbCaller(vertx, rc).created(Import.IMPORT, body);
+            new Https.EbCaller(vertx, rc).created(ImportExport.IMPORT, body);
         });
+
+        router.put("/db/mysql/schemas").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(InitializeDb.MYSQL_CREATE_SCHEMA));
+        router.post("/db/mysql/export/events").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ImportExport.EXPORT));
+        router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(InitializeDb.MYSQL_ON_OFF));
+
         router.get("/").handler(
                 rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Configuration.GET)
         );
@@ -113,6 +131,7 @@ public class Services {
      */
     private Router tables() {
         Router router = Router.router(vertx);
+        router.get("/projects").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Tables.BY_PROJECT));
         router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Tables.LIST));
         return router;
     }
@@ -130,9 +149,38 @@ public class Services {
             new Https.EbCaller(vertx, rc).created(Raw.SAVING, body);
         });
         router.delete("/").handler(rc -> new Https.EbCaller(vertx, rc).created(Reset.RUN, new JsonObject()));
+        router.delete("/calculate/datas").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Raw.CLEAR_CALCULATE_DATA, new JsonObject()));
 
         return router;
     }
+
+    private Router dump() {
+        Router router = Router.router(vertx);
+        router.get("/").handler(rc -> {
+            new Https.EbCaller(vertx, rc).jsonAndReply(Backup.DUMP);
+        });
+        return router;
+    }
+
+
+    /**
+     * Endpoint for getting raw data.
+     *
+     * @return the router
+     */
+    private Router fronts() {
+        Router router = Router.router(vertx);
+        router.post("/").handler(rc -> {
+            final JsonObject body = rc.getBodyAsJson()
+                    .put("update", new Date().getTime());
+
+            new Https.EbCaller(vertx, rc).created(Front.SAVING, body);
+        });
+
+
+        return router;
+    }
+
 
     /**
      * Projects api

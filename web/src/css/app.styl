@@ -1,0 +1,372 @@
+@import '~variables'
+
+/**
+ * GLOBAL
+ */
+body
+  color $blue-grey-5
+  background-color $background
+
+h3
+  font-size 24px
+  line-height 24px
+  margin 0
+  font-weight 400
+
+.container
+  margin 0 30px 30px
+
+.background-positive
+  background-color $positive
+
+.background-negative
+  background-color $negative
+
+.bg-header
+  background $background-header
+
+.text-header
+  color $color-header
+
+.layout-padding
+  padding 1rem 2rem
+
+// INPUT FILE
+.label-file
+  cursor pointer
+
+.input-file
+  display none
+
+/*
+ * QUASAR COMPONENTS
+ */
+
+// LAYOUT
+  .q-layout-drawer-delimiter
+    box-shadow none
+  .q-layout-header
+    box-shadow none
+  .q-layout-drawer-left
+    background-color $primary
+  .q-toolbar.text-header.bg-header
+    border-bottom 1px solid $border
+    .q-btn
+      width 45px
+      height 45px
+      transition all .5s ease-in-out
+    .burger-icon
+      position relative
+      cursor pointer
+      .q-icon
+        margin-right 0
+  .tool-bar
+    .q-collapsible-sub-item
+      padding 0
+    .tool-bar-header
+      .q-list-header
+        display flex
+        justify-content flex-start
+        align-items center
+        color white
+        &.main
+          background-color $secondary
+          justify-content center
+          padding 9px 9px 9px 0
+          border-bottom 1px solid #1d4a41
+          h3
+            line-height 25px
+            letter-spacing: .5px
+            font-weight: 700
+            margin 0
+        h4
+          text-transform: uppercase
+          font-size: 14px
+          font-weight: 500
+          padding-left: 16px
+          margin 0
+    .q-item
+      .q-item-side
+        color: white
+      .q-item-section
+        .q-item-label
+          color: white
+        .q-item-sublabel
+          color: $grey-6
+    .q-item:focus
+    .q-item:hover
+    .q-item.router-link-active
+    .q-item.router-link-active:hover
+    .q-collapsible .q-collapsible-inner > .q-item:hover
+      background-color $background
+      border-left 6px solid $secondary
+      transition all .2s ease-out
+      .q-item-section
+        color: $grey-10
+        .q-item-label
+          color: black
+        .q-item-sublabel
+          color: $grey-8
+
+.q-list
+  padding-top 0
+  .sidebar-header
+    &.q-list-header
+      line-height 25px
+      background-color $primary
+      display flex
+      justify-content flex-start
+      align-items center
+      color $white
+      h3
+        text-shadow: 1px 1px $indigo-10
+        letter-spacing: .5px
+        font-weight: 700
+        font-size: 11px
+        text-transform: uppercase
+        margin 20px 0 10px
+    .side-header
+      padding 9px 9px 9px 16px
+      background-color $secondary
+      border-bottom 1px solid #1d4a41
+      span
+        font-size 22px
+        padding-left 15px
+
+// LAYOUT
+.layout-page-container
+  background $background
+
+.logo-container
+  width 100%
+  height 100%
+  min-height: calc(100vh - 50px)
+  background url("../assets/splash.jpg") no-repeat
+  background-size cover
+
+// CARD
+.q-card
+  box-shadow none
+  border 1px solid $border
+  background white
+  &.row
+    margin 0
+    margin-right 15px
+    .q-card-main
+      flex-grow 1
+      align-items center
+      .q-icon
+        padding .8rem
+      h5
+        font-size 1.4em
+        color black
+        justify-self center
+        flex-grow 1
+        margin 0
+    .q-card-actions
+      display flex
+      flex-grow 0.5
+      padding 0
+      border-left 1px solid $border
+      .q-btn
+        width 100%
+        height 100%
+  .q-card-primary
+    background-color #f4f4f4
+    .q-card-title
+      h3
+        color $grey-10
+
+.q-alert
+  .q-alert-content
+    font-weight bold
+
+/*
+ * PAGE LIST
+ * With data table
+ */
+.page-list
+  .q-table-container
+    box-shadow none
+    border: 1px solid $border
+  .q-table
+    .q-btn
+      background-color $primary
+      color white !important
+    .tooltip
+      color $primary
+      text-decoration none
+      display flex
+      align-items center
+      &:hover
+        color $tertiary
+  table.results
+    width: 100%
+  .font-result
+    font-size: 1.1rem
+    line-height: inherit
+  .results-number
+    margin-top: 1em
+    margin-bottom: .5em
+  .inputs
+    display: flex
+    justify-content: space-between
+    align-items: center
+    .q-if
+      margin-bottom: 16px
+
+// MODAL
+.modal
+  .q-modal-layout
+    .layout-header
+      .q-toolbar
+        background-color $primary
+        color white
+    .q-modal-layout-content
+      padding 15px
+      .q-list
+        padding 0
+        border none
+        .q-item
+          padding 10px
+          border-bottom 1px solid rgba(0, 0, 0, 0.12)
+          .q-item-main
+            color $blue-grey-5
+          &:last-child
+            border none
+          &:nth-child(odd)
+            background-color $grey-3
+          &:hover
+            background-color $neutral
+      h1
+        display none
+      h2
+        font-size 1.5rem
+        padding-bottom 5px
+        border-bottom 1px solid
+      h3
+        font-size 1.2rem
+        color $tertiary
+
+.btn-close-modal
+  width: 100%
+
+.q-pagination .q-btn
+  margin 10px 2px 8px
+
+// COLLAPSIBLE - ACCORDION
+.selected-list
+  .q-list
+    padding 0
+    .q-collapsible:hover,
+    .q-collapsible-opened,
+    .q-collapsible-opened:hover
+      .q-item
+        background-color $secondary
+        color white
+        .q-item-sublabel
+          color rgba(0, 0, 0, 0.54)
+    .q-collapsible
+      .q-item
+        transition all .2s linear
+      .q-collapsible-sub-item
+        .list-table
+          ul
+            list-style none
+            padding-left 0
+            li
+              padding 10px
+              border-bottom 1px solid rgba(0, 0, 0, 0.12)
+              color $blue-grey-5
+              &:last-child
+                border none
+              &:nth-child(odd)
+                background-color $grey-3
+        pre
+          display none
+        h2
+          font-size 1.5rem
+          padding-bottom 5px
+          border-bottom 1px solid
+        h3
+          font-size 1.2rem
+          color $tertiary
+
+// BREADCRUMB
+.q-breadcrumbs
+  div
+    a
+      display block
+      color #FFF !important
+      padding 8px
+      transition background-color .2s linear
+      background-color $primary
+      &:after,
+      &:before
+        content ''
+        position absolute
+        top 0
+        left 100%
+        z-index 1
+        display block
+        width 0
+        height 0
+        border-top 20px solid transparent
+        border-bottom 20px solid transparent
+        border-left 10px solid transparent
+        transition all .2s linear
+      &:after
+        border-left-color $primary
+      &:before
+        left -10px
+        border-top-color: $background
+        border-bottom-color: $background
+      &:hover
+        background-color $secondary
+        &:after
+          border-left-color $secondary
+        &:before
+          border-color $secondary
+          border-left-color transparent
+    .router-link-exact-active
+      background-color $secondary
+      &:before
+        border-color $secondary
+        border-left-color transparent
+    &:first-child
+      a
+        &:before
+          display none
+    &:last-child
+      a
+        &:after
+          display none
+  .q-breadcrumbs-separator
+    width 12px
+
+
+// BUTTONS
+.q-btn,
+.q-btn-round:not(.q-btn-flat):not(.q-btn-outline)
+  box-shadow none
+
+.q-btn-standard
+  &.open
+    .q-icon
+      transform rotate(45deg)
+  .q-icon
+    transition transform .3s ease-in-out
+    width 24px
+
+.q-btn-small
+  padding 0 6px
+  .q-icon
+    width 19px
+
+.q-item-letter,
+.q-item-icon
+  width 24px;
+
+.btn-flat-primary
+  background-color $primary
+  color white

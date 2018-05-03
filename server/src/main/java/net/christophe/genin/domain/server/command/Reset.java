@@ -4,7 +4,9 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.domain.server.db.Dbs;
+import net.christophe.genin.domain.server.Console;
+import net.christophe.genin.domain.server.db.Commands;
+import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
 import org.dizitart.no2.NitriteCollection;
 
@@ -16,23 +18,25 @@ public class Reset extends AbstractVerticle {
 
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         vertx.eventBus().consumer(RUN, (msg) -> {
             logger.info("reset ....");
-            Dbs.instance.nitrite().listCollectionNames()
-                    .parallelStream()
-                    .filter(s -> s.startsWith(Schemas.Version.PREFIX))
-                    .forEach(name -> Dbs.instance.nitrite().getCollection(name).drop());
-            logger.info("version collections deleted");
-            Dbs.instance.getCollection(Schemas.Tables.collection()).drop();
-            logger.info("tables collections deleted");
-            Dbs.instance.getCollection(Schemas.Projects.collection()).drop();
-            logger.info("project collections deleted");
-            NitriteCollection raws = Dbs.instance.getCollection(Schemas.RAW_COLLECTION);
-            raws.find().forEach(doc -> raws.update(doc.put(Schemas.RAW_STATE, Treatments.PROJECTS.getState())));
-            logger.info("treatments relaunched");
-            msg.reply(new JsonObject().put("rest", true));
-            logger.info("reset end.");
+            Commands.get().reset()
+                    .subscribe(
+                            str -> {
+                                logger.info(str);
+                                vertx.eventBus().send(Console.INFO, str);
+                                NitriteCollection raws = Dbs.instance.getCollection(Schemas.RAW_COLLECTION);
+                                raws.find().forEach(doc -> raws.update(doc.put(Schemas.RAW_STATE, Treatments.PROJECTS.getState())));
+                                logger.info("treatments relaunched");
+                                msg.reply(new JsonObject().put("rest", true));
+                                logger.info("reset end.");
+                            },
+                            err -> {
+                                logger.error("Error in " + RUN, err);
+                                msg.fail(500, "Error in resetting");
+                            });
+
         });
 
         logger.info("started");
