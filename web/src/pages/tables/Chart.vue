@@ -1,6 +1,6 @@
 <template>
   <div class="tables-chart-page">
-    <q-card class="container">
+    <q-card>
       <q-card-main>
         <div class="column items-center">
           <div class="chart-title">
