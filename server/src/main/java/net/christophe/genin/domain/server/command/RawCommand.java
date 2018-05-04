@@ -7,36 +7,26 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
-import org.dizitart.no2.Document;
+import net.christophe.genin.domain.server.model.Raw;
 import org.dizitart.no2.NitriteCollection;
 import rx.Observable;
-import rx.Single;
 import rx.schedulers.Schedulers;
 
 import java.util.stream.Collectors;
 
-public class Raw extends AbstractVerticle {
-    private static final Logger logger = LoggerFactory.getLogger(Raw.class);
+public class RawCommand extends AbstractVerticle {
+    private static final Logger logger = LoggerFactory.getLogger(RawCommand.class);
 
-    public static final String SAVING = Raw.class.getName() + ".saving";
-    public static final String CLEAR_CALCULATE_DATA = Raw.class.getName() + ".clear.calculate.data";
+    public static final String SAVING = RawCommand.class.getName() + ".saving";
+    public static final String CLEAR_CALCULATE_DATA = RawCommand.class.getName() + ".clear.calculate.data";
 
 
     @Override
     public void start() {
-        logger.info("start Raw Verticle");
+        logger.info("start RawCommand Verticle");
         vertx.eventBus().<JsonObject>consumer(SAVING, rc -> {
             final JsonObject body = rc.body();
-
-            Single.fromCallable(() -> {
-                final Document document = Dbs.Raws.toDoc(body)
-                        .put("state", Treatments.PROJECTS.getState());
-
-                Dbs.instance.getCollection(Schemas.RAW_COLLECTION)
-                        .insert(document);
-                return document.getId().getIdValue();
-            })
-                    .observeOn(Schedulers.io())
+            Raw.save(body)
                     .subscribe(
                             rc::reply,
                             err -> {

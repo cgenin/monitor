@@ -56,7 +56,7 @@ public class Nitrite2Mysql extends AbstractVerticle {
                 .map(Mysqls::active)
                 .map(active -> {
                     if (!active) {
-                        throw new IllegalStateException("Impossible to create connection for Mysql");
+                        throw new IllegalStateException("Impossible to save connection for Mysql");
                     }
                     return "Mysql db connection Ok.";
                 }).toObservable();

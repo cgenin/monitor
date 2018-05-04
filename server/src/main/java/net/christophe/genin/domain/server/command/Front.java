@@ -29,7 +29,7 @@ public class Front extends AbstractVerticle {
 
     @Override
     public void start() {
-        logger.info("start Raw Verticle");
+        logger.info("start RawCommand Verticle");
         vertx.eventBus().consumer(SAVING, (Handler<Message<JsonObject>>) rc -> {
             final JsonObject body = rc.body();
 

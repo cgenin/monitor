@@ -28,7 +28,7 @@ public class InitializeDb extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(InitializeDb.class);
 
     public static final String HEALTH = InitializeDb.class.getName() + ".health";
-    public static final String MYSQL_CREATE_SCHEMA = InitializeDb.class.getName() + ".mysql.create.schema";
+    public static final String MYSQL_CREATE_SCHEMA = InitializeDb.class.getName() + ".mysql.save.schema";
     public static final String MYSQL_ON_OFF = InitializeDb.class.getName() + ".mysql.on.off";
 
     /**

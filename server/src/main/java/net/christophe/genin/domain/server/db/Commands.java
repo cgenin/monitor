@@ -25,7 +25,6 @@ public interface Commands {
 
     Single<String> reset();
 
-    Observable<String> projects(JsonObject json, String artifactId);
 
     Observable<String> tables(List<String> tables, String artifactId, long update);
 

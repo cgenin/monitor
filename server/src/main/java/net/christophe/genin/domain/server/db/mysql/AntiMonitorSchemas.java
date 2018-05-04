@@ -55,7 +55,7 @@ public class AntiMonitorSchemas {
                     "    VERSION VARCHAR(1000),\n" +
                     "    document LONGTEXT\n" +
                     ")",
-            "create table QUEUE\n" +
+            "save table QUEUE\n" +
                     "(\n" +
                     "  ID       bigint auto_increment\n" +
                     "    primary key,\n" +

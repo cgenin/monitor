@@ -37,14 +37,6 @@ public class NitriteCommand implements Commands {
         });
     }
 
-    @Override
-    public Observable<String> projects(JsonObject json, String artifactId) {
-        if (new NitriteProject(json, artifactId).insert()) {
-            return Observable.just("Projects '" + artifactId + "' updated");
-        }
-        return Observable.just("Projects '" + artifactId + "' not updated");
-    }
-
 
     @SuppressWarnings("unchecked")
     @Override

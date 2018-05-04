@@ -146,11 +146,11 @@ public class Services {
         Router router = Router.router(vertx);
         router.post("/").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson()
-                    .put("update", new Date().getTime());
-            new Https.EbCaller(vertx, rc).created(Raw.SAVING, body);
+                    .put("updateState", new Date().getTime());
+            new Https.EbCaller(vertx, rc).created(RawCommand.SAVING, body);
         });
         router.delete("/").handler(rc -> new Https.EbCaller(vertx, rc).created(Reset.RUN, new JsonObject()));
-        router.delete("/calculate/datas").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Raw.CLEAR_CALCULATE_DATA, new JsonObject()));
+        router.delete("/calculate/datas").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(RawCommand.CLEAR_CALCULATE_DATA, new JsonObject()));
 
         return router;
     }
@@ -173,7 +173,7 @@ public class Services {
         Router router = Router.router(vertx);
         router.post("/").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson()
-                    .put("update", new Date().getTime());
+                    .put("updateState", new Date().getTime());
 
             new Https.EbCaller(vertx, rc).created(Front.SAVING, body);
         });

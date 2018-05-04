@@ -14,7 +14,7 @@ public class ConfigurationCommand extends AbstractVerticle {
     public static final String SAVE = ConfigurationCommand.class.getName() + ".save";
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         vertx.eventBus().consumer(SAVE, (Handler<Message<JsonObject>>) (msg) -> {
             JsonObject body = msg.body();
             ConfigurationDto dto = Schemas.Configuration.fromJson(body);
