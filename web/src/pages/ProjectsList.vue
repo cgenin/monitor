@@ -1,8 +1,8 @@
 <template>
-  <div class="projects-page page-list">
+  <div class="projects-page page-list container">
     <header-app :help="txtHelp" :bc-datas="[{icon:'view_list', label:'Liste des Projets'}]"></header-app>
 
-    <q-card class="container">
+    <q-card>
       <q-card-title>
         <h3>Liste des Projets</h3>
       </q-card-title>
