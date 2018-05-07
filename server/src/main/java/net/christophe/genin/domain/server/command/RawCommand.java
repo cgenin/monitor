@@ -36,7 +36,8 @@ public class RawCommand extends AbstractVerticle {
                     );
         });
         vertx.eventBus().consumer(CLEAR_CALCULATE_DATA, rc -> {
-
+            //TODO
+            /*
             Observable<String> listIdVersions = Observable.from(Dbs.instance.getCollection(Schemas.Projects.collection())
                     .find()
                     .toList()
@@ -62,6 +63,7 @@ public class RawCommand extends AbstractVerticle {
                                 logger.error("Error in clearing in calculating data", err);
                                 rc.fail(500, "Error in clearing in calculating data");
                             });
+                            */
         });
 
     }

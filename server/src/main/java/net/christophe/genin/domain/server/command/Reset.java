@@ -8,7 +8,9 @@ import net.christophe.genin.domain.server.Console;
 import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.db.Schemas;
+import net.christophe.genin.domain.server.model.*;
 import org.dizitart.no2.NitriteCollection;
+import rx.Observable;
 
 public class Reset extends AbstractVerticle {
 
@@ -21,20 +23,28 @@ public class Reset extends AbstractVerticle {
     public void start() {
         vertx.eventBus().consumer(RUN, (msg) -> {
             logger.info("reset ....");
-            Commands.get().reset()
+            Observable.concat(
+                    Version.removeAll().map(nb -> "Version's deleted : " + nb).toObservable(),
+                    Dependency.removeAll().map(nb -> "Version's deleted : " + nb).toObservable(),
+                    Api.removeAll().map(nb -> "Api's deleted : " + nb).toObservable(),
+                    Project.removeAll().map(nb -> "Project's deleted : " + nb).toObservable(),
+                    Table.removeAll().map(nb -> "Table's deleted : " + nb).toObservable()
+            )
                     .subscribe(
                             str -> {
                                 logger.info(str);
                                 vertx.eventBus().send(Console.INFO, str);
-                                NitriteCollection raws = Dbs.instance.getCollection(Schemas.RAW_COLLECTION);
-                                raws.find().forEach(doc -> raws.update(doc.put(Schemas.RAW_STATE, Treatments.PROJECTS.getState())));
-                                logger.info("treatments relaunched");
-                                msg.reply(new JsonObject().put("rest", true));
-                                logger.info("reset end.");
+
                             },
                             err -> {
                                 logger.error("Error in " + RUN, err);
                                 msg.fail(500, "Error in resetting");
+                            },
+                            () -> {
+                                Raw.updateAllStatesBy(Treatments.PROJECTS);
+                                logger.info("treatments relaunched");
+                                msg.reply(new JsonObject().put("rest", true));
+                                logger.info("reset end.");
                             });
 
         });

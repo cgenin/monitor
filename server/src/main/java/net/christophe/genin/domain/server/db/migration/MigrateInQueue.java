@@ -62,7 +62,7 @@ public class MigrateInQueue extends AbstractVerticle {
                             arr -> msg.reply(arr),
                             err -> {
                                 logger.error("Error in migrating ", err);
-                                msg.fail(500, "Migrate Configuration problem see below");
+                                msg.fail(500, "Migrate ConfigurationQuery problem see below");
                             });
             ;
         });

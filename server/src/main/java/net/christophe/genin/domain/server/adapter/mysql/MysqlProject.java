@@ -3,6 +3,7 @@ package net.christophe.genin.domain.server.adapter.mysql;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.UpdateResult;
+import net.christophe.genin.domain.monitor.addon.json.Jsons;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.model.Project;
@@ -14,33 +15,70 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class MysqlProject {
-    public static Single<Project> readByName(String artifactId) {
-        Mysqls mysqls = Mysqls.Instance.get();
 
-        return mysqls.select("SELECT document from PROJECTS WHERE NAME=?", new JsonArray().add(artifactId))
+    public static class MysqlProjectHandler {
 
-                .map(rs -> {
-                    if (Objects.isNull(rs) || rs.getResults().isEmpty()) {
-                        JsonObject n = new JsonObject().put(Schemas.Projects.name.name(), artifactId)
-                                .put(Schemas.Projects.latestUpdate.name(), 0L);
-                        return new ProjectImpl(n);
-                    }
-                    JsonArray firstLine = rs.getResults().get(0);
-                    String string = firstLine.getString(0);
-                    Project project = new ProjectImpl(new JsonObject(string));
-                    return project;
-                })
-                .first()
-                .toSingle();
+        private final Mysqls mysqls;
+
+        public MysqlProjectHandler(Mysqls mysqls) {
+            this.mysqls = mysqls;
+        }
+
+
+        public Single<Project> readByName(String artifactId) {
+            return mysqls.select("SELECT document from PROJECTS WHERE NAME=?", new JsonArray().add(artifactId))
+                    .map(rs -> {
+                        if (Objects.isNull(rs) || rs.getResults().isEmpty()) {
+                            JsonObject n = new JsonObject().put(Schemas.Projects.name.name(), artifactId)
+                                    .put(Schemas.Projects.latestUpdate.name(), 0L);
+                            return new ProjectImpl(this, n);
+                        }
+                        JsonArray firstLine = rs.getResults().get(0);
+                        String string = firstLine.getString(0);
+                        return (Project) new ProjectImpl(this, new JsonObject(string));
+                    })
+                    .first()
+                    .toSingle();
+        }
+
+        public Single<Integer> removeAll() {
+            return mysqls.execute("DELETE FROM  PROJECTS")
+                    .map(UpdateResult::getUpdated);
+        }
+
+        public Single<Boolean> save(ProjectImpl project) {
+            String id = project.document.getString(Schemas.Projects.id.name());
+            Func1<UpdateResult, Boolean> updateFunc = updateResult -> updateResult.getUpdated() == 1;
+            if (Objects.isNull(id)) {
+                String idProject = UUID.randomUUID().toString();
+                return mysqls.execute("INSERT INTO PROJECTS (ID, NAME, document) " +
+                                "  VALUES (?,?,?)",
+                        new JsonArray()
+                                .add(idProject)
+                                .add(project.name())
+                                .add(project.document.put(Schemas.Projects.id.name(), idProject).encode())
+                )
+                        .map(updateFunc);
+
+            }
+
+            return mysqls.execute("UPDATE PROJECTS SET document=? WHERE ID = ?", new JsonArray().add(project.document.encode()).add(id))
+                    .map(updateFunc);
+        }
     }
+
 
     private static class ProjectImpl implements Project {
 
+        private final MysqlProjectHandler handler;
+
         private final JsonObject document;
 
-        private ProjectImpl(JsonObject document) {
+        private ProjectImpl(MysqlProjectHandler handler, JsonObject document) {
             this.document = document;
+            this.handler = handler;
         }
+
 
         @Override
         public long latestUpdate() {
@@ -77,10 +115,16 @@ public class MysqlProject {
         }
 
         @Override
+        public List<String> javaDeps() {
+            return Jsons.builder(document.getJsonArray(Schemas.Projects.javaDeps.name())).toListString();
+        }
+
+        @Override
         public Project setJavaDeps(List<String> javaDeps) {
-            document.put(Schemas.Projects.javaDeps.name(), javaDeps);
+            document.put(Schemas.Projects.javaDeps.name(), new JsonArray(javaDeps));
             return this;
         }
+
 
         @Override
         public Project setChangeLog(String changeLog) {
@@ -101,25 +145,13 @@ public class MysqlProject {
         }
 
         @Override
+        public String id() {
+            return document.getString(Schemas.Projects.id.name());
+        }
+
+        @Override
         public Single<Boolean> save() {
-            Mysqls mysqls = Mysqls.Instance.get();
-            String id = document.getString(Schemas.Projects.id.name());
-            Func1<UpdateResult, Boolean> updateFunc = updateResult -> updateResult.getUpdated() == 1;
-            if (Objects.isNull(id)) {
-                String idProject = UUID.randomUUID().toString();
-                return mysqls.execute("INSERT INTO PROJECTS (ID, NAME, document) " +
-                                "  VALUES (?,?,?)",
-                        new JsonArray()
-                                .add(idProject)
-                                .add(name())
-                                .add(document.put(Schemas.Projects.id.name(), idProject).encode())
-                )
-                        .map(updateFunc);
-
-            }
-
-            return mysqls.execute("UPDATE PROJECTS SET document=? WHERE ID = ?", new JsonArray().add(document.encode()).add(id))
-                    .map(updateFunc);
+            return handler.save(this);
         }
     }
 }

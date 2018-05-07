@@ -10,6 +10,7 @@ import org.dizitart.no2.tool.ExportOptions;
 import org.dizitart.no2.tool.Exporter;
 import org.dizitart.no2.tool.Importer;
 import rx.Observable;
+import rx.Single;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -48,6 +49,14 @@ public final class Dbs {
         return new JsonArray(list.stream()
                 .map(Dbs::toJson)
                 .collect(Collectors.toList()));
+    }
+
+    public static Single<Integer> removeAll(NitriteCollection collection){
+        return Single.fromCallable(() -> {
+            Long size = collection.size();
+            collection.drop();
+            return size.intValue();
+        });
     }
 
     public Dbs build(String dbPath, String user, String pwd) {

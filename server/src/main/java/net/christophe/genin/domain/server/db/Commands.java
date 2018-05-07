@@ -3,11 +3,7 @@ package net.christophe.genin.domain.server.db;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import net.christophe.genin.domain.monitor.addon.json.Jsons;
-import net.christophe.genin.domain.server.db.mysql.MysqlCommand;
-import net.christophe.genin.domain.server.db.mysql.Mysqls;
-import net.christophe.genin.domain.server.db.nitrite.NitriteCommand;
 import rx.Observable;
-import rx.Single;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,21 +14,7 @@ import java.util.stream.Stream;
 
 public interface Commands {
 
-    static Commands get() {
-        return (!Mysqls.Instance.get().active()) ? new NitriteCommand()
-                : new MysqlCommand();
-    }
-
-    Single<String> reset();
-
-
-    Observable<String> tables(List<String> tables, String artifactId, long update);
-
-    Observable<String> versions(JsonObject json, String artifactId, String version);
-
-    Observable<String> apis(JsonObject apis, String artifactId, String version, long update, JsonArray services);
-
-    default Observable<JsonObject> servicesToJson(JsonArray services) {
+    static Observable<JsonObject> servicesToJson(JsonArray services) {
         Function<JsonObject, Stream<? extends JsonObject>> convert2Json = obj -> {
             String className = obj.getString(Schemas.Raw.Apis.Services.name.name(), "");
             JsonArray methods = obj.getJsonArray(Schemas.Raw.Apis.Services.methods.name(), new JsonArray());
@@ -44,8 +26,6 @@ public interface Commands {
                 Jsons.builder(services).toStream().flatMap(convert2Json).collect(Collectors.toList())
         );
     }
-
-    Observable<String> dependencies(JsonObject json, String artifactId, ConfigurationDto configuration);
 
     class Projects {
         public static boolean isSnapshot(String version) {

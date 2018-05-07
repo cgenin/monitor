@@ -8,7 +8,7 @@ import net.christophe.genin.domain.server.db.Queries;
 public class Backup extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(Backup.class);
 
-    public static final String DUMP = Configuration.class.getName() + ".dump";
+    public static final String DUMP = ConfigurationQuery.class.getName() + ".dump";
 
     @Override
     public void start() {

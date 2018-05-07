@@ -99,7 +99,7 @@ public class Services {
     private Router configuration() {
         Router router = Router.router(vertx);
         router.get("/db/export.json").handler(rc ->
-                vertx.eventBus().send(Configuration.EXPORTER, new JsonObject(), new DeliveryOptions(), (Handler<AsyncResult<Message<String>>>) (msg) -> {
+                vertx.eventBus().send(ConfigurationQuery.EXPORTER, new JsonObject(), new DeliveryOptions(), (Handler<AsyncResult<Message<String>>>) (msg) -> {
                     if (msg.failed()) {
                         rc.response().setStatusCode(500).end();
                         return;
@@ -116,7 +116,7 @@ public class Services {
         router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(InitializeDb.MYSQL_ON_OFF));
 
         router.get("/").handler(
-                rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Configuration.GET)
+                rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ConfigurationQuery.GET)
         );
         router.put("/").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson();

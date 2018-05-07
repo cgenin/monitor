@@ -10,16 +10,16 @@ import net.christophe.genin.domain.server.db.Schemas;
 import java.util.Optional;
 
 /**
- * Read Operation on Configuration.
+ * Read Operation on ConfigurationQuery.
  */
-public class Configuration extends AbstractVerticle {
-    private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
+public class ConfigurationQuery extends AbstractVerticle {
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationQuery.class);
 
-    public static final String EXPORTER = Configuration.class.getName() + ".exporter";
-    public static final String GET = Configuration.class.getName() + ".get";
+    public static final String EXPORTER = ConfigurationQuery.class.getName() + ".exporter";
+    public static final String GET = ConfigurationQuery.class.getName() + ".get";
 
     /**
-     * Getter on Nitrite Configuration Object
+     * Getter on Nitrite ConfigurationQuery Object
      * @return the current instance or an new instance.
      */
     public static ConfigurationDto get() {

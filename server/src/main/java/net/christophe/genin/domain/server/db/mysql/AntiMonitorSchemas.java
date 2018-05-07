@@ -48,14 +48,14 @@ public class AntiMonitorSchemas {
                     "  document LONGTEXT,\n" +
                     "  PRIMARY KEY (RESOURCE, USED_BY)\n" +
                     ")",
-            "CREATE TABLE front_apps (\n" +
+            "CREATE TABLE IF NOT EXISTS front_apps (\n" +
                     "    ID VARCHAR(1000) PRIMARY KEY,\n" +
                     "    NAME VARCHAR(1000),\n" +
                     "    LATEST LONG,\n" +
                     "    VERSION VARCHAR(1000),\n" +
                     "    document LONGTEXT\n" +
                     ")",
-            "save table QUEUE\n" +
+            "CREATE TABLE IF NOT EXISTS QUEUE\n" +
                     "(\n" +
                     "  ID       bigint auto_increment\n" +
                     "    primary key,\n" +
@@ -72,14 +72,6 @@ public class AntiMonitorSchemas {
             "DELETE FROM QUEUE",
     };
 
-    private static String[] DELETE_SCRIPTS = new String[]{
-            "DELETE FROM  PROJECTS",
-            "DELETE FROM TABLES",
-            "DELETE FROM APIS",
-            "DELETE FROM VERSIONS",
-            "DELETE FROM DEPENDENCIES",
-            "DELETE FROM front_apps",
-    };
 
 
     public static Single<String> create() {
@@ -88,10 +80,5 @@ public class AntiMonitorSchemas {
                 .map(list -> "Creation of EVENTS, PROJECTS, TABLES, API, VERSIONS if not exist :" + list);
     }
 
-    public static Single<String> delete() {
-        return Mysqls.Instance.get()
-                .batch(DELETE_SCRIPTS)
-                .map(list -> "Suppress of PROJECTS, TABLES, API, VERSIONS :" + list);
-    }
 
 }

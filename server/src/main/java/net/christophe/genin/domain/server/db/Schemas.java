@@ -12,7 +12,7 @@ public final class Schemas {
     public static final String RAW_STATE = "state";
 
     /**
-     * Configuration Dto builder / parser.
+     * ConfigurationQuery Dto builder / parser.
      */
     public static class Configuration {
 
@@ -90,7 +90,7 @@ public final class Schemas {
     }
 
     public enum Apis {
-        id, artifactId, groupId, name, method, returns, path, params, comment, since, className, latestUpdate;
+        id, artifactId, groupId, name, method, returns, path, params, comment, since, className, latestUpdate, idProject;
 
         public static String collection() {
             return Apis.class.getSimpleName().toLowerCase();
@@ -105,14 +105,27 @@ public final class Schemas {
         }
     }
 
+    public enum Dependency {
+        id, usedBy, resource;
+
+        public static final String PREFIX = "dependency";
+
+
+
+        public static String collection() {
+            return PREFIX;
+        }
+    }
+
     public enum Version {
         id, name, idproject, isSnapshot, tables, javaDeps, npmDeps, latestUpdate, apis, changelog;
 
-        public static final String PREFIX = "version/";
+        public static final String PREFIX = "version2/";
 
 
-        public static String collection(String id) {
-            return PREFIX + id;
+
+        public static String collection() {
+            return PREFIX + "Root";
         }
     }
 }

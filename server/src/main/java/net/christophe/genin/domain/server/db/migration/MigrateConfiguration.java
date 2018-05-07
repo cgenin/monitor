@@ -8,7 +8,7 @@ import io.vertx.rxjava.core.eventbus.Message;
 import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
-import net.christophe.genin.domain.server.query.Configuration;
+import net.christophe.genin.domain.server.query.ConfigurationQuery;
 import rx.Single;
 
 public class MigrateConfiguration extends AbstractVerticle {
@@ -23,7 +23,7 @@ public class MigrateConfiguration extends AbstractVerticle {
             try {
                 Single.fromCallable(() -> {
                     logger.info("migrate configuration ...");
-                    ConfigurationDto configurationDto = Configuration.get();
+                    ConfigurationDto configurationDto = ConfigurationQuery.get();
                     return Schemas.Configuration.toJson(configurationDto);
                 })
                         .flatMap(jsonObject -> {
@@ -53,6 +53,6 @@ public class MigrateConfiguration extends AbstractVerticle {
 
     public void errorReply(Message<Object> msg, Throwable ex) {
         logger.error("Error in migrating ", ex);
-        msg.fail(500, "Migrate Configuration problem see below");
+        msg.fail(500, "Migrate ConfigurationQuery problem see below");
     }
 }

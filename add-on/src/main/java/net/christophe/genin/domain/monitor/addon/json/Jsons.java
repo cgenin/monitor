@@ -18,16 +18,19 @@ public interface Jsons {
 
     /**
      * create the instance of JsonArrays.
-      * @param arr the JsonArray.
+     *
+     * @param arr the JsonArray.
      * @return the util class.
      */
     static JsonsArray builder(JsonArray arr) {
-        Objects.requireNonNull(arr);
+        if (Objects.isNull(arr))
+            return new JsonsArrayImpl(new JsonArray());
         return new JsonsArrayImpl(arr);
     }
 
     /**
      * Conversion of an object to JsonObject.
+     *
      * @param o an object.
      * @return an JsonObject
      */
@@ -43,7 +46,7 @@ public interface Jsons {
         return new JsonObject(o.toString());
     }
 
-    interface Collectors{
+    interface Collectors {
         static <T> Collector<T, JsonArray, JsonArray> toJsonArray() {
             return Collector.of(JsonArray::new, JsonArray::add
                     , JsonArray::addAll);
@@ -56,12 +59,14 @@ public interface Jsons {
     interface JsonsArray {
         /**
          * Convert an JsonArray which contains only JsonObject to an Stream.
+         *
          * @return the stream.
          */
         Stream<JsonObject> toStream();
 
         /**
          * Convert an JsonArray which contains only String to an List.
+         *
          * @return an list of string.
          */
         List<String> toListString();
@@ -84,7 +89,7 @@ public interface Jsons {
         }
 
         @SuppressWarnings("unchecked")
-        public List<String> toListString(){
+        public List<String> toListString() {
             final List<Object> javaFilters1 = Optional.ofNullable(arr).orElse(new JsonArray()).getList();
             return javaFilters1
                     .stream()

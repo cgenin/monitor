@@ -14,9 +14,11 @@ public interface Raw {
 
     String artifactId();
 
+
     Single<Boolean> updateState(Treatments treatments);
 
     long update();
+
     /**
      * Create an new Raw Event.
      *
@@ -24,8 +26,12 @@ public interface Raw {
      * @return The id of the created event.
      */
     static Single<Long> save(JsonObject object) {
-        return  new NitriteRaw().save(object)
+        return new NitriteRaw().save(object)
                 .observeOn(Schedulers.io());
+    }
+
+    static Single<Integer> updateAllStatesBy(Treatments treatments) {
+        return new NitriteRaw().updateAllStatesBy(treatments);
     }
 
     static Observable<Raw> findByStateFirst(Treatments treatments) {

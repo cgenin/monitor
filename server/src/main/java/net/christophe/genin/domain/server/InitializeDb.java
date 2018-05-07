@@ -9,7 +9,7 @@ import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.domain.server.db.mysql.AntiMonitorSchemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
-import net.christophe.genin.domain.server.query.Configuration;
+import net.christophe.genin.domain.server.query.ConfigurationQuery;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import rx.Single;
@@ -52,7 +52,7 @@ public class InitializeDb extends AbstractVerticle {
      * @return the result of the loading.
      */
     public static Single<Mysqls> runMysql(Vertx vertx) {
-        return Single.fromCallable(Configuration::get)
+        return Single.fromCallable(ConfigurationQuery::get)
                 .map(configurationDto -> {
                     if (Objects.isNull(configurationDto.getMysqlUser()))
                         return Mysqls.Instance.get();

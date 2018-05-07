@@ -87,7 +87,7 @@ public class NitriteQuery implements Queries {
 
     @Override
     public Single<JsonArray> versions(String idProject) {
-        final JsonArray l = Dbs.instance.getCollection(Schemas.Version.collection(idProject))
+        final JsonArray l = Dbs.instance.getCollection(Schemas.Version.collection())
                 .find().toList()
                 .parallelStream()
                 .map(doc -> {

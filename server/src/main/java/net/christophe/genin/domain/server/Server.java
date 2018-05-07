@@ -68,20 +68,20 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new RawCommand());
         vertx.deployVerticle(new Front());
         vertx.deployVerticle(new ProjectCommand(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new TablesBatch(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new VersionBatch(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new DependenciesBatch(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new TablesCommand(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new VersionCommand(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new DependenciesCommand(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ImportExport());
         vertx.deployVerticle(new ConfigurationCommand());
         vertx.deployVerticle(new Reset(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new ApisBatch(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new ApisCommand(), new DeploymentOptions().setWorker(true));
     }
 
     private void deployQuery() {
         vertx.deployVerticle(new Projects(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Tables(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Backup(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new Configuration());
+        vertx.deployVerticle(new ConfigurationQuery());
         vertx.deployVerticle(new Endpoints(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new Dependencies(), new DeploymentOptions().setWorker(true));
     }

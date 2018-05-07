@@ -10,7 +10,7 @@ import net.christophe.genin.domain.server.db.ConfigurationDto;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.model.Project;
 import net.christophe.genin.domain.server.model.Raw;
-import net.christophe.genin.domain.server.query.Configuration;
+import net.christophe.genin.domain.server.query.ConfigurationQuery;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class ProjectCommand extends AbstractVerticle {
                     String artifactId = doc.artifactId();
                     long update = doc.update();
 
-                    return Project.readByName(artifactId)
+                    return Project.findByName(artifactId)
                             .flatMap(project -> {
                                 if (project.latestUpdate() < update) {
                                     project.setName(artifactId);
@@ -47,7 +47,7 @@ public class ProjectCommand extends AbstractVerticle {
                                     final List<String> tables = Commands.Projects.extractTables(json);
                                     project.setTables(tables);
                                     final List<String> allDeps = Commands.Projects.extractJavaDeps(json);
-                                    final ConfigurationDto conf = Configuration.get();
+                                    final ConfigurationDto conf = ConfigurationQuery.get();
 
                                     List<String> javaFilters = conf.getJavaFilters();
                                     final List<String> javaDeps = allDeps.parallelStream()

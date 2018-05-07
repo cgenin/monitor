@@ -43,6 +43,18 @@ public class NitriteRaw {
                 .orElse(Observable.empty());
     }
 
+    public Single<Integer> updateAllStatesBy(Treatments treatments) {
+        NitriteCollection collection = getCollection();
+        return Observable.from(collection.find())
+                .map(doc -> {
+                            collection.update(doc.put(Schemas.RAW_STATE, Treatments.PROJECTS.getState()));
+                            return 1;
+                        }
+                )
+                .reduce(0, (acc, updated) -> acc + updated)
+                .toSingle();
+    }
+
     public static NitriteCollection getCollection() {
         return Dbs.instance.getCollection(Schemas.RAW_COLLECTION);
     }

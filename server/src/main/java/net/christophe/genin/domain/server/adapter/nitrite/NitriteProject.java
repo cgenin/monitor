@@ -9,36 +9,23 @@ import rx.Single;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.dizitart.no2.filters.Filters.eq;
 
+
 public class NitriteProject {
-    public static Single<Project> readByName(String artifactId) {
-        return Single.just(Optional.ofNullable(getCollection()
-                .find(eq(Schemas.Projects.name.name(), artifactId))
-                .firstOrDefault()
-        )
-                .map(NitriteProject::toProject)
-                .orElseGet(
-                        () -> toProject(Document.createDocument(Schemas.Projects.latestUpdate.name(), 0L)
-                                .put(Schemas.Projects.id.name(), Dbs.newId()))
-                ));
-    }
 
-    private static Project toProject(Document document) {
-        return new ProjectImpl(document);
-    }
-
-    private static NitriteCollection getCollection() {
-        return Dbs.instance.getCollection(Schemas.Projects.collection());
-    }
 
     private static class ProjectImpl implements Project {
 
+        private final NitriteProjectHandler handler;
+
         private final Document document;
 
-        private ProjectImpl(Document document) {
+        private ProjectImpl(NitriteProjectHandler NitriteProjectHandler, Document document) {
             this.document = document;
+            this.handler = NitriteProjectHandler;
         }
 
         @Override
@@ -83,6 +70,12 @@ public class NitriteProject {
         }
 
         @Override
+        public List<String> javaDeps() {
+            return (List<String>) document.get(Schemas.Projects.javaDeps.name());
+
+        }
+
+        @Override
         public Project setChangeLog(String changeLog) {
             document.put(Schemas.Projects.changelog.name(), changeLog);
             return this;
@@ -102,8 +95,57 @@ public class NitriteProject {
 
         @Override
         public Single<Boolean> save() {
-            getCollection().update(document, true);
-            return Single.just(true);
+            return handler.save(this);
+        }
+
+        @Override
+        public String id() {
+            return document.get(Schemas.Projects.id.name(), String.class);
         }
     }
+
+    public static class NitriteProjectHandler {
+
+        private final Dbs dbs;
+
+        public NitriteProjectHandler(Dbs dbs) {
+            this.dbs = dbs;
+        }
+
+        Project toProject(Document document) {
+            return new ProjectImpl(this, document);
+        }
+
+
+        private NitriteCollection getCollection() {
+            return dbs.getCollection(Schemas.Projects.collection());
+        }
+
+
+        public Single<Project> readByName(String artifactId) {
+            return Single.just(Optional.ofNullable(getCollection()
+                    .find(eq(Schemas.Projects.name.name(), artifactId))
+                    .firstOrDefault()
+            )
+                    .map(this::toProject)
+                    .orElseGet(
+                            () -> toProject(Document.createDocument(Schemas.Projects.latestUpdate.name(), 0L)
+                                    .put(Schemas.Projects.id.name(), Dbs.newId()))
+                    ));
+        }
+
+        public Single<Boolean> save(ProjectImpl project) {
+            String id = Optional.ofNullable(project.id())
+                    .orElseGet(() -> UUID.randomUUID().toString());
+            project.document.put(Schemas.Projects.id.name(), id);
+            getCollection().update(project.document, true);
+            return Single.just(true);
+        }
+
+        public Single<Integer> removeAll() {
+            return Dbs.removeAll(getCollection());
+
+        }
+    }
+
 }
