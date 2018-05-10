@@ -3,11 +3,13 @@ package net.christophe.genin.domain.server.adapter.nitrite;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.model.Version;
+import net.christophe.genin.domain.server.model.handler.VersionHandler;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 
 import static org.dizitart.no2.filters.Filters.*;
 
+import rx.Observable;
 import rx.Single;
 
 import java.util.List;
@@ -81,7 +83,36 @@ public class NitriteVersion extends Version {
         return handler.save(this);
     }
 
-    public static class NitriteVersionHandler {
+    @Override
+    public boolean isSnapshot() {
+        return document.get(Schemas.Version.isSnapshot.name(), Boolean.class);
+    }
+
+    @Override
+    public String changelog() {
+        return document.get(Schemas.Version.changelog.name(), String.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> tables() {
+        return (List<String>) document.get(Schemas.Version.tables.name());
+
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> apis() {
+        return (List<String>) document.get(Schemas.Version.apis.name());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> javaDeps() {
+        return (List<String>) document.get(Schemas.Version.javaDeps.name());
+    }
+
+    public static class NitriteVersionHandler implements VersionHandler {
         private final Dbs dbs;
 
         public NitriteVersionHandler(Dbs dbs) {
@@ -127,6 +158,17 @@ public class NitriteVersion extends Version {
 
         public Single<Integer> removeAll() {
             return Dbs.removeAll(getCollection());
+        }
+
+        public Observable<Version> findByProject(String idProject) {
+            return Observable.from(getCollection().find(eq(Schemas.Version.idproject.name(), idProject)).toList())
+                    .map(this::toModel);
+        }
+
+        @Override
+        public Observable<Version> findAll() {
+            return Observable.from(getCollection().find().toList())
+                    .map(this::toModel);
         }
     }
 }

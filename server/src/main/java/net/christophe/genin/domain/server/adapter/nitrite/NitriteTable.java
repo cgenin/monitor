@@ -5,6 +5,7 @@ import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.model.Table;
+import net.christophe.genin.domain.server.model.handler.TableHandler;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import rx.Observable;
@@ -25,7 +26,7 @@ public class NitriteTable extends Table {
     }
 
 
-    public static class NitriteTableHandler {
+    public static class NitriteTableHandler implements TableHandler {
 
         private final Dbs dbs;
 
@@ -50,10 +51,13 @@ public class NitriteTable extends Table {
                     });
         }
 
+        @Override
         public Table newInstance() {
             return new NitriteTable(this);
 
         }
+
+        @Override
 
         public Single<Boolean> remove(String tableName, String artifactId) {
             return Single.fromCallable(() -> getCollection()
@@ -74,9 +78,34 @@ public class NitriteTable extends Table {
             });
         }
 
+        @Override
+
         public Single<Integer> removeAll() {
             NitriteCollection collection = getCollection();
             return Dbs.removeAll(collection);
+        }
+
+        @Override
+
+        public Observable<Table> findAll() {
+            return Observable.from(getCollection().find().toList())
+                    .map(doc -> new NitriteTable(this)
+                            .setId(doc.get(Schemas.Tables.id.name(), String.class))
+                            .setTableName(doc.get(Schemas.Tables.name.name(), String.class))
+                            .setService(doc.get(Schemas.Tables.services.name(), String.class))
+                            .setLastUpdated(doc.get(Schemas.Tables.latestUpdate.name(), Long.class)));
+        }
+
+        @Override
+
+        public Observable<HashMap<String, Long>> countTablesByProjects() {
+            return Observable.from(getCollection().find().toList())
+                    .reduce(new HashMap<>(), (hashmap, doc) -> {
+                        String service = doc.get(Schemas.Tables.services.name(), String.class);
+                        long old = hashmap.getOrDefault(service, 0L);
+                        hashmap.put(service, old + 1);
+                        return hashmap;
+                    });
         }
     }
 
@@ -84,10 +113,10 @@ public class NitriteTable extends Table {
     @Override
     public Single<Boolean> create() {
         Document document = Document.createDocument(Schemas.Projects.latestUpdate.name(), 0L)
-                .put(Schemas.Tables.name.name(), getTableName())
+                .put(Schemas.Tables.name.name(), tableName())
                 .put(Schemas.Tables.id.name(), Dbs.newId())
-                .put(Schemas.Tables.services.name(), getService())
-                .put(Schemas.Tables.latestUpdate.name(), getLastUpdated());
+                .put(Schemas.Tables.services.name(), service())
+                .put(Schemas.Tables.latestUpdate.name(), lastUpdated());
 
         return handler.create(document);
     }

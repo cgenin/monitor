@@ -10,14 +10,20 @@ import rx.schedulers.Schedulers;
 public interface Raw {
 
 
+    static Observable<Raw> findAll() {
+        return new NitriteRaw().findAll();
+    }
+
     JsonObject json();
+
+    Treatments state();
 
     String artifactId();
 
+    long update();
+
 
     Single<Boolean> updateState(Treatments treatments);
-
-    long update();
 
     /**
      * Create an new Raw Event.

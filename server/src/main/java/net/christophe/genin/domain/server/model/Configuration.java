@@ -1,10 +1,7 @@
 package net.christophe.genin.domain.server.model;
 
-import net.christophe.genin.domain.server.adapter.mysql.MysqlConfiguration;
-import net.christophe.genin.domain.server.adapter.mysql.MysqlProject;
 import net.christophe.genin.domain.server.adapter.nitrite.NitriteConfiguration;
-import net.christophe.genin.domain.server.adapter.nitrite.NitriteProject;
-import net.christophe.genin.domain.server.db.mysql.Mysqls;
+import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import org.dizitart.no2.objects.Id;
 import rx.Single;
 
@@ -14,34 +11,48 @@ import java.util.List;
 public abstract class Configuration {
 
     @Id
-    private long confId = 0L;
+    private Long    confId = 1L;
 
-    private String mysqlHost;
+    private String  mysqlHost;
     private Integer mysqlPort;
-    private String mysqlUser;
-    private String mysqlPassword;
-    private String mysqlDB;
+    private String  mysqlUser;
+    private String  mysqlPassword;
+    private String  mysqlDB;
 
 
     private List<String> javaFilters = new ArrayList<>();
     private List<String> npmFilters = new ArrayList<>();
 
     public static Single<Configuration> load() {
-        return (Mysqls.Instance.get().active()) ?
-                MysqlConfiguration.load() :
-                NitriteConfiguration.load();
+        return new NitriteConfiguration.ConfigurationHandler(Dbs.instance).load();
     }
 
-    public long confId() {
+    public static Single<Boolean> save(Configuration conf) {
+        return new NitriteConfiguration.ConfigurationHandler(Dbs.instance).save(conf);
+    }
+
+    public Configuration() {
+    }
+
+    public Configuration(Configuration configuration) {
+        confId = configuration.getConfId();
+        mysqlHost = configuration.getMysqlHost();
+        mysqlPort = configuration.getMysqlPort();
+        mysqlUser = configuration.getMysqlUser();
+        mysqlPassword = configuration.getMysqlPassword();
+        mysqlDB = configuration.getMysqlDB();
+    }
+
+    public Long getConfId() {
         return confId;
     }
 
-    public Configuration setConfId(long confId) {
+    public Configuration setConfId(Long confId) {
         this.confId = confId;
         return this;
     }
 
-    public List<String> javaFilters() {
+    public List<String> getJavaFilters() {
         return javaFilters;
     }
 
@@ -51,7 +62,7 @@ public abstract class Configuration {
 
     }
 
-    public List<String> npmFilters() {
+    public List<String> getNpmFilters() {
         return npmFilters;
     }
 
@@ -61,7 +72,7 @@ public abstract class Configuration {
 
     }
 
-    public String mysqlHost() {
+    public String getMysqlHost() {
         return mysqlHost;
     }
 
@@ -71,7 +82,7 @@ public abstract class Configuration {
 
     }
 
-    public Integer mysqlPort() {
+    public Integer getMysqlPort() {
         return mysqlPort;
     }
 
@@ -81,7 +92,7 @@ public abstract class Configuration {
 
     }
 
-    public String mysqlUser() {
+    public String getMysqlUser() {
         return mysqlUser;
     }
 
@@ -91,7 +102,7 @@ public abstract class Configuration {
 
     }
 
-    public String mysqlPassword() {
+    public String getMysqlPassword() {
         return mysqlPassword;
     }
 
@@ -101,7 +112,7 @@ public abstract class Configuration {
 
     }
 
-    public String mysqlDB() {
+    public String getMysqlDB() {
         return mysqlDB;
 
     }
@@ -111,4 +122,5 @@ public abstract class Configuration {
         return this;
 
     }
+
 }

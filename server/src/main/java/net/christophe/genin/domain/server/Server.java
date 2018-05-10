@@ -4,6 +4,7 @@ import io.vertx.core.*;
 import io.vertx.core.eventbus.Message;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.adapter.Adapters;
 import net.christophe.genin.domain.server.command.*;
 import net.christophe.genin.domain.server.db.Nitrite2Mysql;
 import net.christophe.genin.domain.server.db.migration.MigrateConfiguration;
@@ -46,7 +47,7 @@ public class Server extends AbstractVerticle {
         vertx.eventBus().consumer(FAIL, stopping.stopping(1));
 
         vertx.deployVerticle(new MigrateConfiguration(), stopping.register());
-        vertx.deployVerticle(new MigrateInQueue(),new DeploymentOptions().setConfig(config()).setWorker(true),  stopping.register());
+        vertx.deployVerticle(new MigrateInQueue(), new DeploymentOptions().setConfig(config()).setWorker(true), stopping.register());
         vertx.deployVerticle(new Nitrite2Mysql(), new DeploymentOptions().setConfig(config()), stopping.register());
     }
 
@@ -58,6 +59,7 @@ public class Server extends AbstractVerticle {
             if (as.failed()) {
                 throw new IllegalStateException("Error in creating DB", as.cause());
             }
+            vertx.deployVerticle(new Adapters(), new DeploymentOptions().setConfig(config()));
             deployCommand();
             deployQuery();
         });
@@ -73,17 +75,17 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new DependenciesCommand(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ImportExport());
         vertx.deployVerticle(new ConfigurationCommand());
-        vertx.deployVerticle(new Reset(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new ResetCommand(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ApisCommand(), new DeploymentOptions().setWorker(true));
     }
 
     private void deployQuery() {
-        vertx.deployVerticle(new Projects(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new Tables(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new Backup(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new ProjectQuery(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new TableQuery(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new BackupQuery(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ConfigurationQuery());
-        vertx.deployVerticle(new Endpoints(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new Dependencies(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new EndpointQuery(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new DependencyQuery(), new DeploymentOptions().setWorker(true));
     }
 
     private static class Stopping {

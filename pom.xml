@@ -56,6 +56,11 @@
                 <version>${vertx.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-unit</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.dizitart</groupId>
                 <artifactId>nitrite</artifactId>
                 <version>1.0</version>
@@ -120,7 +125,11 @@
                 <artifactId>assertj-core</artifactId>
                 <version>3.2.0</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.197</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

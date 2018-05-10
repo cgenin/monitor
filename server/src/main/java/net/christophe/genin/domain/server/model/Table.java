@@ -1,5 +1,6 @@
 package net.christophe.genin.domain.server.model;
 
+import net.christophe.genin.domain.server.adapter.Adapters;
 import net.christophe.genin.domain.server.adapter.mysql.MysqlTable.MysqlTableHandler;
 import net.christophe.genin.domain.server.adapter.nitrite.NitriteTable.NitriteTableHandler;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
@@ -7,6 +8,7 @@ import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import rx.Observable;
 import rx.Single;
 
+import java.util.HashMap;
 import java.util.Set;
 
 public abstract class Table {
@@ -17,30 +19,30 @@ public abstract class Table {
 
 
     public static Observable<Set<String>> findByService(String artifactId) {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlTableHandler(Mysqls.Instance.get()).findByService(artifactId) :
-                new NitriteTableHandler(Dbs.instance).findByService(artifactId);
+        return Adapters.get().tableHandler().findByService(artifactId);
     }
 
     public static Single<Boolean> remove(String tableName, String artifactId) {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlTableHandler(Mysqls.Instance.get()).remove(tableName, artifactId)  :
-                new NitriteTableHandler(Dbs.instance).remove(tableName, artifactId)  ;
+        return Adapters.get().tableHandler().remove(tableName, artifactId)  ;
     }
 
     public static Table newInstance() {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlTableHandler(Mysqls.Instance.get()).newInstance() :
-                new NitriteTableHandler(Dbs.instance).newInstance();
+        return Adapters.get().tableHandler().newInstance();
     }
 
     public static Single<Integer> removeAll() {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlTableHandler(Mysqls.Instance.get()).removeAll() :
-                new NitriteTableHandler(Dbs.instance).removeAll();
+        return Adapters.get().tableHandler().removeAll();
     }
 
-    public String getId() {
+    public static Observable<Table> findAll() {
+        return Adapters.get().tableHandler().findAll();
+    }
+
+    public static Observable<HashMap<String, Long>> countTablesByProjects() {
+        return Adapters.get().tableHandler().countTablesByProjects();
+    }
+
+    public String id() {
         return id;
     }
 
@@ -49,7 +51,7 @@ public abstract class Table {
         return this;
     }
 
-    public String getService() {
+    public String service() {
         return Service;
     }
 
@@ -58,7 +60,7 @@ public abstract class Table {
         return this;
     }
 
-    public String getTableName() {
+    public String tableName() {
         return tableName;
     }
 
@@ -67,7 +69,7 @@ public abstract class Table {
         return this;
     }
 
-    public long getLastUpdated() {
+    public long lastUpdated() {
         return lastUpdated;
     }
 

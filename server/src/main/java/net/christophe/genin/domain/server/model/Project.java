@@ -1,9 +1,7 @@
 package net.christophe.genin.domain.server.model;
 
-import net.christophe.genin.domain.server.adapter.mysql.MysqlProject;
-import net.christophe.genin.domain.server.adapter.nitrite.NitriteProject;
-import net.christophe.genin.domain.server.db.mysql.Mysqls;
-import net.christophe.genin.domain.server.db.nitrite.Dbs;
+import net.christophe.genin.domain.server.adapter.Adapters;
+import rx.Observable;
 import rx.Single;
 
 import java.util.List;
@@ -11,15 +9,18 @@ import java.util.List;
 public interface Project {
 
     static Single<Project> findByName(String artifactId) {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlProject.MysqlProjectHandler(Mysqls.Instance.get()).readByName(artifactId) :
-                new NitriteProject.NitriteProjectHandler(Dbs.instance).readByName(artifactId);
+        return Adapters
+                .get().projectHandler().readByName(artifactId);
     }
 
     static  Single<Integer> removeAll(){
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlProject.MysqlProjectHandler(Mysqls.Instance.get()).removeAll() :
-                new NitriteProject.NitriteProjectHandler(Dbs.instance).removeAll();
+        return Adapters
+                .get().projectHandler().removeAll();
+    }
+
+    static Observable<Project> findAll() {
+        return Adapters
+                .get().projectHandler().findAll();
     }
 
     long latestUpdate();
@@ -48,4 +49,14 @@ public interface Project {
     Single<Boolean> save();
 
     String id();
+
+    String release();
+
+    String snapshot();
+
+    List<String> tables();
+
+    List<String> apis();
+
+    String changelog();
 }

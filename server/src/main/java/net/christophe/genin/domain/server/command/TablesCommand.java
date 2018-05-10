@@ -70,7 +70,9 @@ public class TablesCommand extends AbstractVerticle {
                                     .toObservable()
                             );
                     return Observable.concat(deletion, creationTable)
-                            .doOnCompleted(() -> doc.updateState(Treatments.VERSION));
+                            .doOnCompleted(() -> doc.updateState(Treatments.VERSION).subscribe(
+                                    bool -> logger.info("Tables (" + tables + ") in project " + artifactId + " wad updated to next :" + bool)
+                            ));
 
                 }).subscribe(
                 str -> {

@@ -6,10 +6,11 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.core.Vertx;
+import net.christophe.genin.domain.server.adapter.Adapters;
 import net.christophe.genin.domain.server.db.mysql.AntiMonitorSchemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
-import net.christophe.genin.domain.server.query.ConfigurationQuery;
+import net.christophe.genin.domain.server.model.Configuration;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import rx.Single;
@@ -38,7 +39,7 @@ public class InitializeDb extends AbstractVerticle {
      * @return the instance.
      */
     public static Dbs nitriteLoading(JsonObject config) {
-        JsonObject dbConfig = config.getJsonObject("db", new JsonObject());
+        JsonObject dbConfig = config.getJsonObject("nitritedb", new JsonObject());
         String dbPath = dbConfig.getString("path", "test.db");
         String user = dbConfig.getString("user", "user");
         String pwd = dbConfig.getString("pwd", "password");
@@ -52,17 +53,21 @@ public class InitializeDb extends AbstractVerticle {
      * @return the result of the loading.
      */
     public static Single<Mysqls> runMysql(Vertx vertx) {
-        return Single.fromCallable(ConfigurationQuery::get)
-                .map(configurationDto -> {
-                    if (Objects.isNull(configurationDto.getMysqlUser()))
-                        return Mysqls.Instance.get();
+        return Configuration.load()
+                .map(configuration -> {
+                    if (Objects.isNull(configuration.getMysqlUser()))
+                        throw new IllegalStateException("No configuration found");
                     JsonObject config = new JsonObject()
-                            .put("host", configurationDto.getMysqlHost())
-                            .put("port", configurationDto.getMysqlPort())
-                            .put("username", configurationDto.getMysqlUser())
-                            .put("password", configurationDto.getMysqlPassword())
-                            .put("database", configurationDto.getMysqlDB());
+                            .put("host", configuration.getMysqlHost())
+                            .put("port", configuration.getMysqlPort())
+                            .put("username", configuration.getMysqlUser())
+                            .put("password", configuration.getMysqlPassword())
+                            .put("database", configuration.getMysqlDB());
                     return Mysqls.Instance.set(vertx, config);
+                })
+                .doOnSuccess(instance -> {
+                    Adapters.Type type = (Mysqls.Instance.get().active()) ? Adapters.Type.MYSQL : Adapters.Type.NITRITE;
+                    vertx.eventBus().send(Adapters.CHANGE_DATABASE, type.name());
                 });
     }
 
@@ -79,17 +84,20 @@ public class InitializeDb extends AbstractVerticle {
         runMysql(vertx)
                 .subscribe(
                         instance -> logger.info("Mysql active : " + instance.active()),
-                        err -> logger.error("Error in activating mysql.", err)
+                        err -> {
+                            logger.error("Impossible to open connection to mysql => " + err.getMessage());
+                            logger.debug("Error in activating mysql.", err);
+                        }
                 );
         eventBusEndpoints();
 
-
+        logger.info("started");
     }
 
     /**
      * Create Event bus endpoints.
      */
-    private void eventBusEndpoints() {
+    public void eventBusEndpoints() {
         // Health endpoints
         vertx.eventBus().consumer(HEALTH, msg -> {
             JsonArray health = Dbs.toArray(

@@ -9,6 +9,7 @@ import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import rx.Observable;
 import rx.Single;
+import rx.schedulers.Schedulers;
 
 import static org.dizitart.no2.filters.Filters.eq;
 
@@ -45,9 +46,11 @@ public class NitriteRaw {
 
     public Single<Integer> updateAllStatesBy(Treatments treatments) {
         NitriteCollection collection = getCollection();
-        return Observable.from(collection.find())
+        return Observable.from(collection.find().toList())
+                .subscribeOn(Schedulers.computation())
                 .map(doc -> {
-                            collection.update(doc.put(Schemas.RAW_STATE, Treatments.PROJECTS.getState()));
+                    Document put = doc.put(Schemas.RAW_STATE, treatments.getState());
+                    collection.update(put, true);
                             return 1;
                         }
                 )
@@ -57,6 +60,11 @@ public class NitriteRaw {
 
     public static NitriteCollection getCollection() {
         return Dbs.instance.getCollection(Schemas.RAW_COLLECTION);
+    }
+
+    public Observable<Raw> findAll() {
+        return Observable.from(getCollection().find().toList())
+                .map(NitriteRaw::toRaw);
     }
 
     public static class RawImpl implements Raw {
@@ -79,6 +87,11 @@ public class NitriteRaw {
         }
 
         @Override
+        public Treatments state() {
+            return Treatments.parse(document.get(Schemas.RAW_STATE, Integer.class));
+        }
+
+        @Override
         public long update() {
             return json.getLong(Schemas.Raw.update.name());
         }
@@ -86,7 +99,7 @@ public class NitriteRaw {
         @Override
         public Single<Boolean> updateState(Treatments treatments) {
             return Single.fromCallable(() -> {
-                getCollection().update(document.put(Schemas.RAW_STATE, Treatments.TABLES.getState()));
+                getCollection().update(document.put(Schemas.RAW_STATE, treatments.getState()), true);
                 return true;
             });
         }

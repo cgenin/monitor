@@ -2,7 +2,9 @@ package net.christophe.genin.domain.server.adapter.nitrite;
 
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
+import net.christophe.genin.domain.server.db.nitrite.NitriteHandler;
 import net.christophe.genin.domain.server.model.Api;
+import net.christophe.genin.domain.server.model.handler.ApiHandler;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import org.dizitart.no2.WriteResult;
@@ -16,29 +18,61 @@ public class NitriteApi extends Api {
 
 
     private final Document document;
+    private final NitriteApiHandler handler;
 
-    private static NitriteCollection getCollection() {
-        return Dbs.instance.getCollection(Schemas.Apis.collection());
+    public static class NitriteApiHandler extends NitriteHandler implements ApiHandler {
+
+
+        public NitriteApiHandler(Dbs dbs) {
+            super(dbs);
+        }
+
+        @Override
+        protected NitriteCollection getCollection() {
+            return dbs.getCollection(Schemas.Apis.collection());
+        }
+
+        @Override
+        public Observable<Integer> deleteByIdProject(String idProject) {
+            return Observable.fromCallable(
+                    () -> getCollection().remove(and(
+                            eq(Schemas.Apis.idProject.name(), idProject)
+                    ))
+            )
+                    .map(WriteResult::getAffectedCount);
+        }
+
+        @Override
+        public Api newInstance(String method, String path, String idProject) {
+            Document document = Document.createDocument(Schemas.Apis.method.name(), method)
+                    .put(Schemas.Apis.path.name(), path)
+                    .put(Schemas.Apis.idProject.name(), idProject);
+            return new NitriteApi(this, method, path, idProject, document);
+        }
+
+        @Override
+        public Observable<Api> findAll() {
+            return Observable.from(getCollection().find().toList())
+                    .map(doc -> {
+                        String method = doc.get(Schemas.Apis.method.name(), String.class);
+                        String path = doc.get(Schemas.Apis.path.name(), String.class);
+                        String idProject = doc.get(Schemas.Apis.idProject.name(), String.class);
+                        return new NitriteApi(this, method, path, idProject, doc);
+                    });
+        }
+
+
+        public Single<Boolean> create(NitriteApi nitriteApi) {
+            return Single.fromCallable(() -> {
+                getCollection().update(nitriteApi.document, true);
+                return true;
+            });
+        }
     }
 
-    public static Observable<Integer> deleteByIdProject(String idProject) {
-        return Observable.fromCallable(
-                () -> getCollection().remove(and(
-                        eq(Schemas.Apis.idProject.name(), idProject)
-                ))
-        )
-                .map(WriteResult::getAffectedCount);
-    }
-
-    public static Api newInstance(String method, String path, String idProject) {
-        Document document = Document.createDocument(Schemas.Apis.method.name(), method)
-                .put(Schemas.Apis.path.name(), path)
-                .put(Schemas.Apis.idProject.name(), idProject);
-        return new NitriteApi(method, path, idProject, document);
-    }
-
-    private NitriteApi(String method, String path, String idProject, Document document) {
+    private NitriteApi(NitriteApiHandler nitriteApiHandler, String method, String path, String idProject, Document document) {
         super(method, path, idProject);
+        this.handler = nitriteApiHandler;
         this.document = document;
     }
 
@@ -109,9 +143,51 @@ public class NitriteApi extends Api {
 
     @Override
     public Single<Boolean> create() {
-        return Single.fromCallable(() -> {
-            getCollection().update(document, true);
-            return true;
-        });
+        return this.handler.create(this);
+    }
+
+    @Override
+    public String name() {
+        return document.get(Schemas.Apis.name.name(), String.class);
+    }
+
+    @Override
+    public String artifactId() {
+        return document.get(Schemas.Apis.artifactId.name(), String.class);
+    }
+
+    @Override
+    public String groupId() {
+        return document.get(Schemas.Apis.groupId.name(), String.class);
+    }
+
+    @Override
+    public String returns() {
+        return document.get(Schemas.Apis.returns.name(), String.class);
+    }
+
+    @Override
+    public String params() {
+        return document.get(Schemas.Apis.params.name(), String.class);
+    }
+
+    @Override
+    public String comment() {
+        return document.get(Schemas.Apis.comment.name(), String.class);
+    }
+
+    @Override
+    public String since() {
+        return document.get(Schemas.Apis.since.name(), String.class);
+    }
+
+    @Override
+    public String className() {
+        return document.get(Schemas.Apis.className.name(), String.class);
+    }
+
+    @Override
+    public long latestUpdate() {
+        return document.get(Schemas.Apis.latestUpdate.name(), Long.class);
     }
 }

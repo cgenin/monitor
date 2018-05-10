@@ -5,19 +5,36 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.monitor.addon.json.Jsons;
 import net.christophe.genin.domain.server.Console;
-import net.christophe.genin.domain.server.db.Commands;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.model.Api;
 import net.christophe.genin.domain.server.model.Project;
 import net.christophe.genin.domain.server.model.Raw;
+import rx.Observable;
 import rx.Single;
 
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class ApisCommand extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(ApisCommand.class);
+
+    static Observable<JsonObject> servicesToJson(JsonArray services) {
+        Function<JsonObject, Stream<? extends JsonObject>> convert2Json = obj -> {
+            String className = obj.getString(Schemas.Raw.Apis.Services.name.name(), "");
+            JsonArray methods = obj.getJsonArray(Schemas.Raw.Apis.Services.methods.name(), new JsonArray());
+            return Jsons.builder(methods)
+                    .toStream()
+                    .map(o -> o.put("className", className));
+        };
+        return Observable.from(
+                Jsons.builder(services).toStream().flatMap(convert2Json).collect(Collectors.toList())
+        );
+    }
 
     @Override
     public void start() {
@@ -44,7 +61,7 @@ public class ApisCommand extends AbstractVerticle {
                                         .doOnNext(nb -> {
                                             logger.debug("DELETE for '" + artifactId + "' = " + nb);
                                         })
-                                        .flatMap(nb -> Commands.servicesToJson(services))
+                                        .flatMap(nb -> servicesToJson(services))
                                         .flatMap(methodJson -> {
                                             String groupId = apis.getString(Schemas.Raw.Apis.groupId.name(), "");
                                             final String method = methodJson.getString("method", "");
@@ -68,7 +85,8 @@ public class ApisCommand extends AbstractVerticle {
                                                     ).toObservable();
                                         });
                             })
-                            .doOnCompleted(() -> doc.updateState(Treatments.DEPENDENCIES));
+                            .doOnCompleted(() -> doc.updateState(Treatments.DEPENDENCIES)
+                                .subscribe(bool -> logger.info("Api for "+artifactId+" was updated to next :"+bool)));
 
                 }).subscribe(str -> {
                     logger.info(str);
@@ -77,7 +95,6 @@ public class ApisCommand extends AbstractVerticle {
                 err -> {
                     logger.error("Error in projects batch", err);
                 });
-        ;
         return true;
     }
 

@@ -1,17 +1,19 @@
 package net.christophe.genin.domain.server.command;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import io.vertx.ext.sql.UpdateResult;
 import net.christophe.genin.domain.server.db.Schemas;
-import net.christophe.genin.domain.server.db.mysql.MysqlCommand;
+import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import org.dizitart.no2.*;
 import org.dizitart.no2.filters.BaseFilter;
-import org.dizitart.no2.internals.NitriteService;
 import org.dizitart.no2.store.NitriteMap;
 import rx.Observable;
+import rx.Single;
 
 import java.util.List;
 import java.util.Set;
@@ -50,7 +52,7 @@ public class ImportExport extends AbstractVerticle {
                         .put("numberOfExported", 0)
                         .put("numberOfDeleted", 0));
             } else {
-                new MysqlCommand().exportEvents(obs)
+                exportEvents(obs)
                         .subscribe(
                                 nb -> {
                                     Set<NitriteId> ids = documents.stream()
@@ -69,6 +71,40 @@ public class ImportExport extends AbstractVerticle {
 
             }
         });
+    }
+
+    public Single<Integer> exportEvents(Stream<JsonObject> jsons) {
+        Mysqls mysqls = Mysqls.Instance.get();
+        return mysqls.connection()
+                .flatMap(conn -> conn.rxSetAutoCommit(false)
+                        .flatMap(v -> {
+                            Set<Observable<UpdateResult>> collect = jsons
+                                    .map(json -> {
+                                        Integer state = json.getInteger("state");
+                                        Boolean archive = json.getBoolean("ARCHIVE");
+                                        return new JsonArray().add(state).add(json.encode()).add(archive);
+                                    })
+                                    .map(params -> conn.rxUpdateWithParams("INSERT EVENTS (state, document, ARCHIVE) VALUES (?,?,?)", params).toObservable())
+                                    .collect(Collectors.toSet());
+                            return Observable.concat(Observable.from(collect))
+                                    .map(updateResult -> {
+                                        int updated = updateResult.getUpdated();
+                                        if (updated == 0) {
+                                            throw new IllegalStateException("Impossible to insert one data");
+                                        }
+                                        return updated;
+                                    })
+                                    .reduce(0, (acc, a) -> acc + a)
+                                    .toSingle();
+                        })
+                        .doOnError(err -> {
+                            conn.rxRollback()
+                                    .flatMap(v2 -> conn.rxClose());
+                        })
+                        .flatMap(rs -> conn.rxCommit()
+                                .flatMap(v2 -> conn.rxClose())
+                                .map(v3 -> rs)
+                        ));
     }
 
     private static class RemoveByIdNititeFilter extends BaseFilter {

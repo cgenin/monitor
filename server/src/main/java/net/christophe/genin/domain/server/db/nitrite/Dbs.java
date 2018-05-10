@@ -38,7 +38,7 @@ public final class Dbs {
     }
 
 
-    public static JsonObject toJson(Document doc) {
+    private static JsonObject toJson(Document doc) {
         return doc.keySet()
                 .parallelStream()
                 .map(key -> new JsonObject().put(key, doc.get(key)))

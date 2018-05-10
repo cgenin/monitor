@@ -7,6 +7,8 @@ import net.christophe.genin.domain.monitor.addon.json.Jsons;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.model.Project;
+import net.christophe.genin.domain.server.model.handler.ProjectHandler;
+import rx.Observable;
 import rx.Single;
 import rx.functions.Func1;
 
@@ -16,7 +18,7 @@ import java.util.UUID;
 
 public class MysqlProject {
 
-    public static class MysqlProjectHandler {
+    public static class MysqlProjectHandler implements ProjectHandler {
 
         private final Mysqls mysqls;
 
@@ -24,23 +26,29 @@ public class MysqlProject {
             this.mysqls = mysqls;
         }
 
-
+        @Override
         public Single<Project> readByName(String artifactId) {
             return mysqls.select("SELECT document from PROJECTS WHERE NAME=?", new JsonArray().add(artifactId))
                     .map(rs -> {
                         if (Objects.isNull(rs) || rs.getResults().isEmpty()) {
                             JsonObject n = new JsonObject().put(Schemas.Projects.name.name(), artifactId)
                                     .put(Schemas.Projects.latestUpdate.name(), 0L);
-                            return new ProjectImpl(this, n);
+                            return toProject(n);
                         }
                         JsonArray firstLine = rs.getResults().get(0);
                         String string = firstLine.getString(0);
-                        return (Project) new ProjectImpl(this, new JsonObject(string));
+                        JsonObject document = new JsonObject(string);
+                        return toProject(document);
                     })
                     .first()
                     .toSingle();
         }
 
+        private Project toProject(JsonObject document) {
+            return new ProjectImpl(this, document);
+        }
+
+        @Override
         public Single<Integer> removeAll() {
             return mysqls.execute("DELETE FROM  PROJECTS")
                     .map(UpdateResult::getUpdated);
@@ -64,6 +72,20 @@ public class MysqlProject {
 
             return mysqls.execute("UPDATE PROJECTS SET document=? WHERE ID = ?", new JsonArray().add(project.document.encode()).add(id))
                     .map(updateFunc);
+        }
+
+        @Override
+        public Observable<Project> findAll() {
+            return mysqls.select("SELECT document from PROJECTS ")
+                    .flatMap(rs -> {
+                        if (Objects.isNull(rs) || rs.getResults().isEmpty()) {
+                            return Observable.empty();
+                        }
+                        return Observable.from(rs.getResults());
+                    })
+                    .map(arr -> arr.getString(0))
+                    .map(JsonObject::new)
+                    .map(this::toProject);
         }
     }
 
@@ -147,6 +169,32 @@ public class MysqlProject {
         @Override
         public String id() {
             return document.getString(Schemas.Projects.id.name());
+        }
+
+        @Override
+        public String release() {
+            return document.getString(Schemas.Projects.release.name());
+        }
+
+        @Override
+        public String snapshot() {
+            return document.getString(Schemas.Projects.snapshot.name());
+        }
+
+        @Override
+        public List<String> tables() {
+
+            return Jsons.builder(document.getJsonArray(Schemas.Projects.tables.name())).toListString();
+        }
+
+        @Override
+        public List<String> apis() {
+            return Jsons.builder(document.getJsonArray(Schemas.Projects.apis.name())).toListString();
+        }
+
+        @Override
+        public String changelog() {
+            return document.getString(Schemas.Projects.changelog.name());
         }
 
         @Override

@@ -5,18 +5,14 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.Console;
-import net.christophe.genin.domain.server.db.Commands;
-import net.christophe.genin.domain.server.db.nitrite.Dbs;
-import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.model.*;
-import org.dizitart.no2.NitriteCollection;
 import rx.Observable;
 
-public class Reset extends AbstractVerticle {
+public class ResetCommand extends AbstractVerticle {
 
 
-    private static final Logger logger = LoggerFactory.getLogger(Reset.class);
-    public static final String RUN = Reset.class.getName() + ".run";
+    private static final Logger logger = LoggerFactory.getLogger(ResetCommand.class);
+    public static final String RUN = ResetCommand.class.getName() + ".run";
 
 
     @Override
@@ -41,10 +37,17 @@ public class Reset extends AbstractVerticle {
                                 msg.fail(500, "Error in resetting");
                             },
                             () -> {
-                                Raw.updateAllStatesBy(Treatments.PROJECTS);
-                                logger.info("treatments relaunched");
-                                msg.reply(new JsonObject().put("rest", true));
-                                logger.info("reset end.");
+                                Raw.updateAllStatesBy(Treatments.PROJECTS)
+                                        .subscribe(nb -> {
+                                                    logger.info("treatments relaunched for " + nb);
+                                                    msg.reply(new JsonObject().put("rest", true));
+                                                    logger.info("reset end.");
+                                                },
+                                                err -> {
+                                                    logger.error("Error in " + RUN + "in relaunch ", err);
+                                                    msg.fail(500, "Error in resetting");
+                                                });
+
                             });
 
         });

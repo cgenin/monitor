@@ -1,20 +1,22 @@
 package net.christophe.genin.domain.server.query;
 
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
-import net.christophe.genin.domain.server.db.Queries;
+import net.christophe.genin.domain.server.model.Dependency;
 
-public class Dependencies extends AbstractVerticle {
-    private static final Logger logger = LoggerFactory.getLogger(Dependencies.class);
+public class DependencyQuery extends AbstractVerticle {
+    private static final Logger logger = LoggerFactory.getLogger(DependencyQuery.class);
 
-    public static final String FIND = Dependencies.class.getName() + ".find";
-    public static final String USED_BY = Dependencies.class.getName() + ".usedBY";
+    public static final String FIND = DependencyQuery.class.getName() + ".find";
+    public static final String USED_BY = DependencyQuery.class.getName() + ".usedBY";
 
     @Override
     public void start() {
         vertx.eventBus().consumer(FIND, msg ->
-                Queries.get().listAllResourceDependencies()
+                Dependency.findAllResource()
+                        .reduce(new JsonArray(), JsonArray::add)
                         .subscribe(
                                 msg::reply,
                                 err -> {
@@ -24,7 +26,8 @@ public class Dependencies extends AbstractVerticle {
                         ));
         vertx.eventBus().<String>consumer(USED_BY,  msg -> {
             String resource = msg.body();
-            Queries.get().usedBy(resource)
+            Dependency.usedBy(resource)
+                    .reduce(new JsonArray(), JsonArray::add)
                     .subscribe(
                             msg::reply,
                             err -> {

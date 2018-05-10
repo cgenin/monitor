@@ -5,12 +5,12 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.Console;
-import net.christophe.genin.domain.server.db.Commands;
-import net.christophe.genin.domain.server.db.ConfigurationDto;
+import net.christophe.genin.domain.server.command.util.Projects;
 import net.christophe.genin.domain.server.db.Schemas;
+import net.christophe.genin.domain.server.model.Configuration;
 import net.christophe.genin.domain.server.model.Project;
 import net.christophe.genin.domain.server.model.Raw;
-import net.christophe.genin.domain.server.query.ConfigurationQuery;
+import rx.Single;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,58 +32,37 @@ public class ProjectCommand extends AbstractVerticle {
                     String artifactId = doc.artifactId();
                     long update = doc.update();
 
-                    return Project.findByName(artifactId)
-                            .flatMap(project -> {
-                                if (project.latestUpdate() < update) {
-                                    project.setName(artifactId);
-                                    final String version = json.getString(Schemas.Raw.version.name());
-                                    if (Commands.Projects.isSnapshot(version)) {
-                                        project.setSnapshot(version);
-                                    } else {
-                                        project.setRelease(version);
-                                    }
 
+                    return Configuration.load()
+                            .flatMap(conf ->
+                                    Project.findByName(artifactId)
+                                            .flatMap(project -> {
+                                                if (project.latestUpdate() < update) {
+                                                    final List<String> allDeps = Projects.extractJavaDeps(json);
 
-                                    final List<String> tables = Commands.Projects.extractTables(json);
-                                    project.setTables(tables);
-                                    final List<String> allDeps = Commands.Projects.extractJavaDeps(json);
-                                    final ConfigurationDto conf = ConfigurationQuery.get();
-
-                                    List<String> javaFilters = conf.getJavaFilters();
-                                    final List<String> javaDeps = allDeps.parallelStream()
-                                            .map(String::toUpperCase)
-                                            .filter(s ->
-                                                    javaFilters.isEmpty() ||
-                                                            javaFilters.parallelStream()
-                                                                    .map(String::toUpperCase)
-                                                                    .anyMatch(s::contains)
-                                            ).collect(Collectors.toList());
-                                    project.setJavaDeps(javaDeps);
-                                    Optional.ofNullable(json.getString(Schemas.Projects.changelog.name()))
-                                            .ifPresent(project::setChangeLog);
-                                    final List<String> apis = Commands.Projects.extractUrls(json);
-                                    project.setApis(apis);
-                                    logger.info("New data for " + artifactId + ". Document must be updated.");
-                                    project.setLatestUpdate(update);
-                                    return project.save()
-                                            .map(bool -> {
-                                                if (bool) {
-                                                    return "Projects '" + artifactId + "' updated";
+                                                    List<String> javaFilters = conf.getJavaFilters();
+                                                    final List<String> javaDeps = allDeps.parallelStream()
+                                                            .map(String::toUpperCase)
+                                                            .filter(s ->
+                                                                    javaFilters.isEmpty() ||
+                                                                            javaFilters.parallelStream()
+                                                                                    .map(String::toUpperCase)
+                                                                                    .anyMatch(s::contains)
+                                                            ).collect(Collectors.toList());
+                                                    return updateProjectWith(project, artifactId, json, update, javaDeps)
+                                                            .save()
+                                                            .map(bool -> {
+                                                                if (bool) {
+                                                                    return "ProjectQuery '" + artifactId + "' updated";
+                                                                }
+                                                                return "ProjectQuery '" + artifactId + "' not updated";
+                                                            })
+                                                            .flatMap(str -> changState(doc, str));
                                                 }
-                                                return "Projects '" + artifactId + "' not updated";
-                                            })
-                                            .flatMap(str -> {
-                                                return doc.updateState(Treatments.TABLES)
-                                                        .map(b -> {
-                                                            return str;
-                                                        });
-                                            });
-                                }
-                                String message = "No data for " + artifactId + ". Document must not be updated: " + project.latestUpdate() + " > " + update;
-                                logger.info(message);
-                                return doc.updateState(Treatments.TABLES)
-                                        .map(b -> message);
-                            })
+                                                String message = "No data for " + artifactId + ". Document must not be updated: " + project.latestUpdate() + " > " + update;
+                                                logger.info(message);
+                                                return changState(doc, message);
+                                            }))
                             .toObservable();
                 })
                 .subscribe(
@@ -96,6 +75,31 @@ public class ProjectCommand extends AbstractVerticle {
                         });
 
         return true;
+    }
+
+    private Single<String> changState(Raw doc, String message) {
+        return doc.updateState(Treatments.TABLES)
+                .map(b -> message);
+    }
+
+    private Project updateProjectWith(Project project, String artifactId, JsonObject json, long update, List<String> javaDeps ) {
+        project.setName(artifactId);
+        final String version = json.getString(Schemas.Raw.version.name());
+        if (Projects.isSnapshot(version)) {
+            project.setSnapshot(version);
+        } else {
+            project.setRelease(version);
+        }
+        final List<String> tables = Projects.extractTables(json);
+        project.setTables(tables);
+        project.setJavaDeps(javaDeps);
+        Optional.ofNullable(json.getString(Schemas.Projects.changelog.name()))
+                .ifPresent(project::setChangeLog);
+        final List<String> apis = Projects.extractUrls(json);
+        project.setApis(apis);
+        logger.info("New data for " + artifactId + ". Document must be updated.");
+        project.setLatestUpdate(update);
+        return project;
     }
 
 

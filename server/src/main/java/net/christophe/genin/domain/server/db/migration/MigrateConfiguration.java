@@ -1,15 +1,13 @@
 package net.christophe.genin.domain.server.db.migration;
 
 import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.eventbus.Message;
-import net.christophe.genin.domain.server.db.ConfigurationDto;
-import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.query.ConfigurationQuery;
-import rx.Single;
 
 public class MigrateConfiguration extends AbstractVerticle {
 
@@ -21,17 +19,13 @@ public class MigrateConfiguration extends AbstractVerticle {
         logger.info("initialization Ok.");
         vertx.eventBus().consumer(LAUNCH, msg -> {
             try {
-                Single.fromCallable(() -> {
-                    logger.info("migrate configuration ...");
-                    ConfigurationDto configurationDto = ConfigurationQuery.get();
-                    return Schemas.Configuration.toJson(configurationDto);
-                })
+                vertx.eventBus().<JsonObject>rxSend(ConfigurationQuery.GET, new JsonObject())
                         .flatMap(jsonObject -> {
                             Mysqls mysqls = Mysqls.Instance.get();
                             return mysqls.execute("DELETE FROM configuration ")
                                     .flatMap(updateResult -> {
                                         logger.info("Nunber of deleted row : " + updateResult.getUpdated());
-                                        JsonArray params = new JsonArray().add(1).add(jsonObject.encode());
+                                        JsonArray params = new JsonArray().add(1).add(jsonObject.body().encode());
                                         return mysqls.execute("INSERT INTO configuration (ID, document) VALUES (?,?)", params);
                                     });
                         })

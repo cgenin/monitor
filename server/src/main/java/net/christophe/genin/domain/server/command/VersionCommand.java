@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.server.Console;
-import net.christophe.genin.domain.server.db.Commands;
+import net.christophe.genin.domain.server.command.util.Projects;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.model.Project;
 import net.christophe.genin.domain.server.model.Raw;
@@ -38,10 +38,10 @@ public class VersionCommand extends AbstractVerticle {
                                 long lDate = currentDoc.latestUpdate();
                                 long update = json.getLong(Schemas.Raw.update.name());
                                 if (lDate < update) {
-                                    boolean snapshot = Commands.Projects.isSnapshot(version);
-                                    List<String> javaDeps = Commands.Projects.extractJavaDeps(json);
-                                    List<String> tables = Commands.Projects.extractTables(json);
-                                    List<String> urls = Commands.Projects.extractUrls(json);
+                                    boolean snapshot = Projects.isSnapshot(version);
+                                    List<String> javaDeps = Projects.extractJavaDeps(json);
+                                    List<String> tables = Projects.extractTables(json);
+                                    List<String> urls = Projects.extractUrls(json);
                                     Optional.ofNullable(json.getString(Schemas.Projects.changelog.name()))
                                             .ifPresent(currentDoc::setChangeLog);
                                     return Observable.just(currentDoc
@@ -57,7 +57,10 @@ public class VersionCommand extends AbstractVerticle {
                             .map(updateResult -> "Version '" + version +
                                     "' for artifact '" + artifactId + "' updated : " +
                                     updateResult)
-                            .doOnCompleted(() -> doc.updateState(Treatments.URL));
+                            .doOnCompleted(
+                                    () -> doc.updateState(Treatments.URL)
+                                            .subscribe(bool -> logger.info("Version (" + version + ") for project " + artifactId + " wad updated to next :" + bool))
+                            );
 
                 })
                 .subscribe(

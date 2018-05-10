@@ -59,12 +59,11 @@ public class MigrateInQueue extends AbstractVerticle {
                     })
                     .reduce(new JsonArray(), JsonArray::add)
                     .subscribe(
-                            arr -> msg.reply(arr),
+                            msg::reply,
                             err -> {
                                 logger.error("Error in migrating ", err);
                                 msg.fail(500, "Migrate ConfigurationQuery problem see below");
                             });
-            ;
         });
     }
 }

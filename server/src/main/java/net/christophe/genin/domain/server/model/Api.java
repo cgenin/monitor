@@ -1,5 +1,6 @@
 package net.christophe.genin.domain.server.model;
 
+import net.christophe.genin.domain.server.adapter.Adapters;
 import net.christophe.genin.domain.server.adapter.mysql.MysqlApi.MysqlApiHandler;
 import net.christophe.genin.domain.server.adapter.nitrite.NitriteApi;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
@@ -14,22 +15,21 @@ public abstract class Api {
     protected final String idProject;
 
     public static Observable<Integer> deleteByIdProject(String idProject) {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlApiHandler(Mysqls.Instance.get()).deleteByIdProject(idProject) :
-                NitriteApi.deleteByIdProject(idProject);
+        return Adapters.get().apiHandler().deleteByIdProject(idProject);
     }
 
     public static Api newInstance(String method, String path, String idProject) {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlApiHandler(Mysqls.Instance.get()).newInstance(method, path, idProject) :
-                NitriteApi.newInstance(method, path, idProject);
+        return Adapters.get().apiHandler().newInstance(method, path, idProject);
 
     }
 
     public static Single<Integer> removeAll() {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlApiHandler(Mysqls.Instance.get()).removeAll() :
-                NitriteApi.removeAll();
+        return Adapters.get().apiHandler().removeAll();
+    }
+
+
+    public static Observable<Api> findAll() {
+        return Adapters.get().apiHandler().findAll();
     }
 
     public Api(String method, String path, String idProject) {
@@ -38,7 +38,17 @@ public abstract class Api {
         this.idProject = idProject;
     }
 
+    public String method(){
+        return method;
+    }
 
+    public String path(){
+        return path;
+    }
+
+    public String idProject(){
+        return idProject;
+    }
 
     public abstract String id();
 
@@ -63,4 +73,25 @@ public abstract class Api {
     public abstract Api setClassName(String className);
 
     public abstract Single<Boolean> create();
+
+    public abstract String name();
+
+    public abstract String artifactId();
+
+    public abstract String groupId();
+
+    public abstract String returns();
+
+    public abstract String params();
+
+    public abstract String comment();
+
+
+    public abstract String since();
+
+
+    public abstract String className();
+
+
+    public abstract long latestUpdate();
 }

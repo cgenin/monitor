@@ -38,15 +38,15 @@ public class RawCommand extends AbstractVerticle {
         vertx.eventBus().consumer(CLEAR_CALCULATE_DATA, rc -> {
             //TODO
             /*
-            Observable<String> listIdVersions = Observable.from(Dbs.instance.getCollection(Schemas.Projects.collection())
+            Observable<String> listIdVersions = Observable.from(Dbs.instance.getCollection(Schemas.ProjectQuery.collection())
                     .find()
                     .toList()
                     .stream()
-                    .map(d -> d.get(Schemas.Projects.id.name(), String.class))
+                    .map(d -> d.get(Schemas.ProjectQuery.id.name(), String.class))
                     .map(Schemas.Version::collection)
                     .collect(Collectors.toList()));
 
-            Observable<String> others = Observable.just(Schemas.Apis.collection(), Schemas.Projects.collection(), Schemas.Tables.collection());
+            Observable<String> others = Observable.just(Schemas.Apis.collection(), Schemas.ProjectQuery.collection(), Schemas.TableQuery.collection());
 
             Observable.concat(listIdVersions, others)
                     .observeOn(Schedulers.io())

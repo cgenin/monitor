@@ -3,9 +3,12 @@ package net.christophe.genin.domain.server.adapter.mysql;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.sql.UpdateResult;
+import net.christophe.genin.domain.monitor.addon.json.Jsons;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.model.Version;
+import net.christophe.genin.domain.server.model.handler.VersionHandler;
+import rx.Observable;
 import rx.Single;
 import rx.functions.Func1;
 
@@ -61,7 +64,34 @@ public class MysqlVersion extends Version {
         return handler.save(this);
     }
 
-    public static class MysqlVersionHandler {
+    @Override
+    public boolean isSnapshot() {
+        return json().getBoolean(Schemas.Version.isSnapshot.name());
+
+    }
+
+    @Override
+    public String changelog() {
+        return json().getString(Schemas.Version.changelog.name());
+    }
+
+    @Override
+    public List<String> tables() {
+        return Jsons.builder(json().getJsonArray(Schemas.Version.tables.name())).toListString();
+    }
+
+    @Override
+    public List<String> apis() {
+        return Jsons.builder(json().getJsonArray(Schemas.Version.apis.name())).toListString();
+    }
+
+    @Override
+    public List<String> javaDeps() {
+        return Jsons.builder(json().getJsonArray(Schemas.Version.javaDeps.name())).toListString();
+
+    }
+
+    public static class MysqlVersionHandler implements VersionHandler {
         private final Mysqls mysqls;
 
         public MysqlVersionHandler(Mysqls mysqls) {
@@ -93,6 +123,7 @@ public class MysqlVersion extends Version {
         }
 
 
+        @Override
         public Single<Version> findByNameAndProjectOrDefault(String version, String idProject) {
             return mysqls.select("SELECT document from VERSIONS WHERE NAME=? AND IDPROJECT = ?", new JsonArray().add(version).add(idProject))
                     .map(rs2 -> {
@@ -119,9 +150,54 @@ public class MysqlVersion extends Version {
                     .toSingle();
         }
 
+        @Override
         public Single<Integer> removeAll() {
             return mysqls.execute("DELETE FROM VERSIONS")
                     .map(UpdateResult::getUpdated);
+        }
+
+
+        @Override
+        public Observable<Version> findByProject(String idProject) {
+            return mysqls.select("SELECT document from VERSIONS WHERE IDPROJECT = ?", new JsonArray().add(idProject))
+                    .flatMap(rs2 -> {
+                        if (Objects.isNull(rs2) || rs2.getResults().isEmpty()) {
+                            return Observable.empty();
+                        }
+                        return Observable.from(rs2.getResults());
+
+                    })
+                    .map(arr -> arr.getString(0))
+                    .map(JsonObject::new)
+                    .map(this::toVersion);
+        }
+
+        @Override
+        public Observable<Version> findAll() {
+            return mysqls.select("SELECT  IDPROJECT, NAME, document from VERSIONS")
+                    .flatMap(rs -> {
+                        if (Objects.isNull(rs)) {
+                            return Observable.empty();
+                        }
+                        return Observable.from(rs.getResults());
+                    })
+                    .map(arr -> {
+                        String idProject = arr.getString(0);
+                        String version = arr.getString(1);
+                        String strDoc = arr.getString(2);
+                        JsonObject json = new JsonObject(strDoc);
+                        return new MysqlVersion(this, version, idProject)
+                                .setJson(json);
+                    });
+        }
+
+        private Version toVersion(JsonObject json) {
+            String idProject = json.getString(Schemas.Version.idproject.name());
+            String name = json.getString(Schemas.Version.name.name());
+            Long latestUpdate = json.getLong(Schemas.Version.latestUpdate.name(), 0L);
+            return new MysqlVersion(this, name, idProject)
+                    .setJson(json)
+                    .setLatestUpdate(latestUpdate);
         }
     }
 }

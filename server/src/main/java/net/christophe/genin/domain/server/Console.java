@@ -9,13 +9,13 @@ import io.vertx.core.logging.LoggerFactory;
 import java.util.Date;
 
 /**
- * Verticle for the push to all clients
+ * Verticle for the push message to  all console clients.
  */
 public class Console extends AbstractVerticle {
 
     private static final Logger logger = LoggerFactory.getLogger(Console.class);
     public static final String INFO = Console.class.getName() + ".info";
-    public static final String CONSOLE = "console.text";
+    static final String CONSOLE = "console.text";
 
 
     @Override

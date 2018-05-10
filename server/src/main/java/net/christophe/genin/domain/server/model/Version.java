@@ -2,10 +2,8 @@ package net.christophe.genin.domain.server.model;
 
 
 import io.vertx.core.json.JsonObject;
-import net.christophe.genin.domain.server.adapter.mysql.MysqlVersion.MysqlVersionHandler;
-import net.christophe.genin.domain.server.adapter.nitrite.NitriteVersion.NitriteVersionHandler;
-import net.christophe.genin.domain.server.db.mysql.Mysqls;
-import net.christophe.genin.domain.server.db.nitrite.Dbs;
+import net.christophe.genin.domain.server.adapter.Adapters;
+import rx.Observable;
 import rx.Single;
 
 import java.util.List;
@@ -18,22 +16,27 @@ public abstract class Version {
     private final String idProject;
 
     public static Single<Version> findByNameAndProjectOrDefault(String version, String idProject) {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlVersionHandler(Mysqls.Instance.get()).findByNameAndProjectOrDefault(version, idProject) :
-                new NitriteVersionHandler(Dbs.instance).findByNameAndProjectOrDefault(version, idProject);
+        return Adapters.get().versionHandler().findByNameAndProjectOrDefault(version, idProject);
     }
 
 
     public static Single<Integer> removeAll() {
-        return (Mysqls.Instance.get().active()) ?
-                new MysqlVersionHandler(Mysqls.Instance.get()).removeAll():
-                new NitriteVersionHandler(Dbs.instance).removeAll();
+        return Adapters.get().versionHandler().removeAll();
+    }
+
+
+    public static Observable<Version> findByProject(String idProject) {
+        return Adapters.get().versionHandler().findByProject(idProject);
+    }
+    public static Observable<Version> findAll() {
+        return Adapters.get().versionHandler().findAll();
     }
 
     protected Version(String name, String idProject) {
         this.name = name;
         this.idProject = idProject;
     }
+
 
 
     public JsonObject json() {
@@ -74,4 +77,13 @@ public abstract class Version {
 
     public abstract Single<Boolean> save();
 
+    public abstract boolean isSnapshot();
+
+    public abstract String changelog();
+
+    public abstract List<String> tables();
+
+    public abstract List<String> apis();
+
+    public abstract List<String> javaDeps();
 }

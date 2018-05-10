@@ -21,7 +21,7 @@ public class Http extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(Http.class);
 
     @Override
-    public void start() throws Exception {
+    public void start()  {
         final int port = config().getInteger("server-port", 8279);
 
         final HttpServer httpServer = vertx.createHttpServer(new HttpServerOptions().setCompressionSupported(true));

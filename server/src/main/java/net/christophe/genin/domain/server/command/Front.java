@@ -20,7 +20,7 @@ public class Front extends AbstractVerticle {
     enum State {
         FRONT(0), END(1);
 
-        private int state;
+        private final int state;
 
         State(int state) {
             this.state = state;

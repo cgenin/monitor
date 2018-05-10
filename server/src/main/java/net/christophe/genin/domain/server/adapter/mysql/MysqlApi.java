@@ -6,8 +6,11 @@ import io.vertx.ext.sql.UpdateResult;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.domain.server.model.Api;
+import net.christophe.genin.domain.server.model.handler.ApiHandler;
 import rx.Observable;
 import rx.Single;
+
+import java.util.Objects;
 
 public class MysqlApi extends Api {
     private final MysqlApiHandler handler;
@@ -95,7 +98,57 @@ public class MysqlApi extends Api {
         return handler.create(this);
     }
 
-    public static class MysqlApiHandler {
+    @Override
+    public String name() {
+        return document.getString(Schemas.Apis.name.name());
+    }
+
+    @Override
+    public String artifactId() {
+        return document.getString(Schemas.Apis.artifactId.name());
+    }
+
+    @Override
+    public String groupId() {
+        return document.getString(Schemas.Apis.groupId.name());
+
+    }
+
+    @Override
+    public String returns() {
+        return document.getString(Schemas.Apis.returns.name());
+
+    }
+
+    @Override
+    public String params() {
+        return document.getString(Schemas.Apis.params.name());
+
+    }
+
+    @Override
+    public String comment() {
+        return document.getString(Schemas.Apis.comment.name());
+
+    }
+
+    @Override
+    public String since() {
+        return document.getString(Schemas.Apis.since.name());
+
+    }
+
+    @Override
+    public String className() {
+        return document.getString(Schemas.Apis.className.name());
+    }
+
+    @Override
+    public long latestUpdate() {
+        return document.getLong(Schemas.Apis.latestUpdate.name());
+    }
+
+    public static class MysqlApiHandler implements ApiHandler {
 
         private final Mysqls mysqls;
 
@@ -104,12 +157,14 @@ public class MysqlApi extends Api {
         }
 
 
+        @Override
         public Observable<Integer> deleteByIdProject(String idProject) {
             return mysqls.execute("DELETE from APIS WHERE IDPROJECT=?", new JsonArray().add(idProject))
                     .map(UpdateResult::getUpdated)
                     .toObservable();
         }
 
+        @Override
         public Api newInstance(String method, String path, String idProject) {
             return new MysqlApi(this, method, path, idProject, new JsonObject());
         }
@@ -126,9 +181,30 @@ public class MysqlApi extends Api {
                     .map(updateResult -> updateResult.getUpdated() == 1);
         }
 
+        @Override
         public Single<Integer> removeAll() {
             return mysqls.execute("DELETE FROM APIS")
                     .map(UpdateResult::getUpdated);
+        }
+
+        @Override
+        public Observable<Api> findAll() {
+            return mysqls.select("SELECT IDPROJECT, METHOD, FULLURL,  document FROM APIS")
+                    .flatMap(rs -> {
+                        if (Objects.isNull(rs)) {
+                            return Observable.empty();
+                        }
+                        return Observable.from(rs.getResults());
+                    })
+                    .map(arr -> {
+                        String idProject = arr.getString(0);
+                        String method = arr.getString(1);
+                        String path = arr.getString(2);
+                        String strDocument = arr.getString(3);
+                        JsonObject document = new JsonObject(strDocument);
+
+                        return new MysqlApi(this, method, path, idProject, document);
+                    });
         }
     }
 }

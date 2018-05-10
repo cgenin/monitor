@@ -5,7 +5,7 @@ import rx.Single;
 
 public class AntiMonitorSchemas {
 
-    private static String[] CREATE_SCRIPTS = new String[]{
+    private static final String[] CREATE_SCRIPTS = new String[]{
             "CREATE TABLE IF NOT EXISTS EVENTS (\n" +
                     "  ID       BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
                     "  state    INTEGER,\n" +

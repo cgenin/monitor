@@ -71,13 +71,13 @@ public class Services {
      */
     private Router apis() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Endpoints.FIND));
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(EndpointQuery.FIND));
         return router;
     }
 
     private Router dependencies() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Dependencies.FIND));
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(DependencyQuery.FIND));
 
         router.get("/:resource")
                 .handler(rc -> {
@@ -86,7 +86,7 @@ public class Services {
                         rc.fail(400);
                         return;
                     }
-                    new Https.EbCaller(vertx, rc).arrAndReply(Dependencies.USED_BY, resource);
+                    new Https.EbCaller(vertx, rc).arrAndReply(DependencyQuery.USED_BY, resource);
                 });
         return router;
     }
@@ -99,12 +99,13 @@ public class Services {
     private Router configuration() {
         Router router = Router.router(vertx);
         router.get("/db/export.json").handler(rc ->
-                vertx.eventBus().send(ConfigurationQuery.EXPORTER, new JsonObject(), new DeliveryOptions(), (Handler<AsyncResult<Message<String>>>) (msg) -> {
+                vertx.eventBus().send(BackupQuery.DUMP, new JsonObject(), new DeliveryOptions(), (Handler<AsyncResult<Message<JsonObject>>>) (msg) -> {
                     if (msg.failed()) {
                         rc.response().setStatusCode(500).end();
                         return;
                     }
-                    new Https.Json(rc).send(msg.result().body());
+                    JsonObject body = msg.result().body();
+                    new Https.Json(rc).send(body.encodePrettily());
                 }));
         router.put("/db/import").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson();
@@ -126,14 +127,14 @@ public class Services {
     }
 
     /**
-     * Tables  endpoints.
+     * TableQuery  endpoints.
      *
      * @return the router
      */
     private Router tables() {
         Router router = Router.router(vertx);
-        router.get("/projects").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Tables.BY_PROJECT));
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Tables.LIST));
+        router.get("/projects").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(TableQuery.BY_PROJECT));
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(TableQuery.LIST));
         return router;
     }
 
@@ -149,7 +150,7 @@ public class Services {
                     .put("updateState", new Date().getTime());
             new Https.EbCaller(vertx, rc).created(RawCommand.SAVING, body);
         });
-        router.delete("/").handler(rc -> new Https.EbCaller(vertx, rc).created(Reset.RUN, new JsonObject()));
+        router.delete("/").handler(rc -> new Https.EbCaller(vertx, rc).created(ResetCommand.RUN, new JsonObject()));
         router.delete("/calculate/datas").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(RawCommand.CLEAR_CALCULATE_DATA, new JsonObject()));
 
         return router;
@@ -158,7 +159,7 @@ public class Services {
     private Router dump() {
         Router router = Router.router(vertx);
         router.get("/").handler(rc -> {
-            new Https.EbCaller(vertx, rc).jsonAndReply(Backup.DUMP);
+            new Https.EbCaller(vertx, rc).jsonAndReply(BackupQuery.DUMP);
         });
         return router;
     }
@@ -184,7 +185,7 @@ public class Services {
 
 
     /**
-     * Projects api
+     * ProjectQuery api
      *
      * @return router
      */
@@ -192,9 +193,9 @@ public class Services {
         Router router = Router.router(vertx);
         router.get("/:id").handler(rc -> {
             String id = rc.request().params().get("id");
-            new Https.EbCaller(vertx, rc).arrAndReply(Projects.GET, new JsonObject().put(Projects.ID, id));
+            new Https.EbCaller(vertx, rc).arrAndReply(ProjectQuery.GET, new JsonObject().put(ProjectQuery.ID, id));
         });
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Projects.LIST));
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(ProjectQuery.LIST));
         return router;
     }
 }

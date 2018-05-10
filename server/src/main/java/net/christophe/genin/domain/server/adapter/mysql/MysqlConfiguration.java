@@ -36,8 +36,8 @@ public class MysqlConfiguration extends Configuration {
                 .setMysqlUser(mysql.getString("user"))
                 .setMysqlPassword(mysql.getString("password"))
                 .setMysqlDB(mysql.getString("database"))
-                .setJavaFilters(Jsons.builder(json.getJsonArray("javaFilters")).toListString())
-                .setNpmFilters(Jsons.builder(json.getJsonArray("npmFilters")).toListString());
+                .setJavaFilters(Jsons.builder(json.getJsonArray("getJavaFilters")).toListString())
+                .setNpmFilters(Jsons.builder(json.getJsonArray("getNpmFilters")).toListString());
 
     }
 

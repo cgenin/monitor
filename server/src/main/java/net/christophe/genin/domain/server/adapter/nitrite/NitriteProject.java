@@ -3,8 +3,10 @@ package net.christophe.genin.domain.server.adapter.nitrite;
 import net.christophe.genin.domain.server.db.Schemas;
 import net.christophe.genin.domain.server.db.nitrite.Dbs;
 import net.christophe.genin.domain.server.model.Project;
+import net.christophe.genin.domain.server.model.handler.ProjectHandler;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
+import rx.Observable;
 import rx.Single;
 
 import java.util.List;
@@ -71,8 +73,7 @@ public class NitriteProject {
 
         @Override
         public List<String> javaDeps() {
-            return (List<String>) document.get(Schemas.Projects.javaDeps.name());
-
+            return new Dbs.Attributes(document).toList(Schemas.Projects.javaDeps.name());
         }
 
         @Override
@@ -102,9 +103,36 @@ public class NitriteProject {
         public String id() {
             return document.get(Schemas.Projects.id.name(), String.class);
         }
+
+        @Override
+        public String release() {
+            return document.get(Schemas.Projects.release.name(), String.class);
+        }
+
+        @Override
+        public String snapshot() {
+            return document.get(Schemas.Projects.snapshot.name(), String.class);
+        }
+
+        @Override
+        public List<String> tables() {
+            return new Dbs.Attributes(document).toList(Schemas.Projects.tables.name());
+
+        }
+
+        @Override
+        public List<String> apis() {
+            return new Dbs.Attributes(document).toList(Schemas.Projects.apis.name());
+
+        }
+
+        @Override
+        public String changelog() {
+            return document.get(Schemas.Projects.snapshot.name(), String.class);
+        }
     }
 
-    public static class NitriteProjectHandler {
+    public static class NitriteProjectHandler implements ProjectHandler {
 
         private final Dbs dbs;
 
@@ -122,6 +150,7 @@ public class NitriteProject {
         }
 
 
+        @Override
         public Single<Project> readByName(String artifactId) {
             return Single.just(Optional.ofNullable(getCollection()
                     .find(eq(Schemas.Projects.name.name(), artifactId))
@@ -142,9 +171,16 @@ public class NitriteProject {
             return Single.just(true);
         }
 
+        @Override
         public Single<Integer> removeAll() {
             return Dbs.removeAll(getCollection());
 
+        }
+
+        @Override
+        public Observable<Project> findAll() {
+            return Observable.from(getCollection().find().toList())
+                    .map(this::toProject);
         }
     }
 

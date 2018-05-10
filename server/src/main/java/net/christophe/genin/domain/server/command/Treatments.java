@@ -3,7 +3,10 @@ package net.christophe.genin.domain.server.command;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.domain.server.InitializeDb;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -14,6 +17,10 @@ public enum Treatments {
     URL(3),
     DEPENDENCIES(4),
     END(5);
+
+
+    private static final Logger logger = LoggerFactory.getLogger(Treatments.class);
+
 
     private final Integer state;
 
@@ -32,6 +39,15 @@ public enum Treatments {
         return noise + batch;
     }
 
+    public static Treatments parse(Integer state) {
+        return Arrays.stream(Treatments.values())
+                .filter(treatments -> treatments.getState().equals(state))
+                .findFirst()
+                .orElseGet(() -> {
+                    logger.warn("Treatments not found : " + state + " return end by default");
+                    return END;
+                });
+    }
 
 
     public static class Periodic {
