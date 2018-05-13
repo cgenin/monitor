@@ -43,8 +43,8 @@ export default new VueRouter({
       children: [
         {path: 'administration', component: load('configuration/Administration')},
         {path: 'status', component: load('configuration/Status')},
-        {path: 'import', component: load('configuration/Import')},
-        {path: 'export', component: load('configuration/Export')},
+        {path: 'import-export', component: load('configuration/ImportExport')},
+        //{path: 'export', component: load('configuration/Export')},
         {path: 'reset', component: load('configuration/Reset')},
         {path: '', redirect: 'status'},
       ]

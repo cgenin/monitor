@@ -16,12 +16,8 @@
                        to="/configuration/administration"
                        exact
                        slot="title"/>
-          <q-route-tab icon="cloud_upload" label="Import"
-                       to="/configuration/import"
-                       exact
-                       slot="title"/>
-          <q-route-tab icon="send" label="Export"
-                       to="/configuration/export"
+          <q-route-tab icon="cloud_upload" label="Import / Export"
+                       to="/configuration/import-export"
                        exact
                        slot="title"/>
           <q-route-tab icon="history" label="Reset"

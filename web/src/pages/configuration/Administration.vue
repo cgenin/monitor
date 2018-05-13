@@ -1,27 +1,39 @@
 <template>
   <div class="administration-page">
     <q-list>
-      <q-list-header>Configuration Mysql</q-list-header>
+      <q-list-header>Configuration Mysql&nbsp;-&nbsp;
+        <q-toggle v-model="activerMysql" @input="changeMysql" color="teal-8" label="Afficher"></q-toggle>
+      </q-list-header>
       <q-item class="column items-start">
-        <div>
-          <q-toggle v-model="activerMysql" @change="changeMysql" color="teal-8" label="Activer Mysql"></q-toggle>
-        </div>
         <div v-if="activerMysql">
           <q-input v-model="mysql.host" float-label="Host"></q-input>
           <q-input v-model="mysql.port" type="number" float-label="Port"></q-input>
           <q-input v-model="mysql.user" float-label="Utilisateur"></q-input>
           <q-input v-model="mysql.password" type="password" float-label="Mot de passe"></q-input>
           <q-input v-model="mysql.database" float-label="Base de données"></q-input>
+          <div class="row mysql-buttons align-center">
+            <div>
+              <q-toggle v-model="mysql.activate" color="teal-10" label="Activer"></q-toggle>
+            </div>
+            <div>
+              <q-btn color="blue-grey-5">Tester la connexion</q-btn>
+            </div>
+          </div>
         </div>
       </q-item>
-      <q-item-separator />
-      <q-list-header>Filtres sur les librairies Java</q-list-header>
+      <q-item-separator/>
+      <q-list-header>Filtres sur les librairies Java.
+        <span class="text-grey-6" style="font-size:.95em;">
+          (Ce filtre permet de spécifier uniquement les librairies interne à afficher dans la vue "projet".)
+        </span>
+      </q-list-header>
       <q-item class="column items-stretch">
+
         <div>
           <q-chips-input color="green" v-model="javaFilters" placeholder="Ajouter un nouveau filtre"></q-chips-input>
         </div>
       </q-item>
-      <q-item-separator />
+      <q-item-separator/>
       <q-list-header>Filtres sur les dépendences Npm</q-list-header>
       <q-item class="column items-stretch">
         <div>
@@ -55,9 +67,9 @@
       }
     },
     methods: {
-      changeMysql() {
-        if (this.activerMysql) {
-          this.mysql = {host: 'localhost', port: 3306, database: 'antimonitor'};
+      changeMysql(newVal) {
+        if (newVal) {
+          this.mysql = {host: 'localhost', port: 3306, database: 'antimonitor', activate: false};
         }
         else {
           this.mysql = {};
@@ -103,5 +115,14 @@
   .administration-page .buttons .button {
     margin-left: 1em;
     margin-right: 1em;
+  }
+
+  .administration-page .row.mysql-buttons {
+    margin-top: 1.5em;
+  }
+
+  .administration-page .row.mysql-buttons div {
+    margin-left: .5em;
+    margin-right: .5em;
   }
 </style>
