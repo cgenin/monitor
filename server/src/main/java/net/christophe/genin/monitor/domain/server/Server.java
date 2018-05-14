@@ -6,9 +6,8 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
 import net.christophe.genin.monitor.domain.server.command.*;
-import net.christophe.genin.monitor.domain.server.db.Nitrite2Mysql;
-import net.christophe.genin.monitor.domain.server.db.migration.MigrateConfiguration;
-import net.christophe.genin.monitor.domain.server.db.migration.MigrateInQueue;
+import net.christophe.genin.monitor.domain.server.migration.Nitrite2Mysql;
+import net.christophe.genin.monitor.domain.server.migration.MigrateInQueue;
 import net.christophe.genin.monitor.domain.server.query.*;
 
 import java.util.ArrayList;
@@ -46,7 +45,6 @@ public class Server extends AbstractVerticle {
         vertx.eventBus().consumer(STOP, stopping.stopping(0));
         vertx.eventBus().consumer(FAIL, stopping.stopping(1));
 
-        vertx.deployVerticle(new MigrateConfiguration(), stopping.register());
         vertx.deployVerticle(new MigrateInQueue(), new DeploymentOptions().setConfig(config()).setWorker(true), stopping.register());
         vertx.deployVerticle(new Nitrite2Mysql(), new DeploymentOptions().setConfig(config()), stopping.register());
     }
@@ -75,6 +73,7 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new DependenciesCommand(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ImportExport());
         vertx.deployVerticle(new ConfigurationCommand());
+        vertx.deployVerticle(new NitriteCommand());
         vertx.deployVerticle(new ResetCommand(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ApisCommand(), new DeploymentOptions().setWorker(true));
     }

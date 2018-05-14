@@ -18,8 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Instance for managing mysql's connection and current query.
+ */
 public interface Mysqls {
-
+    /**
+     * Test an connection.
+     *
+     * @param vertx         the vertx instance.
+     * @param configuration the configuration object.
+     * @return true if OK.
+     */
     static Single<Boolean> test(Vertx vertx, JsonObject configuration) {
         return Single.fromCallable(() -> MySQLClient.createNonShared(vertx, configuration))
                 .subscribeOn(Schedulers.io())
@@ -60,10 +69,18 @@ public interface Mysqls {
         return Observable.<List<Integer>>empty().toSingle();
     }
 
-
+    /**
+     * Singleton which store the current instance.
+     */
     final class Instance {
         private static Mysqls instance = new NullMysql();
 
+        /**
+         * Update the singleton
+         * @param vertx The vertx instance.
+         * @param configuration the current configuration.
+         * @return the updated instance
+         */
         public synchronized static Mysqls set(Vertx vertx, JsonObject configuration) {
 
             instance = Optional.ofNullable(configuration)
@@ -82,9 +99,15 @@ public interface Mysqls {
         }
     }
 
+    /**
+     * An not open connection.
+     */
     class NullMysql implements Mysqls {
     }
 
+    /**
+     * An implementation for the
+     */
     class VertxMysql implements Mysqls {
         private static final Logger logger = LoggerFactory.getLogger(VertxMysql.class);
 

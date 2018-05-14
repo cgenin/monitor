@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Util function for project settings.
+ * Util function for Raw.
  */
-public final class Projects {
+public final class Raws {
 
     /**
      * Test if the version is an snapshot or not.
+     *
      * @param version the version tag.
      * @return true if it's an snapshot.
      */
@@ -46,6 +47,12 @@ public final class Projects {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Extract from Json Object the name of the tables.
+     *
+     * @param json the Json
+     * @return the list of table's name.
+     */
     public static List<String> extractTables(JsonObject json) {
         return Jsons.builder(json.getJsonArray(Schemas.Raw.Tables.collection())).toStream()
                 .map(js -> js.getString(Schemas.Raw.Tables.table.name(), ""))

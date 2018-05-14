@@ -73,7 +73,10 @@ public class AntiMonitorSchemas {
     };
 
 
-
+    /**
+     * Methods for creating an schema.
+     * @return The results.
+     */
     public static Single<String> create() {
         return Mysqls.Instance.get()
                 .batch(CREATE_SCRIPTS)

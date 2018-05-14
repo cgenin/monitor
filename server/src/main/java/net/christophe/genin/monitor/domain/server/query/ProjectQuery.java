@@ -23,7 +23,6 @@ public class ProjectQuery extends AbstractVerticle {
     public void start() {
         vertx.eventBus().consumer(LIST,
                 msg -> {
-                    //Queries.get().projects()
                     Project.findAll()
                             .map(project -> {
                                 final JsonObject obj = new JsonObject();
@@ -51,7 +50,6 @@ public class ProjectQuery extends AbstractVerticle {
                 });
         vertx.eventBus().<JsonObject>consumer(GET, msg -> {
             String id = msg.body().getString(ID, "");
-            //Queries.get().versions(id)
             Version.findByProject(id)
                     .map(version -> new JsonObject()
                             .put(Schemas.Version.id.name(), version.id())

@@ -13,7 +13,6 @@ export function success(message = `Mise à jour effectuée avec succés. :)`) {
 
 export function error(err, message = defaultMessageError) {
   console.log(err);
-  console.log(Notify)
   Notify.create({
     type: 'negative',
     message,

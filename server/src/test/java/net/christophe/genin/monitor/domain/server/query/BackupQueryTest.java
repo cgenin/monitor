@@ -12,8 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
-
 @RunWith(VertxUnitRunner.class)
 public class BackupQueryTest {
 
@@ -22,7 +20,7 @@ public class BackupQueryTest {
 
 
     @Before
-    public void before(TestContext context) throws IOException {
+    public void before(TestContext context) {
         JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", "target/testBackupQuery.db"));
         DeploymentOptions options = new DeploymentOptions()
                 .setConfig(config);

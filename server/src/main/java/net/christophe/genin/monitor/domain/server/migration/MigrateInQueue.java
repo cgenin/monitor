@@ -1,4 +1,4 @@
-package net.christophe.genin.monitor.domain.server.db.migration;
+package net.christophe.genin.monitor.domain.server.migration;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;

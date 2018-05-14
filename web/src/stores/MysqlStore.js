@@ -27,6 +27,16 @@ class MysqlStore {
     })
       .then(res => res.json());
   }
+
+  test(mysql) {
+    const body = JSON.stringify(mysql);
+
+    return fetch('/api/configuration/db/mysql/connect', {
+      method: 'POST',
+      body
+    })
+      .then(res => res.json());
+  }
 }
 
 export default new MysqlStore();

@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.monitor.domain.server.Console;
-import net.christophe.genin.monitor.domain.server.command.util.Projects;
+import net.christophe.genin.monitor.domain.server.command.util.Raws;
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.model.Project;
 import net.christophe.genin.monitor.domain.server.model.Raw;
@@ -26,9 +26,9 @@ public class VersionCommand extends AbstractVerticle {
 
     private synchronized boolean periodic() {
         Raw.findByStateFirst(Treatments.VERSION)
-                .flatMap(doc -> {
-                    final JsonObject json = doc.json();
-                    final String artifactId = doc.artifactId();
+                .flatMap(raw -> {
+                    final JsonObject json = raw.json();
+                    final String artifactId = raw.artifactId();
                     final String version = json.getString(Schemas.Raw.version.name());
                     return Project.findByName(artifactId)
                             .map(Project::id)
@@ -38,10 +38,10 @@ public class VersionCommand extends AbstractVerticle {
                                 long lDate = currentDoc.latestUpdate();
                                 long update = json.getLong(Schemas.Raw.update.name());
                                 if (lDate < update) {
-                                    boolean snapshot = Projects.isSnapshot(version);
-                                    List<String> javaDeps = Projects.extractJavaDeps(json);
-                                    List<String> tables = Projects.extractTables(json);
-                                    List<String> urls = Projects.extractUrls(json);
+                                    boolean snapshot = Raws.isSnapshot(version);
+                                    List<String> javaDeps = Raws.extractJavaDeps(json);
+                                    List<String> tables = Raws.extractTables(json);
+                                    List<String> urls = Raws.extractUrls(json);
                                     Optional.ofNullable(json.getString(Schemas.Projects.changelog.name()))
                                             .ifPresent(currentDoc::setChangeLog);
                                     return Observable.just(currentDoc
@@ -58,7 +58,7 @@ public class VersionCommand extends AbstractVerticle {
                                     "' for artifact '" + artifactId + "' updated : " +
                                     updateResult)
                             .doOnCompleted(
-                                    () -> doc.updateState(Treatments.URL)
+                                    () -> raw.updateState(Treatments.URL)
                                             .subscribe(bool -> logger.info("Version (" + version + ") for project " + artifactId + " wad updated to next :" + bool))
                             );
 

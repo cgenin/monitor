@@ -2,7 +2,7 @@ package net.christophe.genin.monitor.domain.server.adapter.nitrite;
 
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
-import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteHandler;
+import net.christophe.genin.monitor.domain.server.db.nitrite.NitritePort;
 import net.christophe.genin.monitor.domain.server.model.Api;
 import net.christophe.genin.monitor.domain.server.model.port.ApiPort;
 import org.dizitart.no2.Document;
@@ -20,7 +20,7 @@ public class NitriteApi extends Api {
     private final Document document;
     private final NitriteApiPort handler;
 
-    public static class NitriteApiPort extends NitriteHandler implements ApiPort {
+    public static class NitriteApiPort extends NitritePort implements ApiPort {
 
 
         public NitriteApiPort(NitriteDbs nitriteDbs) {

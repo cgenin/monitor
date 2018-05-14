@@ -5,7 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.monitor.domain.server.Console;
-import net.christophe.genin.monitor.domain.server.command.util.Projects;
+import net.christophe.genin.monitor.domain.server.command.util.Raws;
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.model.Configuration;
 import net.christophe.genin.monitor.domain.server.model.Project;
@@ -39,7 +39,7 @@ public class ProjectCommand extends AbstractVerticle {
                                             .flatMap(project -> {
                                                 if (project.latestUpdate() < update) {
                                                     final List<String> allDeps =
-                                                            Projects.extractJavaDeps(json);
+                                                            Raws.extractJavaDeps(json);
 
                                                     List<String> javaFilters = conf.javaFilters();
                                                     logger.debug("javaFilters:" + javaFilters);
@@ -88,17 +88,17 @@ public class ProjectCommand extends AbstractVerticle {
     private Project updateProjectWith(Project project, String artifactId, JsonObject json, long update, List<String> javaDeps) {
         project.setName(artifactId);
         final String version = json.getString(Schemas.Raw.version.name());
-        if (Projects.isSnapshot(version)) {
+        if (Raws.isSnapshot(version)) {
             project.setSnapshot(version);
         } else {
             project.setRelease(version);
         }
-        final List<String> tables = Projects.extractTables(json);
+        final List<String> tables = Raws.extractTables(json);
         project.setTables(tables);
         project.setJavaDeps(javaDeps);
         Optional.ofNullable(json.getString(Schemas.Projects.changelog.name()))
                 .ifPresent(project::setChangeLog);
-        final List<String> apis = Projects.extractUrls(json);
+        final List<String> apis = Raws.extractUrls(json);
         project.setApis(apis);
         logger.info("New data for " + artifactId + ". Document must be updated.");
         project.setLatestUpdate(update);

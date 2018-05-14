@@ -4,7 +4,10 @@ import net.christophe.genin.monitor.domain.server.adapter.Adapters;
 import rx.Observable;
 import rx.Single;
 
-
+/**
+ * Class Model which represent an Service Rest.
+ *
+ */
 public abstract class Api {
 
     protected final String method;

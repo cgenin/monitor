@@ -8,7 +8,7 @@ import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
 import net.christophe.genin.monitor.domain.server.model.port.*;
 
 /**
- * Select And create the current handler for the good implementation.
+ * Select And create the current Port for the current implementation.
  */
 public class Adapters extends AbstractVerticle {
 
@@ -68,7 +68,7 @@ public class Adapters extends AbstractVerticle {
             case MYSQL:
                 return new MysqlVersion.MysqlVersionHandler(Mysqls.Instance.get());
             case NITRITE:
-                return new NitriteVersion.NitriteVersionHandler(NitriteDbs.instance);
+                return new NitriteVersion.NitriteVersionPort(NitriteDbs.instance);
             default:
                 throw new IllegalStateException("No type found " + type);
         }

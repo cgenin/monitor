@@ -158,7 +158,9 @@ public class Database extends AbstractVerticle {
 
         vertx.eventBus().<JsonObject>consumer(TEST_MYSQL_CONNECTION, msg -> {
             JsonObject configuration = msg.body();
-            Mysqls.test(vertx, configuration)
+            Single.just(configuration)
+                    .map(c -> c.put("username", c.getString("user")))
+                    .flatMap(c -> Mysqls.test(vertx, c))
                     .subscribe(
                             bool -> {
                                 if (bool) {
@@ -171,8 +173,7 @@ public class Database extends AbstractVerticle {
                                 logger.error("Error in testing ", err);
 
                                 StringWriter sw = new StringWriter();
-                                BufferedWriter bw = new BufferedWriter(sw);
-                                err.printStackTrace(new PrintWriter(bw));
+                                err.printStackTrace(new PrintWriter(sw, true));
                                 String stacktrace = sw.getBuffer().toString();
                                 msg.reply(new JsonObject()
                                         .put("state", "fail")

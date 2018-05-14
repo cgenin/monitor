@@ -2,7 +2,7 @@ package net.christophe.genin.monitor.domain.server.adapter.nitrite;
 
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
-import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteHandler;
+import net.christophe.genin.monitor.domain.server.db.nitrite.NitritePort;
 import net.christophe.genin.monitor.domain.server.model.Dependency;
 import net.christophe.genin.monitor.domain.server.model.port.DependencyPort;
 import org.dizitart.no2.Document;
@@ -19,7 +19,7 @@ public class NitriteDependency extends Dependency {
         super(resource, usedBy);
     }
 
-    public static class NitriteDependencyPort extends NitriteHandler implements DependencyPort {
+    public static class NitriteDependencyPort extends NitritePort implements DependencyPort {
 
 
         public NitriteDependencyPort(NitriteDbs nitriteDbs) {

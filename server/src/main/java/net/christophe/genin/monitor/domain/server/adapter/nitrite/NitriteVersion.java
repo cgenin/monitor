@@ -18,10 +18,10 @@ import static org.dizitart.no2.filters.Filters.eq;
 public class NitriteVersion extends Version {
 
     private final Document document;
-    private final NitriteVersionHandler handler;
+    private final NitriteVersionPort handler;
 
 
-    private NitriteVersion(NitriteVersionHandler handler, String name, String idProject, Document document) {
+    private NitriteVersion(NitriteVersionPort handler, String name, String idProject, Document document) {
         super(name, idProject);
         this.handler = handler;
         this.document = document;
@@ -110,10 +110,10 @@ public class NitriteVersion extends Version {
         return (List<String>) document.get(Schemas.Version.javaDeps.name());
     }
 
-    public static class NitriteVersionHandler implements VersionPort {
+    public static class NitriteVersionPort implements VersionPort {
         private final NitriteDbs nitriteDbs;
 
-        public NitriteVersionHandler(NitriteDbs nitriteDbs) {
+        public NitriteVersionPort(NitriteDbs nitriteDbs) {
             this.nitriteDbs = nitriteDbs;
         }
 

@@ -2,11 +2,11 @@
   <div class="import-export-page">
     <q-list>
       <q-list-header>Import</q-list-header>
-      <q-item class="">
+      <q-item>
         <import></import>
       </q-item>
       <q-list-header>Export</q-list-header>
-      <q-item class="">
+      <q-item>
         <export></export>
       </q-item>
     </q-list>

@@ -116,7 +116,10 @@ public class Services {
         router.put("/db/mysql/schemas").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_CREATE_SCHEMA));
         router.post("/db/mysql/export/events").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ImportExport.EXPORT));
         router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_ON_OFF));
-        router.post("/db/mysql/connect").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.TEST_MYSQL_CONNECTION));
+        router.post("/db/mysql/connect").handler(rc -> {
+            final JsonObject body = rc.getBodyAsJson();
+            new Https.EbCaller(vertx, rc).jsonAndReply(Database.TEST_MYSQL_CONNECTION, body);
+        });
 
         router.get("/").handler(
                 rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ConfigurationQuery.GET)
@@ -153,7 +156,7 @@ public class Services {
             new Https.EbCaller(vertx, rc).created(RawCommand.SAVING, body);
         });
         router.delete("/").handler(rc -> new Https.EbCaller(vertx, rc).created(ResetCommand.RUN, new JsonObject()));
-        router.delete("/calculate/datas").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(RawCommand.CLEAR_CALCULATE_DATA, new JsonObject()));
+        router.delete("/calculate/datas").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(NitriteCommand.CLEAR_CALCULATE_DATA, new JsonObject()));
 
         return router;
     }

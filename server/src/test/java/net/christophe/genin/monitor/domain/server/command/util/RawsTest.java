@@ -13,18 +13,18 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ProjectsTest {
+public class RawsTest {
     private JsonObject data;
 
     @Test
     public void should_test_is_Snaphot_or_not() {
-        assertThat(Projects.isSnapshot("1.0.0-SNAPSHOT")).isTrue();
-        assertThat(Projects.isSnapshot("1.0.0")).isFalse();
+        assertThat(Raws.isSnapshot("1.0.0-SNAPSHOT")).isTrue();
+        assertThat(Raws.isSnapshot("1.0.0")).isFalse();
     }
 
     @Before
     public void before() throws Exception {
-        URI uri = ProjectsTest.class.getResource("/datas/projects-1.json").toURI();
+        URI uri = RawsTest.class.getResource("/datas/projects-1.json").toURI();
         Path path = Paths.get(uri);
         String str = Files.readAllLines(path).stream().collect(Collectors.joining("\n"));
         data = new JsonObject(str).getJsonObject("json");
@@ -32,7 +32,7 @@ public class ProjectsTest {
 
     @Test
     public void should_extract_java_deps() {
-        List<String> strings = Projects.extractJavaDeps(data);
+        List<String> strings = Raws.extractJavaDeps(data);
         assertThat(strings)
                 .isNotEmpty()
                 .hasSize(17)
@@ -45,7 +45,7 @@ public class ProjectsTest {
 
     @Test
     public void should_extract_urls() {
-        List<String> strings = Projects.extractUrls(data);
+        List<String> strings = Raws.extractUrls(data);
         assertThat(strings)
                 .isNotEmpty()
                 .hasSize(2)
@@ -55,7 +55,7 @@ public class ProjectsTest {
 
     @Test
     public void should_tables() {
-        List<String> strings = Projects.extractTables(data);
+        List<String> strings = Raws.extractTables(data);
         assertThat(strings)
                 .isNotEmpty()
                 .hasSize(1)
