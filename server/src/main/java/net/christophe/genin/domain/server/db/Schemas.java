@@ -29,7 +29,8 @@ public final class Schemas {
                             .parallelStream().collect(Jsons.Collectors.toJsonArray()))
                     .put("npmFilters", configurationDto.getNpmFilters()
                             .parallelStream().collect(Jsons.Collectors.toJsonArray()))
-                    .put("mysql", mysql);
+                    .put("mysql", mysql)
+                    .put("moniThorUrl", configurationDto.getMoniThorUrl());
         }
 
         @SuppressWarnings("unchecked")
@@ -44,6 +45,7 @@ public final class Schemas {
             configurationDto.setMysqlDB(mysql.getString("database"));
             configurationDto.setJavaFilters(Jsons.builder(obj.getJsonArray("javaFilters")).toListString());
             configurationDto.setNpmFilters(Jsons.builder(obj.getJsonArray("npmFilters")).toListString());
+            configurationDto.setMoniThorUrl(obj.getString("moniThorUrl"));
             return configurationDto;
         }
     }
