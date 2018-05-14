@@ -1,7 +1,7 @@
 <template>
-  <div class="tables-page">
+  <div class="tables-page container">
     <header-app :bc-datas="[{icon:'border_all', label:'Tables'}]"></header-app>
-    <div class="tabs-container container bg-light">
+    <div class="tabs-container bg-light">
       <q-tabs color="light">
         <q-route-tab icon="view_list" label="Liste des tables"
                      to="/tables/list" color="primary"
@@ -30,7 +30,6 @@
   @import '~variables'
   .tables-page
     .tabs-container
-      margin: 0 30px
       border-left: 1px solid $border
       border-top: 1px solid $border
       border-right: 1px solid $border

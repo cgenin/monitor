@@ -1,6 +1,6 @@
 <template>
   <div class="page-list">
-    <q-card class="container">
+    <q-card>
       <q-card-main>
         <transition
           appear

@@ -1,8 +1,8 @@
 <template>
-  <div class="apis-page page-list">
+  <div class="apis-page page-list container">
     <header-app :bc-datas="[{icon:'explore', label:'Liste des Apis'}]"/>
 
-    <q-card class="container">
+    <q-card>
       <q-card-title>
         <h3>Liste des apis</h3>
       </q-card-title>
