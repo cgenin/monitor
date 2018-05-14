@@ -1,38 +1,17 @@
 <template>
   <div class="welcome-container logo-container">
 
-    <div class="panel-information column items-stretch text-white">
-      <div class="row col">
-        <div class="row justify-center items-center  col">
-          <h2>
-            <q-icon name="view_list"></q-icon>
-          </h2>
-          <q-item to="/projects-list">
-            <h2 class="link">
-               Projets : {{nbProjects}}
-            </h2>
-          </q-item>
-        </div>
-        <div class="row justify-center items-center col">
-          <h2>
-            <q-icon name="border_all" ></q-icon>
-          </h2>
-          <q-item to="/tables/list">
-            <h2 class="link">
-               Tables : {{nbTables}}
-            </h2>
-          </q-item>
-        </div>
-      </div>
-      <div class="col row justify-center items-center ">
-        <h2>
-          <q-icon name="explore"/>
-        </h2>
-        <q-item to="/apis-list">
-          <h2 class="link">
-            &nbsp;Apis : {{nbApis}}
-          </h2>
-        </q-item>
+    <div class="panel-information column items-center justify-around">
+      <div class="column justify-between items-stretch" style="width: 500px;">
+          <q-btn outline color="white" label="Projets" size="lg" icon="view_list" @click="$router.push('/projects-list')">
+            <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbProjects}}</q-chip>
+          </q-btn>
+          <q-btn outline color="white" label="Tables" size="lg" icon="border_all" @click="$router.push('/tables/list')">
+            <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbTables}}</q-chip>
+          </q-btn>
+          <q-btn outline color="white" label="Apis" size="lg" icon="explore" @click="$router.push('/apis-list')">
+            <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbApis}}</q-chip>
+          </q-btn>
       </div>
     </div>
   </div>
@@ -101,20 +80,12 @@
     justify-content center
     width 100%
 
-  .pie-container
-    display flex
-    justify-content center
-    > div
-      width 40%
-
   .panel-information
     min-height 75vh
     min-width 75vw
     background-color: rgba(6, 6, 6, 0.67);
-    h2.link
-      text-decoration underline
-      cursor pointer
-      text-align center
+    .q-btn
+      margin 15px 0
 
 
 </style>

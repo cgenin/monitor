@@ -1,13 +1,13 @@
 <template>
-  <div class="tables-page">
+  <div class="tables-page container">
     <header-app :bc-datas="[{icon:'border_all', label:'Tables'}]"></header-app>
-    <div class="tabs-container container bg-light">
+    <div class="tabs-container bg-light">
       <q-tabs color="light">
-        <q-route-tab icon="fa-list" label="Liste des tables"
+        <q-route-tab icon="view_list" label="Liste des tables"
                      to="/tables/list" color="primary"
                      slot="title">
         </q-route-tab>
-        <q-route-tab icon="fa-line-chart" label="Graphique"
+        <q-route-tab icon="show_chart" label="Graphique"
                      to="/tables/chart" color="primary"
                      slot="title">
         </q-route-tab>
@@ -27,13 +27,15 @@
   }
 </script>
 <style lang="stylus">
-  //@import "../css/quasar.variables.styl"
+  @import '~variables'
   .tables-page
     .tabs-container
-      margin: 0 30px
-      padding: 5px
-      border: 1px solid $border
+      border-left: 1px solid $border
+      border-top: 1px solid $border
+      border-right: 1px solid $border
     .q-tabs-normal
+      .q-tabs-head:not(.scrollable)
+        padding 0
       .q-tabs-bar
         color: $primary
 </style>

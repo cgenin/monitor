@@ -20,6 +20,7 @@ public class ConfigurationDto implements Serializable {
     private String mysqlUser;
     private String mysqlPassword;
     private String mysqlDB;
+    private String moniThorUrl;
 
 
     private List<String> javaFilters = new ArrayList<>();
@@ -87,5 +88,13 @@ public class ConfigurationDto implements Serializable {
 
     public void setMysqlDB(String mysqlDB) {
         this.mysqlDB = mysqlDB;
+    }
+
+    public String getMoniThorUrl() {
+        return moniThorUrl;
+    }
+
+    public void setMoniThorUrl(String moniThorUrl) {
+        this.moniThorUrl = moniThorUrl;
     }
 }

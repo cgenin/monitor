@@ -105,7 +105,8 @@ public class InitializeDb extends AbstractVerticle {
                             .put("port", configurationDto.getMysqlPort())
                             .put("username", configurationDto.getMysqlUser())
                             .put("password", configurationDto.getMysqlPassword())
-                            .put("database", configurationDto.getMysqlDB());
+                            .put("database", configurationDto.getMysqlDB())
+                            .put("moniThorUrl", configurationDto.getMoniThorUrl());
                     return Mysqls.Instance.set(vertx, config);
                 });
     }
