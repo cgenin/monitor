@@ -4,7 +4,6 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.monitor.domain.server.Console;
 import net.christophe.genin.monitor.domain.server.command.util.Raws;
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.model.Configuration;
@@ -26,20 +25,11 @@ public class ProjectCommand extends AbstractVerticle {
         new Treatments.Periodic(this, logger).run(this::periodic);
     }
 
-    private synchronized boolean periodic() {
+    private synchronized Observable<String> periodic() {
 
-        Raw.findByStateFirst(Treatments.PROJECTS)
-                .flatMap(run())
-                .subscribe(
-                        str -> {
-                            logger.info(str);
-                            vertx.eventBus().send(Console.INFO, str);
-                        },
-                        err -> {
-                            logger.error("Error in projects batch", err);
-                        });
+        return Raw.findByStateFirst(Treatments.PROJECTS)
+                .flatMap(run());
 
-        return true;
     }
 
     Func1<Raw, Observable<String>> run() {

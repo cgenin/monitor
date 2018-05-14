@@ -4,11 +4,7 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.monitor.domain.server.db.Schemas;
-import net.christophe.genin.monitor.domain.server.model.Project;
 import net.christophe.genin.monitor.domain.server.model.Raw;
-import rx.Observable;
-import rx.Single;
 
 public class RawCommand extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(RawCommand.class);

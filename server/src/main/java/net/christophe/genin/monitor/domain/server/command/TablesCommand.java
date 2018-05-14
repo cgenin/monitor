@@ -5,7 +5,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.domain.monitor.addon.json.Jsons;
-import net.christophe.genin.monitor.domain.server.Console;
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import net.christophe.genin.monitor.domain.server.model.Table;
@@ -26,21 +25,9 @@ public class TablesCommand extends AbstractVerticle {
         new Treatments.Periodic(this, logger).run(this::periodic);
     }
 
-
-    private synchronized boolean periodic() {
-
-        Raw.findByStateFirst(Treatments.TABLES)
-                .flatMap(run()).subscribe(
-                str -> {
-                    logger.info(str);
-                    vertx.eventBus().send(Console.INFO, str);
-                },
-                err -> {
-                    logger.error("error in tables for ", err);
-                }
-        );
-
-        return true;
+    private synchronized Observable<String> periodic() {
+       return Raw.findByStateFirst(Treatments.TABLES)
+                .flatMap(run());
     }
 
     Func1<Raw, Observable<? extends String>> run() {

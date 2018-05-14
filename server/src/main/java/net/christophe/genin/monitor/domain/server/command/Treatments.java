@@ -4,11 +4,17 @@ import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.monitor.domain.server.Console;
+import rx.Observable;
 
 import java.util.Arrays;
 import java.util.Random;
 import java.util.function.Supplier;
 
+/**
+ * State of all tasks for all differents screens.
+ * <p>Contains also methods for launching periodic treatment</p>
+ */
 public enum Treatments {
     PROJECTS(0),
     TABLES(1),
@@ -34,7 +40,9 @@ public enum Treatments {
     public static long batchTime(JsonObject config) {
         final Long batch = config.getLong("batch", 1_000L);
         Random r = new Random();
-        final Long noise = r.longs(1_000L, 5_001L).findFirst().getAsLong();
+        final Long noise = r.longs(1_000L, 4_001L)
+                .findFirst()
+                .getAsLong();
         return noise + batch;
     }
 
@@ -48,7 +56,9 @@ public enum Treatments {
                 });
     }
 
-
+    /**
+     * The class for launching periodic treatments.
+     */
     public static class Periodic {
 
         private final AbstractVerticle verticle;
@@ -59,14 +69,21 @@ public enum Treatments {
             this.logger = logger;
         }
 
-        public void run(Supplier<Boolean> supplier) {
+        public void run(Supplier<Observable<String>> supplier) {
             final long batch = Treatments.batchTime(verticle.config());
             logger.info("batch time : " + batch);
             verticle.getVertx().setPeriodic(batch, (id) -> {
                 logger.debug("Début du traitement");
-                final Boolean state = supplier.get();
-                logger.debug("state : " + state);
-                logger.debug("Fin du traitement");
+                supplier.get().subscribe(
+                        str -> {
+                            logger.info(str);
+                            verticle.getVertx().eventBus().send(Console.INFO, str);
+                        },
+                        err -> {
+                            logger.error("error in tables for ", err);
+                        },
+                        () -> logger.debug("Fin du traitement")
+                );
             });
             logger.info("started.");
         }

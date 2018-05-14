@@ -1,10 +1,8 @@
 package net.christophe.genin.monitor.domain.server.command;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import net.christophe.genin.monitor.domain.server.Console;
 import net.christophe.genin.monitor.domain.server.model.Configuration;
 import net.christophe.genin.monitor.domain.server.model.Dependency;
 import net.christophe.genin.monitor.domain.server.model.Project;
@@ -24,9 +22,9 @@ public class DependenciesCommand extends AbstractVerticle {
     }
 
 
-    private synchronized boolean periodic() {
+    private synchronized Observable<String>  periodic() {
 
-        Raw.findByStateFirst(Treatments.DEPENDENCIES)
+      return   Raw.findByStateFirst(Treatments.DEPENDENCIES)
                 .flatMap(doc -> {
                     final String artifactId = doc.artifactId();
                     String usedBy = new DependenciesSanitizer(artifactId).run();
@@ -54,16 +52,8 @@ public class DependenciesCommand extends AbstractVerticle {
                                             )
                             );
                 })
-                .subscribe(
-                        str -> {
-                            logger.info(str);
-                            vertx.eventBus().send(Console.INFO, str);
-                        },
-                        err -> {
-                            logger.error("error in tables for ", err);
-                        });
+               ;
 
-        return true;
     }
 
     public static class DependenciesSanitizer {

@@ -42,8 +42,8 @@ public class ApisCommand extends AbstractVerticle {
         logger.info("started");
     }
 
-    private synchronized boolean periodic() {
-        Raw.findByStateFirst(Treatments.URL)
+    private synchronized Observable<String> periodic() {
+        return Raw.findByStateFirst(Treatments.URL)
                 .flatMap(doc -> {
                     final JsonObject json = doc.json();
                     final JsonObject apis = json.getJsonObject(Schemas.Raw.apis.name(), new JsonObject());
@@ -86,16 +86,9 @@ public class ApisCommand extends AbstractVerticle {
                                         });
                             })
                             .doOnCompleted(() -> doc.updateState(Treatments.DEPENDENCIES)
-                                .subscribe(bool -> logger.info("Api for "+artifactId+" was updated to next :"+bool)));
+                                    .subscribe(bool -> logger.info("Api for " + artifactId + " was updated to next :" + bool)));
 
-                }).subscribe(str -> {
-                    logger.info(str);
-                    vertx.eventBus().send(Console.INFO, str);
-                },
-                err -> {
-                    logger.error("Error in projects batch", err);
                 });
-        return true;
     }
 
 
