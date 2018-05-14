@@ -40,7 +40,7 @@
               <q-item-side icon="home"/>
               <q-item-main label="Welcome" sublabel="Page de résumé"/>
             </q-item>
-            <q-collapsible icon="fa-cogs" label="Micro services" opened>
+            <q-collapsible icon="fa-cogs" label="Micro services" sublabel="Informations concernant les services">
               <q-item to="/projects-list">
                 <q-item-side icon="view_list"/>
                 <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>
@@ -58,6 +58,14 @@
                 <q-item-main label="Dépendances" sublabel="Dépendance entre les Micro Services"/>
               </q-item>
             </q-collapsible>
+            <q-item to="/npm-list" v-if="moniThorUrl">
+              <q-item-side icon="view_list"/>
+              <q-item-main label="NPM" sublabel="Informations concernant les projets NPM"/>
+            </q-item>
+            <q-item to="/monitoring" v-if="moniThorUrl">
+              <q-item-side icon="graphic_eq"/>
+              <q-item-main label="Monitoring" sublabel="Informations concernant les serveurs"/>
+            </q-item>
             <q-item to="/configuration">
               <q-item-side icon="build"/>
               <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
@@ -74,6 +82,9 @@
 
 <script>
 
+  import NpmStore from './stores/NpmStore';
+  import ConfigurationStore from './stores/ConfigurationStore';
+
   /*
    * Root component
    */
@@ -81,7 +92,9 @@
     name: 'App',
     data() {
       return {
-        opened: this.$q.platform.is.desktop
+        opened: this.$q.platform.is.desktop,
+        npms: null,
+        moniThorUrl: null
       }
     },
     methods: {
@@ -93,6 +106,13 @@
           this.opened = false
         }
       }
+    },
+    mounted() {
+      NpmStore.initialize().then((npms) => this.npms = npms);
+      ConfigurationStore.initialize()
+        .then(() => {
+          this.moniThorUrl = ConfigurationStore.moniThorUrl;
+        });
     }
   }
 </script>

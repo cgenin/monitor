@@ -167,7 +167,7 @@
             field: 'name',
             name: 'name',
             width: '270px',
-            sort: true,
+            sortable: true,
             type: 'string',
             filter: true
           },
@@ -176,7 +176,7 @@
             field: 'snapshot',
             name: 'snapshot',
             width: '170px',
-            sort: false,
+            sortable: false,
             type: 'string',
             filter: true
           },
@@ -185,7 +185,7 @@
             field: 'release',
             name: 'release',
             width: '90px',
-            sort: false,
+            sortable: false,
             type: 'string',
             filter: true
           },
@@ -227,7 +227,7 @@
             field: 'latest',
             name: 'latest',
             width: '175px',
-            sort: true,
+            sortable: true,
             type: 'date',
             filter: true
           },
@@ -236,14 +236,14 @@
             field: 'changelog',
             name: 'changelog',
             width: '57px',
-            sort: false
+            sortable: false
           },
           {
             label: 'Détail',
             field: 'destinationUrl',
             name: 'destinationUrl',
             width: '67px',
-            sort: false
+            sortable: false
           }
         ]
       };

@@ -98,7 +98,8 @@ module.exports = function (ctx) {
         'QAutocomplete',
         'QTableColumns',
         'QBreadcrumbs',
-        'QBreadcrumbsEl'
+        'QBreadcrumbsEl',
+        'QTree'
       ],
       directives: [
         'Ripple'
