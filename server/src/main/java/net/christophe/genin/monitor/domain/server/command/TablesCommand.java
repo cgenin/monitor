@@ -10,6 +10,7 @@ import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import net.christophe.genin.monitor.domain.server.model.Table;
 import rx.Observable;
+import rx.functions.Func1;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,52 +30,7 @@ public class TablesCommand extends AbstractVerticle {
     private synchronized boolean periodic() {
 
         Raw.findByStateFirst(Treatments.TABLES)
-                .flatMap(doc -> {
-                    final JsonObject json = doc.json();
-                    final List<String> tables = Jsons.builder(json.getJsonArray(Schemas.Raw.Tables.collection())).toStream()
-                            .map(js -> js.getString(Schemas.Raw.Tables.table.name(), ""))
-                            .collect(Collectors.toList());
-                    final String artifactId = doc.artifactId();
-
-                    final long update = doc.update();
-
-                    rx.Observable<String> creationTable = Table.findByService(artifactId)
-                            .flatMap(rs -> {
-                                if (Objects.isNull(rs)) {
-                                    return rx.Observable.from(tables);
-                                }
-                                HashSet<String> toCreate = new HashSet<>(tables);
-                                toCreate.removeAll(rs);
-                                return Observable.from(toCreate);
-                            })
-                            .flatMap(tableName -> {
-                                Table newTable = Table.newInstance();
-                                newTable.setTableName(tableName)
-                                        .setService(artifactId)
-                                        .setLastUpdated(update);
-                                return newTable.create()
-                                        .map(updateResult -> "Table '" + tableName + "' for '" + artifactId + "' creation " + updateResult)
-                                        .toObservable();
-                            });
-                    Observable<String> deletion = Table.findByService(artifactId)
-                            .flatMap(rs -> {
-                                if (Objects.isNull(rs)) {
-                                    return Observable.empty();
-                                }
-
-                                rs.removeAll(tables);
-                                return Observable.from(rs);
-                            })
-                            .flatMap(tableName -> Table.remove(tableName, artifactId)
-                                    .map(updateResult -> "Table '" + tableName + "' for '" + artifactId + "'  deleted :" + updateResult)
-                                    .toObservable()
-                            );
-                    return Observable.concat(deletion, creationTable)
-                            .doOnCompleted(() -> doc.updateState(Treatments.VERSION).subscribe(
-                                    bool -> logger.info("Tables (" + tables + ") in project " + artifactId + " wad updated to next :" + bool)
-                            ));
-
-                }).subscribe(
+                .flatMap(run()).subscribe(
                 str -> {
                     logger.info(str);
                     vertx.eventBus().send(Console.INFO, str);
@@ -85,6 +41,55 @@ public class TablesCommand extends AbstractVerticle {
         );
 
         return true;
+    }
+
+    Func1<Raw, Observable<? extends String>> run() {
+        return raw -> {
+            final JsonObject json = raw.json();
+            final List<String> tables = Jsons.builder(json.getJsonArray(Schemas.Raw.Tables.collection())).toStream()
+                    .map(js -> js.getString(Schemas.Raw.Tables.table.name(), ""))
+                    .collect(Collectors.toList());
+            final String artifactId = raw.artifactId();
+
+            final long update = raw.update();
+
+            Observable<String> creationTable = Table.findByService(artifactId)
+                    .flatMap(rs -> {
+                        if (Objects.isNull(rs)) {
+                            return Observable.from(tables);
+                        }
+                        HashSet<String> toCreate = new HashSet<>(tables);
+                        toCreate.removeAll(rs);
+                        return Observable.from(toCreate);
+                    })
+                    .flatMap(tableName -> {
+                        Table newTable = Table.newInstance();
+                        newTable.setTableName(tableName)
+                                .setService(artifactId)
+                                .setLastUpdated(update);
+                        return newTable.create()
+                                .map(updateResult -> "Table '" + tableName + "' for '" + artifactId + "' creation " + updateResult)
+                                .toObservable();
+                    });
+            Observable<String> deletion = Table.findByService(artifactId)
+                    .flatMap(rs -> {
+                        if (Objects.isNull(rs)) {
+                            return Observable.empty();
+                        }
+
+                        rs.removeAll(tables);
+                        return Observable.from(rs);
+                    })
+                    .flatMap(tableName -> Table.remove(tableName, artifactId)
+                            .map(updateResult -> "Table '" + tableName + "' for '" + artifactId + "'  deleted :" + updateResult)
+                            .toObservable()
+                    );
+            return Observable.concat(deletion, creationTable)
+                    .doOnCompleted(() -> raw.updateState(Treatments.VERSION).subscribe(
+                            bool -> logger.info("Tables (" + tables + ") in project " + artifactId + " wad updated to next :" + bool)
+                    ));
+
+        };
     }
 
 }

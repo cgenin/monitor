@@ -6,6 +6,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.sql.UpdateResult;
+import net.christophe.genin.monitor.domain.server.adapter.nitrite.NitriteRaw;
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
@@ -45,7 +46,7 @@ public class ImportExport extends AbstractVerticle {
                     .find(eq(Schemas.RAW_STATE, Treatments.END.getState()))
                     .toList();
             Stream<JsonObject> obs = documents.stream()
-                    .map(NitriteDbs.Raws::toJson)
+                    .map(NitriteRaw::toJson)
                     .map(json -> json.put("state", Treatments.END.getState()).put("ARCHIVE", true));
             if (documents.isEmpty()) {
                 msg.reply(new JsonObject()

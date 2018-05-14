@@ -18,9 +18,18 @@ import static org.dizitart.no2.filters.Filters.eq;
  */
 public class NitriteRaw {
 
+    public static Document toDoc(JsonObject json) {
+        return Document.createDocument("data", json.encode());
+    }
+
+    public static JsonObject toJson(Document dc) {
+        final String data = dc.get("data").toString();
+        return new JsonObject(data);
+    }
+
     public Single<Long> save(JsonObject object) {
         return Single.fromCallable(() -> {
-            final Document document = NitriteDbs.Raws.toDoc(object)
+            final Document document = toDoc(object)
                     .put("state", Treatments.PROJECTS.getState());
 
             getCollection().insert(document);
@@ -73,7 +82,7 @@ public class NitriteRaw {
 
         private RawImpl(Document document) {
             this.document = document;
-            this.json = NitriteDbs.Raws.toJson(document);
+            this.json = toJson(document);
         }
 
         @Override

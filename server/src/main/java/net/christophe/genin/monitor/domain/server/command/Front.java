@@ -6,6 +6,7 @@ import io.vertx.core.eventbus.Message;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import net.christophe.genin.monitor.domain.server.adapter.nitrite.NitriteRaw;
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
 import org.dizitart.no2.Document;
@@ -34,7 +35,7 @@ public class Front extends AbstractVerticle {
             final JsonObject body = rc.body();
 
             Single.fromCallable(() -> {
-                final Document document = NitriteDbs.Raws.toDoc(body)
+                final Document document = NitriteRaw.toDoc(body)
                         .put("state", State.FRONT.state);
 
                 NitriteDbs.instance.getCollection(Schemas.FRONT_COLLECTION)

@@ -98,18 +98,6 @@ public final class NitriteDbs {
         return true;
     }
 
-    public static class Raws {
-        public static Document toDoc(JsonObject json) {
-            return Document.createDocument("data", json.encode());
-        }
-
-        public static JsonObject toJson(Document dc) {
-            final String data = dc.get("data").toString();
-            return new JsonObject(data);
-        }
-    }
-
-
     public static class Attributes {
         private final Document document;
 

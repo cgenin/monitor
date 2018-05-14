@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
+import net.christophe.genin.monitor.domain.server.adapter.nitrite.NitriteRaw;
 import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
@@ -30,7 +31,7 @@ public class MigrateInQueue extends AbstractVerticle {
                             .find()
                             .toList())
                     .map(doc -> {
-                        JsonObject document = NitriteDbs.Raws.toJson(doc);
+                        JsonObject document = NitriteRaw.toJson(doc);
                         Integer state = doc.get(Schemas.RAW_STATE, Integer.class);
                         return new JsonObject()
                                 .put(Schemas.RAW_STATE, state)

@@ -10,7 +10,9 @@ import net.christophe.genin.monitor.domain.server.db.Schemas;
 import net.christophe.genin.monitor.domain.server.model.Configuration;
 import net.christophe.genin.monitor.domain.server.model.Project;
 import net.christophe.genin.monitor.domain.server.model.Raw;
+import rx.Observable;
 import rx.Single;
+import rx.functions.Func1;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,47 +29,7 @@ public class ProjectCommand extends AbstractVerticle {
     private synchronized boolean periodic() {
 
         Raw.findByStateFirst(Treatments.PROJECTS)
-                .flatMap(doc -> {
-                    final JsonObject json = doc.json();
-                    String artifactId = doc.artifactId();
-                    long update = doc.update();
-
-
-                    return Configuration.load()
-                            .flatMap(conf ->
-                                    Project.findByName(artifactId)
-                                            .flatMap(project -> {
-                                                if (project.latestUpdate() < update) {
-                                                    final List<String> allDeps =
-                                                            Raws.extractJavaDeps(json);
-
-                                                    List<String> javaFilters = conf.javaFilters();
-                                                    logger.debug("javaFilters:" + javaFilters);
-                                                    final List<String> javaDeps = allDeps.parallelStream()
-                                                            .map(String::toUpperCase)
-                                                            .filter(s ->
-                                                                    javaFilters.isEmpty() ||
-                                                                            javaFilters.parallelStream()
-                                                                                    .map(String::toUpperCase)
-                                                                                    .anyMatch(s::contains)
-                                                            ).collect(Collectors.toList());
-                                                    logger.debug("javaDeps:" + javaDeps);
-                                                    return updateProjectWith(project, artifactId, json, update, javaDeps)
-                                                            .save()
-                                                            .map(bool -> {
-                                                                if (bool) {
-                                                                    return "ProjectQuery '" + artifactId + "' updated";
-                                                                }
-                                                                return "ProjectQuery '" + artifactId + "' not updated";
-                                                            })
-                                                            .flatMap(str -> changState(doc, str));
-                                                }
-                                                String message = "No data for " + artifactId + ". Document must not be updated: " + project.latestUpdate() + " > " + update;
-                                                logger.info(message);
-                                                return changState(doc, message);
-                                            }))
-                            .toObservable();
-                })
+                .flatMap(run())
                 .subscribe(
                         str -> {
                             logger.info(str);
@@ -78,6 +40,50 @@ public class ProjectCommand extends AbstractVerticle {
                         });
 
         return true;
+    }
+
+    Func1<Raw, Observable<String>> run() {
+        return doc -> {
+            final JsonObject json = doc.json();
+            String artifactId = doc.artifactId();
+            long update = doc.update();
+
+
+            return Configuration.load()
+                    .flatMap(conf ->
+                            Project.findByName(artifactId)
+                                    .flatMap(project -> {
+                                        if (project.latestUpdate() < update) {
+                                            final List<String> allDeps =
+                                                    Raws.extractJavaDeps(json);
+
+                                            List<String> javaFilters = conf.javaFilters();
+                                            logger.debug("javaFilters:" + javaFilters);
+                                            final List<String> javaDeps = allDeps.parallelStream()
+                                                    .map(String::toUpperCase)
+                                                    .filter(s ->
+                                                            javaFilters.isEmpty() ||
+                                                                    javaFilters.parallelStream()
+                                                                            .map(String::toUpperCase)
+                                                                            .anyMatch(s::contains)
+                                                    ).collect(Collectors.toList());
+                                            logger.debug("javaDeps:" + javaDeps);
+                                            return updateProjectWith(project, artifactId, json, update, javaDeps)
+                                                    .save()
+                                                    .map(bool -> {
+                                                        if (bool) {
+                                                            return "Project '" + artifactId + "' updated";
+                                                        }
+                                                        return "Project '" + artifactId + "' not updated";
+                                                    })
+                                                    .flatMap(str -> changState(doc, str));
+                                        }
+                                        String message = "No data for " + artifactId + ". Document must not be updated: " + project.latestUpdate() + " > " + update;
+                                        logger.info(message);
+                                        return changState(doc, message);
+                                    }))
+                    .toObservable();
+        };
     }
 
     private Single<String> changState(Raw doc, String message) {
