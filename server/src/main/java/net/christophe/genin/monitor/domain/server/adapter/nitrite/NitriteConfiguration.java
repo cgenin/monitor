@@ -41,6 +41,7 @@ public class NitriteConfiguration extends Configuration {
                     .setMysqlUser(document.get("mysqlUser", String.class))
                     .setMysqlPassword(document.get("mysqlPassword", String.class))
                     .setMysqlDB(document.get("mysqlDB", String.class))
+                    .setMonithorUrl(document.get("monithorUrl", String.class))
                     .setJavaFilters(javaFilters)
                     .setNpmFilters(npmFilters);
         }
@@ -54,6 +55,7 @@ public class NitriteConfiguration extends Configuration {
                     .put("mysqlUser", configuration.mysqlUser())
                     .put("mysqlPassword", configuration.mysqlPassword())
                     .put("mysqlDB", configuration.mysqlDB())
+                    .put("monithorUrl", configuration.monithorUrl())
                     .put("javaFilters", javaFilters)
                     .put("npmFilters", npmFilters);
         }
