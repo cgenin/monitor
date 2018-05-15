@@ -5,13 +5,13 @@ import Vue from 'vue';
 
 export default Vue.component('response-time-chart', {
     extends: Line,
-    props: ['services'],
+    props: ['service'],
     mounted() {
         this.getStats();
     },
     methods: {
         getStats() {
-            let service = this.services[0];
+            let service = this.service;
             let filteredMetrics = Object.keys(service.metrics)
                 .filter(key => key.startsWith('gauge') && !key.includes('hystrix'))
                 .sort((a, b) => service.metrics[a] - service.metrics[b])
@@ -64,7 +64,7 @@ export default Vue.component('response-time-chart', {
         }
     },
     watch: {
-        services() {
+        service() {
             this.getStats();
         },
         limit() {

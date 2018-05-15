@@ -28,8 +28,11 @@
           </q-inner-loading>
           <div v-if="service && modal && displayGraph">
             <h2>Temps de réponse</h2>
+            <div>Moyenne : {{getAverage()}}ms</div>
+            <div>80% : {{get80()}}ms</div>
+            <hr>
             <response-time-chart
-              :services="[service]">
+              :service="service">
             </response-time-chart>
             <h2>Nombre de requête par url</h2>
             <counter-chart
@@ -88,6 +91,25 @@
             })
         }
       },
+      getAverage() {
+        const metrics = this.getMetrics();
+        return metrics.reduce((a, b) => a + b, 0) / metrics.length;
+      },
+      get80() {
+        const metrics = this.getMetrics();
+        return metrics
+          .sort((a, b) => a - b)
+          [Math.floor(metrics.length * 0.80)];
+      },
+      getMetrics() {
+        let filteredMetrics = Object.keys(this.service.metrics)
+          .filter(key => key.startsWith('gauge') && !key.includes('hystrix'));
+        return filteredMetrics
+          .reduce((obj, key) => {
+            obj.push(this.service.metrics[key]);
+            return obj;
+          }, []);
+      },
       openModal() {
         this.modal = true;
         this.loadServiceData();
@@ -104,7 +126,7 @@ ${b1}=${a[b1]}
         this.properties = 'Chargement des données en cours...';
         await this.loadServiceData();
         let env = Object.keys(this.service.env)
-          .filter((k) => k !== 'systemProperties' && k !=='systemEnvironment' && k !== 'servletContextInitParams')
+          .filter((k) => k !== 'systemProperties' && k !== 'systemEnvironment' && k !== 'servletContextInitParams')
           .sort((a, b) => a.localeCompare(b))
           .reduce((a, b) => `
 ${a}
