@@ -36,7 +36,6 @@ public class NitriteConfiguration extends Configuration {
             List npmFilters = document.get("npmFilters", List.class);
             return new NitriteConfiguration()
                     .setConfId(document.get("confId", Long.class))
-                    .setMonithorUrl(document.get("monithorUrl", String.class))
                     .setMysqlHost(document.get("mysqlHost", String.class))
                     .setMysqlPort(document.get("mysqlPort", Integer.class))
                     .setMysqlUser(document.get("mysqlUser", String.class))
@@ -51,7 +50,6 @@ public class NitriteConfiguration extends Configuration {
             List<String> npmFilters = new ArrayList<>(configuration.npmFilters());
             List<String> javaFilters = new ArrayList<>(configuration.javaFilters());
             return Document.createDocument("confId", configuration.confId())
-                    .put("monithorUrl", configuration.monithorUrl())
                     .put("mysqlHost", configuration.mysqlHost())
                     .put("mysqlPort", configuration.mysqlPort())
                     .put("mysqlUser", configuration.mysqlUser())
