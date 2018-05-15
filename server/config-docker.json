@@ -1,4 +1,5 @@
 {
+  "app": "http",
   "server-port": 8080,
   "db": {
     "path": "/nitrite/test.db",

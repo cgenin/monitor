@@ -1,5 +1,5 @@
 <template>
-  <div class="row items-center" style="margin: 30px">
+  <div class="row items-center breadcrumb-area">
     <div class="col-10">
       <bread-crumb :datas="bcDatas"/>
     </div>
@@ -17,6 +17,12 @@
     props: ['help', 'bcDatas'],
     components: {
       BreadCrumb, HelpButton
+    },
+    computed: {
+      showHelpButton() {
+        return (this.help);
+      }
     }
+
   }
 </script>
