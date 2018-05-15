@@ -24,6 +24,10 @@
                        to="/configuration/reset"
                        exact
                        slot="title"/>
+          <q-route-tab icon="graphic_eq" label="Moni-thor"
+                       to="/configuration/monithor"
+                       exact
+                       slot="title"/>
         </q-tabs>
         <router-view/>
       </q-card-main>

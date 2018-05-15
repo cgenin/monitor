@@ -1,8 +1,8 @@
 <template>
-  <div class="projects-page page-list">
+  <div class="projects-page page-list container">
     <header-app :help="txtHelp" :bc-datas="[{icon:'view_list', label:'Liste des Projets'}]"></header-app>
 
-    <q-card class="container">
+    <q-card>
       <q-card-title>
         <h3>Liste des Projets</h3>
       </q-card-title>
@@ -42,7 +42,7 @@
               </template>
               <q-td slot="body-cell-javaDeps" slot-scope="props" :props="props">
                 <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Dépendance Java')"
-                   class="tootip">
+                   class="tooltip">
                   <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
@@ -50,7 +50,7 @@
               </q-td>
               <q-td slot="body-cell-apis" slot-scope="props" :props="props">
                 <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Apis')"
-                   class="tootip">
+                   class="tooltip">
                   <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
@@ -58,7 +58,7 @@
               </q-td>
               <q-td slot="body-cell-tables" slot-scope="props" :props="props">
                 <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Tables')"
-                   class="tootip">
+                   class="tooltip">
                   <span>{{props.value.length}}&nbsp;</span>
                   <i class="material-icons">info </i>
                 </a>
@@ -68,8 +68,8 @@
                 <changelog-button :key="props.row.id" :content="props.value"/>
               </q-td>
               <q-td slot="body-cell-destinationUrl" slot-scope="props" :props="props">
-                <q-btn flat color="white" style="background: black" @click="$router.push(props.value)" small>
-                  <q-icon name="ion-document-text"/>
+                <q-btn flat color="tertiary" @click="$router.push(props.value)" small>
+                  <q-icon name="description"/>
                 </q-btn>
               </q-td>
             </q-table>
@@ -167,7 +167,7 @@
             field: 'name',
             name: 'name',
             width: '270px',
-            sort: true,
+            sortable: true,
             type: 'string',
             filter: true
           },
@@ -176,7 +176,7 @@
             field: 'snapshot',
             name: 'snapshot',
             width: '170px',
-            sort: false,
+            sortable: false,
             type: 'string',
             filter: true
           },
@@ -185,7 +185,7 @@
             field: 'release',
             name: 'release',
             width: '90px',
-            sort: false,
+            sortable: false,
             type: 'string',
             filter: true
           },
@@ -227,7 +227,7 @@
             field: 'latest',
             name: 'latest',
             width: '175px',
-            sort: true,
+            sortable: true,
             type: 'date',
             filter: true
           },
@@ -236,14 +236,14 @@
             field: 'changelog',
             name: 'changelog',
             width: '57px',
-            sort: false
+            sortable: false
           },
           {
             label: 'Détail',
             field: 'destinationUrl',
             name: 'destinationUrl',
             width: '67px',
-            sort: false
+            sortable: false
           }
         ]
       };

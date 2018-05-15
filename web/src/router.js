@@ -27,6 +27,8 @@ export default new VueRouter({
   routes: [
     {name:'welcome', path: '/', component: load('Welcome')},
     {name:'projectsList',path: '/projects-list', component: load('ProjectsList')},
+    {name:'npmList',path: '/npm-list', component: load('npm/NpmList')},
+    {name:'serveursCompare',path: '/monitoring', component: load('monitoring/ServeursCompare')},
     {
       path: '/tables',
       component: load('Tables'),
@@ -46,6 +48,7 @@ export default new VueRouter({
         {path: 'import-export', component: load('configuration/ImportExport')},
         //{path: 'export', component: load('configuration/Export')},
         {path: 'reset', component: load('configuration/Reset')},
+        {path: 'monithor', component: load('configuration/MoniThor')},
         {path: '', redirect: 'status'},
       ]
     },

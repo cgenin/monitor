@@ -101,7 +101,7 @@
       save() {
         const {javaFilters, npmFilters, activerMysql} = this;
         const mysql = (activerMysql) ? this.mysql : {};
-        const configuration = Object.assign({}, ConfigurationStore.state, {javaFilters, npmFilters, mysql});
+        const configuration = Object.assign({}, ConfigurationStore._state, {javaFilters, npmFilters, mysql});
         ConfigurationStore.save(configuration)
           .then(() => success())
           .catch((err) => error(err));

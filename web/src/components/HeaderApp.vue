@@ -1,9 +1,9 @@
 <template>
-  <div class="header-app row items-center" style="margin:1.5em">
-    <div class="col-11">
+  <div class="row items-center breadcrumb-area">
+    <div class="col-10">
       <bread-crumb :datas="bcDatas"/>
     </div>
-    <div class="col-1" v-if="showHelpButton">
+    <div class="col-2 row justify-end">
       <help-button :text="help"/>
     </div>
   </div>

@@ -1,7 +1,6 @@
 <template>
-  <div class="main">
-    <header-app
-      :bc-datas="[{icon:'view_list', label:'Liste des Projets', path : '/projects-list'},{icon:'ion-document-text', label:title}]"/>
+  <div class="main container">
+    <header-app :help="txtHelp" :bc-datas="[{icon:'view_list', label:'Liste des Projets', path : '/projects-list'},{icon:'ion-document-text', label:title}]"></header-app>
     <q-card>
       <q-card-title>
         <h3>{{title}}</h3>
@@ -49,18 +48,16 @@
   </div>
 </template>
 <script>
-  import BreadCrumb from '../../components/BreadCrumb'
+  import HeaderApp from '../../components/HeaderApp';
   import VueMarkdown from 'vue-markdown'
   import ProjectsStore from '../../stores/ProjectsStore';
   import {formatYYYYMMDDHHmm} from '../../Dates';
   import {sortStringForSorter} from '../../FiltersAndSorter'
-  import HeaderApp from "../../components/HeaderApp";
 
   export default {
     name: 'ProjectDetail',
     components: {
       HeaderApp,
-      BreadCrumb,
       VueMarkdown,
     },
     data() {
@@ -127,7 +124,7 @@
   }
 
   .selected-list {
-    padding: 10px;
+    padding: 10px 0;
     background: none;
   }
 </style>

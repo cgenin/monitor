@@ -17,13 +17,14 @@
     "vertx3-eventbus-client": "^3.5.0",
     "vue-markdown": "^2.2.4",
     "vue-router": "^3.0.1",
-    "vued3tree": "^3.4.3"
+    "vued3tree": "^3.4.3",
+    "vue-chartjs": "^2.8.7"
   },
   "devDependencies": {
-    "sockjs": "0.3.19",
     "json-loader": "^0.5.7",
+    "quasar-cli": "^0.15.11",
     "raw-loader": "^0.5.1",
-    "quasar-cli": "^0.15.11"
+    "sockjs": "0.3.19"
   },
   "engines": {
     "node": ">= 8.9.0",

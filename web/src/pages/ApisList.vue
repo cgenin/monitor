@@ -1,8 +1,8 @@
 <template>
-  <div class="apis-page page-list">
+  <div class="apis-page page-list container">
     <header-app :bc-datas="[{icon:'explore', label:'Liste des Apis'}]"/>
 
-    <q-card class="container">
+    <q-card>
       <q-card-title>
         <h3>Liste des apis</h3>
       </q-card-title>
@@ -19,8 +19,11 @@
               float-label="Filtrer"
               @input="filtering"></q-input>
           </q-field>
-          <div>
-            <q-toggle v-model="viewTable" label="Affichage table ou card" color="tertiary"></q-toggle>
+          <div class="column">
+            <label>Affichage :</label>
+            <q-toggle @input="changedTable" v-model="viewTable" label="table" color="tertiary"></q-toggle>
+            <q-toggle @input="changedCard" v-model="viewCard" label="carte" color="tertiary"></q-toggle>
+            <q-toggle @input="changedTree" v-model="viewTree" label="arbre" color="tertiary"></q-toggle>
           </div>
         </div>
         <div class="inputs">
@@ -45,18 +48,17 @@
           <p class="caption">Résultat : {{datas.length}}</p>
         </div>
         <div v-if="viewTable">
-
-            <q-list>
-              <q-item v-for="api in datas" class="list-apis-table" :key="`${api.method}-${api.absolutePath}`">
-                <q-item-side>
-                  <method-icon :method="api.method"></method-icon>
-                </q-item-side>
-                <q-item-main :label="api.path" :sublabel="api.comment">
-                </q-item-main>
-              </q-item>
-            </q-list>
+          <q-list>
+            <q-item v-for="api in datas" class="list-apis-table" :key="`${api.method}-${api.absolutePath}`">
+              <q-item-side>
+                <method-icon :method="api.method"></method-icon>
+              </q-item-side>
+              <q-item-main :label="api.path" :sublabel="api.comment">
+              </q-item-main>
+            </q-item>
+          </q-list>
         </div>
-        <div v-if="!viewTable">
+        <div v-if="viewCard">
           <q-infinite-scroll :handler="loadMore">
             <div class="card-container">
               <apis-card :api="api" v-for="api in listCards" :key="`${api.method}-${api.absolutePath}`"></apis-card>
@@ -65,6 +67,33 @@
               <q-spinner-dots color="red" :size="40"></q-spinner-dots>
             </div>
           </q-infinite-scroll>
+        </div>
+        <div v-if="viewTree">
+          <q-tree
+            :nodes="datasAsTree"
+            node-key="label"
+          >
+            <!--<div slot="body-method" slot-scope="prop">-->
+            <!--<span v-if="prop.node.method">-->
+            <!--<q-item-side>-->
+            <!--<method-icon :method="prop.node.method"></method-icon>-->
+            <!--</q-item-side>-->
+            <!--<q-item-main :sublabel="prop.node.comment">-->
+            <!--</q-item-main>-->
+
+            <!--</span>-->
+            <!--</div>-->
+            <div slot="header-generic" slot-scope="prop" class="row items-center">
+              <div class="text-weight-bold text-primary">{{ prop.node.label }}&nbsp;&nbsp;</div>
+              <method-icon :method="prop.node.method" v-if="prop.node.method"></method-icon>
+              <q-item-side icon="help" v-if="prop.node.comment">
+                <q-tooltip >
+                  {{prop.node.comment}}
+                </q-tooltip>
+              </q-item-side>
+            </div>
+
+          </q-tree>
         </div>
       </q-card-main>
     </q-card>
@@ -100,8 +129,7 @@
     components: {
       HeaderApp,
       MethodIcon,
-      ApisCard,
-
+      ApisCard
     },
     data() {
       return {
@@ -109,9 +137,13 @@
         filter: '',
         page: 1,
         datas: [],
+        datasAsTree: {},
+        datasPrepareAsTree: {},
         original: [],
         listCards: [],
         viewTable: true,
+        viewTree: false,
+        viewCard: false,
         filtersPanel: false,
         subFilters: {},
         methodsOptions: [
@@ -128,21 +160,21 @@
             name: 'method',
             field: 'nmethod',
             align: 'left',
-            sort: true,
+            sortable: true,
           },
           {
             label: 'Path',
             name: 'path',
             field: 'path',
             align: 'left',
-            sort: true,
+            sortable: true,
           },
           {
             label: 'Commentaire',
             name: 'comment',
             field: 'comment',
             align: 'left',
-            sort: true,
+            sortable: true,
           }
         ]
       };
@@ -180,6 +212,58 @@
         else {
           done();
         }
+      },
+      changedTable(v) {
+        if (!v) {
+          this.viewTable = true;
+        }
+        this.viewTree = false;
+        this.viewCard = false;
+      },
+      changedCard(v) {
+        if (!v) {
+          this.viewCard = true;
+        }
+        this.viewTable = false;
+        this.viewTree = false;
+      },
+      changedTree(v) {
+        if (!v) {
+          this.viewTree = true;
+        }
+        this.viewTable = false;
+        this.viewCard = false;
+      },
+      createTree(data) {
+        data.forEach((api) => {
+          this.datasPrepareAsTree[api.artifactId] = this.datasPrepareAsTree[api.artifactId] || {};
+          let previous = this.datasPrepareAsTree[api.artifactId];
+          api.path.split('/').forEach((entry) => {
+            if (entry) {
+              previous[entry] = previous[entry] || {};
+              previous = previous[entry];
+            }
+          });
+          previous.method = api.method;
+          previous.comment = api.comment;
+        });
+        this.datasAsTree = this.adaptForQTree(this.datasPrepareAsTree);
+        console.log(this.datasAsTree);
+      },
+      adaptForQTree(entry = {}) {
+        return Object.keys(entry).map((k) => {
+          if (k === 'method' || k === 'comment') {
+            return null;
+          }
+          return {
+            label: k,
+            children: [...this.adaptForQTree(entry[k])].filter((el) => el),
+            body: 'method',
+            method: entry[k].method,
+            comment: entry[k].comment,
+            header: 'generic'
+          };
+        })
       }
     },
     mounted() {
@@ -195,12 +279,13 @@
           }).sort(sortApis);
           this.original = l;
           this.datas = l;
+          this.createTree(l);
         });
     }
 
   }
 </script>
-<style >
+<style>
   .apis-page .inputs {
     display: flex;
     justify-content: space-between;
