@@ -49,6 +49,7 @@ public class ConfigurationCommand extends AbstractVerticle {
                     .setMysqlUser(mysql.getString("user"))
                     .setMysqlPassword(mysql.getString("password"))
                     .setMysqlDB(mysql.getString("database"))
+                    .setMonithorUrl(mysql.getString("moniThorUrl"))
                     .setJavaFilters(javaFilters)
                     .setNpmFilters(npmFilters);
             return configuration;

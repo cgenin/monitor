@@ -16,6 +16,9 @@ import io.vertx.ext.web.handler.sockjs.SockJSHandler;
 import net.christophe.genin.monitor.domain.server.http.Index;
 import net.christophe.genin.monitor.domain.server.http.Services;
 
+/**
+ * Verticle for the creation of an http / websocket server.
+ */
 public class Http extends AbstractVerticle {
 
     private static final Logger logger = LoggerFactory.getLogger(Http.class);

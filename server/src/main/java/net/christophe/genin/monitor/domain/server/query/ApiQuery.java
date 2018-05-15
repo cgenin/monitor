@@ -10,10 +10,13 @@ import net.christophe.genin.monitor.domain.server.model.Api;
 import static net.christophe.genin.monitor.domain.server.db.Schemas.Apis.*;
 import static net.christophe.genin.monitor.domain.server.db.Schemas.Apis.latestUpdate;
 
-public class EndpointQuery extends AbstractVerticle {
-    private static final Logger logger = LoggerFactory.getLogger(EndpointQuery.class);
+/**
+ * Read operation for Api.
+ */
+public class ApiQuery extends AbstractVerticle {
+    private static final Logger logger = LoggerFactory.getLogger(ApiQuery.class);
 
-    public static final String FIND = EndpointQuery.class.getName() + ".find";
+    public static final String FIND = ApiQuery.class.getName() + ".find";
 
     @Override
     public void start() {

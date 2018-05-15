@@ -14,7 +14,6 @@ import io.vertx.ext.web.handler.CorsHandler;
 import net.christophe.genin.domain.monitor.addon.http.Https;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.query.*;
-import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.command.*;
 
 import java.util.Date;
@@ -72,7 +71,7 @@ public class Services {
      */
     private Router apis() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(EndpointQuery.FIND));
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(ApiQuery.FIND));
         return router;
     }
 
@@ -114,7 +113,7 @@ public class Services {
         });
 
         router.put("/db/mysql/schemas").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_CREATE_SCHEMA));
-        router.post("/db/mysql/export/events").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ImportExport.EXPORT));
+        router.post("/db/mysql/export/events").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ImportExport.ARCHIVE));
         router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_ON_OFF));
         router.post("/db/mysql/connect").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson();

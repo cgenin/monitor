@@ -7,6 +7,9 @@ import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
 
+/**
+ * Model representing an Raw events of an service domain.
+ */
 public interface Raw {
 
 

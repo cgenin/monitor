@@ -20,7 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @RunWith(VertxUnitRunner.class)
-public class EndpointQueryTest {
+public class ApiQueryTest {
 
 
     public static final String PATH_DB = "target/testEndpointQueryTest.db";
@@ -55,7 +55,7 @@ public class EndpointQueryTest {
                         async.countDown();
                     });
         });
-        vertx.deployVerticle(EndpointQuery.class.getName(), options, (r) -> {
+        vertx.deployVerticle(ApiQuery.class.getName(), options, (r) -> {
             context.assertTrue(r.succeeded());
             async.countDown();
         });
@@ -69,7 +69,7 @@ public class EndpointQueryTest {
     @Test
     public void should_find_all_api(TestContext context) {
         Async async = context.async();
-        vertx.eventBus().<JsonArray>send(EndpointQuery.FIND, new JsonObject(), msg -> {
+        vertx.eventBus().<JsonArray>send(ApiQuery.FIND, new JsonObject(), msg -> {
             context.assertTrue(msg.succeeded());
             JsonArray body = msg.result().body();
             context.assertNotNull(body);

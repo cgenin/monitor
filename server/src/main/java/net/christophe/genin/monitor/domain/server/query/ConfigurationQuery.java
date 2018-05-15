@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 /**
- * Read Operation on ConfigurationQuery.
+ * Read Operation on Configuration.
  */
 public class ConfigurationQuery extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationQuery.class);
@@ -35,6 +35,7 @@ public class ConfigurationQuery extends AbstractVerticle {
                 .parallelStream().collect(Jsons.Collectors.toJsonArray());
         return new JsonObject()
                 .put("id", configuration.confId())
+                .put("moniThorUrl", configuration.monithorUrl())
                 .put("javaFilters", javaFilters)
                 .put("npmFilters", npmFilters)
                 .put("ignoreJava", ignoreJava)

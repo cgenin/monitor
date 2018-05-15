@@ -9,7 +9,9 @@ import net.christophe.genin.monitor.domain.server.model.*;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-
+/**
+ * Verticle for exporting datas of all models on json format.
+ */
 public class BackupQuery extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(BackupQuery.class);
 

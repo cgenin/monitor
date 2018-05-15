@@ -8,6 +8,9 @@ import rx.Single;
 
 import java.util.List;
 
+/**
+ * Model which represents an version for an specific domain.
+ */
 public abstract class Version {
 
     private JsonObject json;

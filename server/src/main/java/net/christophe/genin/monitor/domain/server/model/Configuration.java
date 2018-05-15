@@ -8,16 +8,20 @@ import rx.Single;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The model for the configuration of the server.
+ */
 public abstract class Configuration {
 
     @Id
-    private Long    confId = 1L;
+    private Long confId = 1L;
 
-    private String  mysqlHost;
+    private String mysqlHost;
     private Integer mysqlPort;
-    private String  mysqlUser;
-    private String  mysqlPassword;
-    private String  mysqlDB;
+    private String mysqlUser;
+    private String mysqlPassword;
+    private String mysqlDB;
+    private String monithorUrl;
 
 
     private List<String> javaFilters = new ArrayList<>();
@@ -122,6 +126,15 @@ public abstract class Configuration {
 
     public Configuration setIgnoreJava(List<String> ignoreJava) {
         this.ignoreJava = ignoreJava;
+        return this;
+    }
+
+    public String monithorUrl() {
+        return monithorUrl;
+    }
+
+    public Configuration setMonithorUrl(String monithorUrl) {
+        this.monithorUrl = monithorUrl;
         return this;
     }
 }

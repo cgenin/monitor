@@ -1,6 +1,5 @@
 package net.christophe.genin.monitor.domain.server;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;

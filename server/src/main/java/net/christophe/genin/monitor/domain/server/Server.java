@@ -13,7 +13,8 @@ import net.christophe.genin.monitor.domain.server.query.*;
 import java.util.ArrayList;
 
 /**
- * Main Verticle
+ * Main Verticle.
+ * <p>Verticle for launching all verticles switching the current configuration.</p>
  */
 public class Server extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
@@ -32,6 +33,7 @@ public class Server extends AbstractVerticle {
                 break;
             case HTTP:
             default:
+                logger.warn("Unkonwn mode : " + app);
                 server();
         }
 
@@ -83,7 +85,7 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new TableQuery(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new BackupQuery(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ConfigurationQuery());
-        vertx.deployVerticle(new EndpointQuery(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new ApiQuery(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new DependencyQuery(), new DeploymentOptions().setWorker(true));
     }
 

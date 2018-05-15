@@ -11,6 +11,9 @@ import net.christophe.genin.monitor.domain.server.model.Version;
 
 import java.util.Optional;
 
+/**
+ * Read operation for domain service.
+ */
 public class ProjectQuery extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(ProjectQuery.class);
 

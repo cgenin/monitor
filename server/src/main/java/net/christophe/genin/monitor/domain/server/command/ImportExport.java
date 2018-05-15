@@ -27,10 +27,10 @@ public class ImportExport extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(ImportExport.class);
 
     public static final String IMPORT = ImportExport.class.getName() + ".import";
-    public static final String EXPORT = ImportExport.class.getName() + ".export";
+    public static final String ARCHIVE = ImportExport.class.getName() + ".archive";
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         vertx.eventBus().<JsonObject>consumer(IMPORT, (msg) -> {
             if (NitriteDbs.instance.importFrom(msg.body())) {
                 msg.reply(new JsonObject());
@@ -39,7 +39,7 @@ public class ImportExport extends AbstractVerticle {
             }
         });
 
-        vertx.eventBus().<JsonObject>consumer(EXPORT, (msg) -> {
+        vertx.eventBus().<JsonObject>consumer(ARCHIVE, (msg) -> {
             final NitriteCollection collection = NitriteDbs.instance
                     .getCollection(Schemas.RAW_COLLECTION);
             List<Document> documents = collection

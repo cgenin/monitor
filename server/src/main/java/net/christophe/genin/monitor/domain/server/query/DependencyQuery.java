@@ -6,6 +6,9 @@ import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
 import net.christophe.genin.monitor.domain.server.model.Dependency;
 
+/**
+ * Read operation for dependencies.
+ */
 public class DependencyQuery extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(DependencyQuery.class);
 

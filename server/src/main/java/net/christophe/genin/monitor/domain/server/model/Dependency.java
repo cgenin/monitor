@@ -4,6 +4,9 @@ import net.christophe.genin.monitor.domain.server.adapter.Adapters;
 import rx.Observable;
 import rx.Single;
 
+/**
+ * this class represents the dependencies on differents domain objects.
+ */
 public abstract class Dependency {
 
     private final String resource;

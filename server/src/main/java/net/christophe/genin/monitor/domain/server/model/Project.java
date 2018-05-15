@@ -6,6 +6,9 @@ import rx.Single;
 
 import java.util.List;
 
+/**
+ * This class represents the last informations for an specific domain.
+ */
 public interface Project {
 
     static Single<Project> findByName(String artifactId) {

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.logging.LogManager;
 
 /**
- * Main Classe
+ * Main Class.
  */
 public class Main extends Launcher {
 

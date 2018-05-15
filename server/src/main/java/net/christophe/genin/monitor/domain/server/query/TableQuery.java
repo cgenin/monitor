@@ -13,6 +13,9 @@ import rx.Observable;
 
 import java.util.HashMap;
 
+/**
+ * Read operation for Table.
+ */
 public class TableQuery extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(RawCommand.class);
 

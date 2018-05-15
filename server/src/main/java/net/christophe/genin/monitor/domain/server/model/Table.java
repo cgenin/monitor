@@ -7,6 +7,9 @@ import rx.Single;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Model which represents an link between an domain and an table.
+ */
 public abstract class Table {
     private String id;
     private String Service;

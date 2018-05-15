@@ -15,7 +15,6 @@ import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
 import rx.Single;
 
-import java.io.BufferedWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Date;
