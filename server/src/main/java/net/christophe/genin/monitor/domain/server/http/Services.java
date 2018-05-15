@@ -42,6 +42,7 @@ public class Services {
      * @return the router
      */
     public Router build() {
+        logger.info("building router....");
         Router router = Router.router(vertx);
         router.route().handler(CorsHandler.create("*")
                 .allowedMethod(HttpMethod.GET)
@@ -61,6 +62,8 @@ public class Services {
         router.mountSubRouter("/dump", dump());
         router.mountSubRouter("/apps", apps());
         router.mountSubRouter("/fronts", fronts());
+        logger.info("building router : OK.");
+
         return router;
     }
 
@@ -109,11 +112,11 @@ public class Services {
                 }));
         router.put("/db/import").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson();
-            new Https.EbCaller(vertx, rc).created(ImportExport.IMPORT, body);
+            new Https.EbCaller(vertx, rc).created(ImportCommand.IMPORT, body);
         });
 
         router.put("/db/mysql/schemas").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_CREATE_SCHEMA));
-        router.post("/db/mysql/export/events").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ImportExport.ARCHIVE));
+        router.post("/db/events/store").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ArchiveCommand.ARCHIVE));
         router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_ON_OFF));
         router.post("/db/mysql/connect").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson();
@@ -162,9 +165,7 @@ public class Services {
 
     private Router dump() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> {
-            new Https.EbCaller(vertx, rc).jsonAndReply(BackupQuery.DUMP);
-        });
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(BackupQuery.DUMP));
         return router;
     }
 

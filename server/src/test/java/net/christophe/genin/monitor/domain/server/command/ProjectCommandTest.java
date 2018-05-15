@@ -126,6 +126,11 @@ public class ProjectCommandTest {
         }
 
         @Override
+        public long id() {
+            return 0;
+        }
+
+        @Override
         public Single<Boolean> updateState(Treatments treatments) {
             context.assertEquals(Treatments.TABLES, treatments);
             async.countDown();

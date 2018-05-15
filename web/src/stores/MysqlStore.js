@@ -15,7 +15,7 @@ class MysqlStore {
   }
 
   migrateEvents() {
-    return fetch('/api/configuration/db/mysql/export/events', {
+    return fetch('/api/configuration/db/events/store', {
       method: 'POST'
     })
       .then(res => res.json());

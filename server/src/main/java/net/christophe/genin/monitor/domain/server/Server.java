@@ -55,14 +55,15 @@ public class Server extends AbstractVerticle {
         logger.info("http start ....");
         vertx.deployVerticle(new Console());
         vertx.deployVerticle(new Http(), new DeploymentOptions().setConfig(config()));
-        vertx.deployVerticle(new Database(), new DeploymentOptions().setConfig(config()), as -> {
-            if (as.failed()) {
-                throw new IllegalStateException("Error in creating DB", as.cause());
-            }
-            vertx.deployVerticle(new Adapters(), new DeploymentOptions().setConfig(config()));
-            deployCommand();
-            deployQuery();
-        });
+        vertx.deployVerticle(new Adapters(), new DeploymentOptions().setConfig(config()), res ->
+                vertx.deployVerticle(new Database(), new DeploymentOptions().setConfig(config()), as -> {
+                    if (as.failed()) {
+                        throw new IllegalStateException("Error in creating DB", as.cause());
+                    }
+                    deployCommand();
+                    deployQuery();
+                })
+        );
         logger.info("http verticles launch : OK");
     }
 
@@ -73,7 +74,8 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new TablesCommand(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new VersionCommand(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new DependenciesCommand(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new ImportExport());
+        vertx.deployVerticle(new ImportCommand());
+        vertx.deployVerticle(new ArchiveCommand());
         vertx.deployVerticle(new ConfigurationCommand());
         vertx.deployVerticle(new NitriteCommand());
         vertx.deployVerticle(new ResetCommand(), new DeploymentOptions().setWorker(true));

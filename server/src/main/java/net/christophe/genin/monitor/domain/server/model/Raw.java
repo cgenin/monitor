@@ -12,7 +12,6 @@ import rx.schedulers.Schedulers;
  */
 public interface Raw {
 
-
     static Observable<Raw> findAll() {
         return new NitriteRaw().findAll();
     }
@@ -25,6 +24,7 @@ public interface Raw {
 
     long update();
 
+    long id();
 
     Single<Boolean> updateState(Treatments treatments);
 
@@ -47,4 +47,11 @@ public interface Raw {
         return new NitriteRaw().findByStateFirst(treatments);
     }
 
+    static Observable<Raw> findAllByState(Treatments treatments) {
+        return new NitriteRaw().findAllByState(treatments);
+    }
+
+    static Single<Boolean> removeById(long id) {
+        return new NitriteRaw().removeById(id);
+    }
 }

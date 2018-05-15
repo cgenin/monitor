@@ -7,9 +7,15 @@ import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.dizitart.no2.Document;
 import org.dizitart.no2.NitriteCollection;
+import org.dizitart.no2.NitriteId;
+import org.dizitart.no2.filters.BaseFilter;
+import org.dizitart.no2.store.NitriteMap;
 import rx.Observable;
 import rx.Single;
 import rx.schedulers.Schedulers;
+
+import java.util.Collections;
+import java.util.Set;
 
 import static org.dizitart.no2.filters.Filters.eq;
 
@@ -41,16 +47,18 @@ public class NitriteRaw {
         return new RawImpl(doc);
     }
 
+
     public Observable<Raw> findByStateFirst(Treatments treatments) {
-        final NitriteCollection collection = getCollection();
-        return collection
+        return findAllByState(treatments)
+                .take(1);
+    }
+
+    public Observable<Raw> findAllByState(Treatments treatments) {
+        return Observable.fromCallable(() -> getCollection()
                 .find(eq(Schemas.RAW_STATE, treatments.getState()))
-                .toList()
-                .stream()
-                .findFirst()
-                .map(NitriteRaw::toRaw)
-                .map(Observable::just)
-                .orElse(Observable.empty());
+                .toList())
+                .flatMap(Observable::from)
+                .map(NitriteRaw::toRaw);
     }
 
     public Single<Integer> updateAllStatesBy(Treatments treatments) {
@@ -58,8 +66,8 @@ public class NitriteRaw {
         return Observable.from(collection.find().toList())
                 .subscribeOn(Schedulers.computation())
                 .map(doc -> {
-                    Document put = doc.put(Schemas.RAW_STATE, treatments.getState());
-                    collection.update(put, true);
+                            Document put = doc.put(Schemas.RAW_STATE, treatments.getState());
+                            collection.update(put, true);
                             return 1;
                         }
                 )
@@ -74,6 +82,13 @@ public class NitriteRaw {
     public Observable<Raw> findAll() {
         return Observable.from(getCollection().find().toList())
                 .map(NitriteRaw::toRaw);
+    }
+
+    public Single<Boolean> removeById(long id) {
+        return Single.fromCallable(() -> getCollection()
+                .remove(new RemoveByIdNititeFilter(id)))
+                .subscribeOn(Schedulers.io())
+                .map(wr -> wr.getAffectedCount() == 1);
     }
 
     public static class RawImpl implements Raw {
@@ -106,11 +121,35 @@ public class NitriteRaw {
         }
 
         @Override
+        public long id() {
+            return document.getId().getIdValue();
+        }
+
+        @Override
         public Single<Boolean> updateState(Treatments treatments) {
             return Single.fromCallable(() -> {
                 getCollection().update(document.put(Schemas.RAW_STATE, treatments.getState()), true);
                 return true;
             });
+        }
+    }
+
+    private static class RemoveByIdNititeFilter extends BaseFilter {
+
+        private final long id;
+
+        private RemoveByIdNititeFilter(long ids) {
+            this.id = ids;
+        }
+
+        @Override
+        public Set<NitriteId> apply(NitriteMap<NitriteId, Document> nitriteMap) {
+
+            return nitriteMap.keySet().parallelStream()
+                    .filter(nid -> nid.getIdValue() == id)
+                    .findAny()
+                    .map(Collections::singleton)
+                    .orElseGet(Collections::emptySet);
         }
     }
 }

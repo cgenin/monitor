@@ -14,7 +14,7 @@ public class Adapters extends AbstractVerticle {
 
     public static final String CHANGE_DATABASE = Adapters.class.getName() + ".change.database";
 
-    private static ThreadLocal<Type> type = ThreadLocal.withInitial(() -> Type.NITRITE);
+    private static Singleton type = new Singleton();
 
 
     public static Adapters get() {
@@ -26,12 +26,12 @@ public class Adapters extends AbstractVerticle {
         vertx.eventBus().<String>consumer(CHANGE_DATABASE, msg -> {
             String t = msg.body();
             Type typeLocal = Type.valueOf(t);
-            type.set(typeLocal);
+            type.setType(typeLocal);
         });
     }
 
     public DependencyPort dependencyHandler() {
-        switch (type.get()) {
+        switch (type.getType()) {
             case MYSQL:
                 return new MysqlDependency.MysqlDependencyPort(Mysqls.Instance.get());
             case NITRITE:
@@ -42,7 +42,7 @@ public class Adapters extends AbstractVerticle {
     }
 
     public ProjectPort projectHandler() {
-        switch (type.get()) {
+        switch (type.getType()) {
             case MYSQL:
                 return new MysqlProject.MysqlProjectPort(Mysqls.Instance.get());
             case NITRITE:
@@ -53,7 +53,7 @@ public class Adapters extends AbstractVerticle {
     }
 
     public TablePort tableHandler() {
-        switch (type.get()) {
+        switch (type.getType()) {
             case MYSQL:
                 return new MysqlTable.MysqlTablePort(Mysqls.Instance.get());
             case NITRITE:
@@ -64,7 +64,7 @@ public class Adapters extends AbstractVerticle {
     }
 
     public VersionPort versionHandler() {
-        switch (type.get()) {
+        switch (type.getType()) {
             case MYSQL:
                 return new MysqlVersion.MysqlVersionHandler(Mysqls.Instance.get());
             case NITRITE:
@@ -75,7 +75,7 @@ public class Adapters extends AbstractVerticle {
     }
 
     public ApiPort apiHandler() {
-        switch (type.get()) {
+        switch (type.getType()) {
             case MYSQL:
                 return new MysqlApi.MysqlApiPort(Mysqls.Instance.get());
             case NITRITE:
@@ -85,7 +85,30 @@ public class Adapters extends AbstractVerticle {
         }
     }
 
+    public StoredServiceEventPort storedServiceEventHandler() {
+        switch (type.getType()) {
+            case MYSQL:
+                return new MysqlStoredServiceEvent.MysqlStoredServiceEventPort(Mysqls.Instance.get());
+            case NITRITE:
+            default:
+                throw new IllegalStateException("Only in mysql mode " + type);
+        }
+    }
+
     public enum Type {
         NITRITE, MYSQL
+    }
+
+    public static class Singleton {
+
+        private Type type = Type.NITRITE;
+
+        public synchronized Type getType() {
+            return type;
+        }
+
+        public synchronized void setType(Type type) {
+            this.type = type;
+        }
     }
 }
