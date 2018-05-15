@@ -104,7 +104,7 @@
                             <outputDirectory>${basedir}/target/classes/dist</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${basedir}/../web/dist</directory>
+                                    <directory>${basedir}/../web/dist/spa-mat</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -126,8 +126,8 @@
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>net.christophe.genin.domain.server.Main</Main-Class>
-                                        <Main-Verticle>net.christophe.genin.domain.server.Server</Main-Verticle>
+                                        <Main-Class>net.christophe.genin.monitor.domain.server.Main</Main-Class>
+                                        <Main-Verticle>net.christophe.genin.monitor.domain.server.Server</Main-Verticle>
                                     </manifestEntries>
                                 </transformer>
                                 <transformer

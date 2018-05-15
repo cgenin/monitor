@@ -19,7 +19,7 @@ import java.util.Collections;
 public class ConfigurationQueryTest {
     Vertx vertx;
     private Configuration configuration;
-    private String result = "{\"id\":1,\"javaFilters\":[\"onejava\"],\"npmFilters\":[\"npm\"],\"ignoreJava\":[],\"mysql\":{\"host\":\"host\",\"port\":666,\"user\":\"user\",\"password\":\"password\",\"database\":\"db\"}}";
+    private String result = "{\"id\":1,\"moniThorUrl\":null,\"javaFilters\":[\"onejava\"],\"npmFilters\":[\"npm\"],\"ignoreJava\":[],\"mysql\":{\"host\":\"host\",\"port\":666,\"user\":\"user\",\"password\":\"password\",\"database\":\"db\"}}";
 
     @Before
     public void before(TestContext context) throws IOException {
