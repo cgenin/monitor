@@ -71,23 +71,13 @@
         <div v-if="viewTree">
           <q-tree
             :nodes="datasAsTree"
-            node-key="label"
+            node-key="id"
           >
-            <!--<div slot="body-method" slot-scope="prop">-->
-            <!--<span v-if="prop.node.method">-->
-            <!--<q-item-side>-->
-            <!--<method-icon :method="prop.node.method"></method-icon>-->
-            <!--</q-item-side>-->
-            <!--<q-item-main :sublabel="prop.node.comment">-->
-            <!--</q-item-main>-->
-
-            <!--</span>-->
-            <!--</div>-->
             <div slot="header-generic" slot-scope="prop" class="row items-center">
               <div class="text-weight-bold text-primary">{{ prop.node.label }}&nbsp;&nbsp;</div>
               <method-icon :method="prop.node.method" v-if="prop.node.method"></method-icon>
               <q-item-side icon="help" v-if="prop.node.comment">
-                <q-tooltip >
+                <q-tooltip>
                   {{prop.node.comment}}
                 </q-tooltip>
               </q-item-side>
@@ -187,17 +177,15 @@
           this.filtering();
         }
       },
-
       filtering() {
-        console.log('test')
         const mF = methodFiltering(this.original, this.subFilters.method);
         const aF = absolutePathFiltering(mF, this.subFilters.path);
         const aiF = artifactIdFiltering(aF, this.subFilters.domain);
         this.datas = filtering(aiF, this.filter);
         this.listCards = this.datas.filter((o, index) => index < maxLoadedCard);
+        this.createTree(this.datas);
       },
       loadMore(index, done) {
-        console.log('loadmore')
         if (index < (this.datas.length - 1)) {
           setTimeout(() => {
             if ((index + maxLoadedCard) >= this.datas.length) {
@@ -235,6 +223,7 @@
         this.viewCard = false;
       },
       createTree(data) {
+        this.datasPrepareAsTree = {};
         data.forEach((api) => {
           this.datasPrepareAsTree[api.artifactId] = this.datasPrepareAsTree[api.artifactId] || {};
           let previous = this.datasPrepareAsTree[api.artifactId];
@@ -247,17 +236,19 @@
           previous.method = api.method;
           previous.comment = api.comment;
         });
-        this.datasAsTree = this.adaptForQTree(this.datasPrepareAsTree);
-        console.log(this.datasAsTree);
+        let i = 0;
+        this.datasAsTree = this.adaptForQTree(this.datasPrepareAsTree, i);
       },
-      adaptForQTree(entry = {}) {
+      adaptForQTree(entry = {}, i) {
         return Object.keys(entry).map((k) => {
           if (k === 'method' || k === 'comment') {
             return null;
           }
+          i++;
           return {
+            id: k + i,
             label: k,
-            children: [...this.adaptForQTree(entry[k])].filter((el) => el),
+            children: [...this.adaptForQTree(entry[k], i)].filter((el) => el),
             body: 'method',
             method: entry[k].method,
             comment: entry[k].comment,
