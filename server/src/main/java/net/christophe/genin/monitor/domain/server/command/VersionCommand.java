@@ -34,6 +34,7 @@ public class VersionCommand extends AbstractVerticle {
         return raw -> {
             final JsonObject json = raw.json();
             final String artifactId = raw.artifactId();
+            Long update = raw.update();
             final String version = json.getString(Schemas.Raw.version.name());
             return Project.findByName(artifactId)
                     .map(Project::id)
@@ -41,7 +42,6 @@ public class VersionCommand extends AbstractVerticle {
                     .toObservable()
                     .flatMap(currentDoc -> {
                         long lDate = currentDoc.latestUpdate();
-                        long update = json.getLong(Schemas.Raw.update.name());
                         if (lDate < update) {
                             boolean snapshot = Raws.isSnapshot(version);
                             List<String> javaDeps = Raws.extractJavaDeps(json);

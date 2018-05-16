@@ -22,9 +22,9 @@ public interface Raw {
 
     String artifactId();
 
-    long update();
+    Long update();
 
-    long id();
+    Long id();
 
     Single<Boolean> updateState(Treatments treatments);
 

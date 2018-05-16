@@ -49,7 +49,7 @@ public class ApisCommand extends AbstractVerticle {
                     final JsonObject apis = json.getJsonObject(Schemas.Raw.apis.name(), new JsonObject());
                     String artifactId = json.getString(Schemas.Raw.Apis.artifactId.name(), "");
                     String version = json.getString(Schemas.Raw.Apis.version.name(), "");
-                    final long update = json.getLong(Schemas.Raw.update.name());
+                    final long update = doc.update();
                     JsonArray services = apis.getJsonArray(Schemas.Raw.Apis.services.name(), new JsonArray());
 
 

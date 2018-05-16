@@ -49,7 +49,7 @@
         </div>
         <div v-if="viewTable">
           <q-list>
-            <q-item v-for="api in datas" class="list-apis-table" :key="`${api.method}-${api.absolutePath}`">
+            <q-item v-for="api in datas" class="list-apis-table" :key="`table-${api.method}-${api.absolutePath}`">
               <q-item-side>
                 <method-icon :method="api.method"></method-icon>
               </q-item-side>
@@ -61,7 +61,7 @@
         <div v-if="viewCard">
           <q-infinite-scroll :handler="loadMore">
             <div class="card-container">
-              <apis-card :api="api" v-for="api in listCards" :key="`${api.method}-${api.absolutePath}`"></apis-card>
+              <apis-card :api="api" v-for="api in listCards" :key="`card-${api.method}-${api.absolutePath}`"></apis-card>
             </div>
             <div class="awaiting" slot="message">
               <q-spinner-dots color="red" :size="40"></q-spinner-dots>

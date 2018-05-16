@@ -38,7 +38,7 @@ public class TablesCommand extends AbstractVerticle {
                     .collect(Collectors.toList());
             final String artifactId = raw.artifactId();
 
-            final long update = raw.update();
+            final Long update = raw.update();
 
             Observable<String> creationTable = Table.findByService(artifactId)
                     .flatMap(rs -> {

@@ -12,6 +12,7 @@ import net.christophe.genin.monitor.domain.server.adapter.Adapters;
 import net.christophe.genin.monitor.domain.server.model.Project;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,7 +31,7 @@ public class ProjectQueryTest {
     private Project project;
 
 
-    @Before
+    @BeforeClass
     public void before(TestContext context) throws IOException {
         Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
         JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
@@ -72,6 +73,7 @@ public class ProjectQueryTest {
 
     @After
     public void after(TestContext context) {
+
         vertx.close(context.asyncAssertSuccess());
     }
 

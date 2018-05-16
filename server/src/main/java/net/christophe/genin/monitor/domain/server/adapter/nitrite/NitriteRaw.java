@@ -49,8 +49,14 @@ public class NitriteRaw {
 
 
     public Observable<Raw> findByStateFirst(Treatments treatments) {
-        return findAllByState(treatments)
-                .take(1);
+        return getCollection()
+                .find(eq(Schemas.RAW_STATE, treatments.getState()))
+                .toList()
+                .stream()
+                .findFirst()
+                .map(NitriteRaw::toRaw)
+                .map(Observable::just)
+                .orElse(Observable.empty());
     }
 
     public Observable<Raw> findAllByState(Treatments treatments) {
@@ -116,12 +122,12 @@ public class NitriteRaw {
         }
 
         @Override
-        public long update() {
-            return json.getLong(Schemas.Raw.update.name());
+        public Long update() {
+            return json.getLong(Schemas.Raw.update.name(), 0L);
         }
 
         @Override
-        public long id() {
+        public Long id() {
             return document.getId().getIdValue();
         }
 
