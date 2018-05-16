@@ -41,6 +41,22 @@ h3
 .input-file
   display none
 
+// INPUT PANEL
+
+.inputs-panel
+  &.open
+    animation: .3s ease-out 0s 1 fadeIn;
+
+// ANIMATIONS
+@keyframes fadeIn {
+  0% {
+    opacity 0
+  }
+  100% {
+    opacity 1
+  }
+}
+
 /*
  * QUASAR COMPONENTS
  */
@@ -65,7 +81,8 @@ h3
         margin-right 0
   .tool-bar
     .q-collapsible-sub-item
-      padding 0
+      padding 8px
+      background-color $primary-darken
     .tool-bar-header
       .q-list-header
         display flex
@@ -89,6 +106,7 @@ h3
           padding-left: 16px
           margin 0
     .q-item
+      min-height 56px
       .q-item-side
         color: white
       .q-item-section
@@ -355,7 +373,8 @@ h3
 .q-btn-round:not(.q-btn-flat):not(.q-btn-outline)
   box-shadow none
 
-.q-btn-standard
+.q-btn-standard,
+.btn-flat-primary
   &.open
     .q-icon
       transform rotate(45deg)

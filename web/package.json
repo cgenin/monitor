@@ -15,10 +15,10 @@
     "chart.js": "^2.7.1",
     "sockjs-client": "1.1.4",
     "vertx3-eventbus-client": "^3.5.0",
+    "vue-chartjs": "^3.3.1",
     "vue-markdown": "^2.2.4",
     "vue-router": "^3.0.1",
-    "vued3tree": "^3.4.3",
-    "vue-chartjs": "^2.8.7"
+    "vued3tree": "^3.4.3"
   },
   "devDependencies": {
     "json-loader": "^0.5.7",
