@@ -5,7 +5,7 @@ class ConfigurationStore {
     if (instance) {
       return instance;
     }
-    this.state = {};
+    this._state = {};
     instance = this;
   }
 
@@ -19,6 +19,10 @@ class ConfigurationStore {
 
   get npmFilters() {
     return Array.from(this._state.npmFilters);
+  }
+
+  get moniThorUrl() {
+    return this._state.moniThorUrl;
   }
 
   importDb(data) {
@@ -40,7 +44,7 @@ class ConfigurationStore {
       .then(res => res.json())
       .then(content => {
         this._state = content;
-        return this.state;
+        return this._state;
       });
   }
 

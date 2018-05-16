@@ -1,6 +1,6 @@
 <template>
   <div class="page-list">
-    <q-card class="container">
+    <q-card>
       <q-card-main>
         <transition
           appear
@@ -86,7 +86,7 @@
             field: 'name',
             align: 'left',
             width: '400px',
-            sort: true,
+            sortable: true,
             type: 'string',
             filter: true
           },
@@ -110,7 +110,7 @@
             field: 'latest',
             align: 'center',
             width: '230px',
-            sort: true,
+            sortable: true,
             type: 'date',
             filter: true
           }

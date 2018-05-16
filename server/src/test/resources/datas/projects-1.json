@@ -1,0 +1,899 @@
+{
+  "artifactId": "societe-service-impl",
+  "update": 1504610102028,
+  "json": {
+    "tables": [
+      {
+        "className": "fr.mdpa.ms.socle.services.societe.entities.SocietDb",
+        "table": "SOCIETE"
+      }
+    ],
+    "apis": {
+      "artifactId": "societe-service-client",
+      "groupId": "fr.mdpa.ms.socle.services.societe",
+      "version": "1.0.3-SNAPSHOT",
+      "services": [
+        {
+          "name": "ISocieteService",
+          "methods": [
+            {
+              "name": "getAll",
+              "method": "GET",
+              "returns": "List",
+              "path": "/api/societes",
+              "params": [],
+              "comment": "Permet de recuperer la liste des sociÃ©tÃ©s d'assurance"
+            },
+            {
+              "name": "getById",
+              "method": "GET",
+              "returns": "SocieteDto",
+              "path": "/api/societes/:id",
+              "params": [
+                {
+                  "type": "path",
+                  "object": "String",
+                  "name": "id"
+                }
+              ],
+              "comment": "Permet de recuperer une societe d'assurance par son code"
+            }
+          ]
+        }
+      ],
+      "dependencies": [
+        {
+          "groupId": "fr.mdpa.ms.socle.technique.credentials",
+          "artifactId": "credentials",
+          "version": "1.5"
+        },
+        {
+          "groupId": "fr.mdpa.ms.socle.technique.framework",
+          "artifactId": "starter-service-entities",
+          "version": "1.20"
+        },
+        {
+          "groupId": "fr.mdpa.ms.socle.utils.tokenprovider",
+          "artifactId": "tokenprovider",
+          "version": "1.3"
+        },
+        {
+          "groupId": "fr.mdpa.ms.socle.technique.framework",
+          "artifactId": "starter-service-client",
+          "version": "1.20"
+        },
+        {
+          "groupId": "fr.mdpa.ms.socle.technique.framework",
+          "artifactId": "springboot-config-util",
+          "version": "1.20"
+        },
+        {
+          "groupId": "fr.mdpa.ms.socle.technique.framework",
+          "artifactId": "registration-client",
+          "version": "1.20"
+        },
+        {
+          "groupId": "fr.mdpa.ms.socle.technique.framework",
+          "artifactId": "security-config-util",
+          "version": "1.20"
+        },
+        {
+          "groupId": "fr.mdpa.ms.socle.technique.framework",
+          "artifactId": "feign-config",
+          "version": "1.20"
+        }
+      ]
+    },
+    "groupId": "fr.mdpa.ms.socle.services.societe",
+    "changelog": "# Change Log\r\n\r\n## [Unreleased]()\r\n### Modified\r\n- Montée version pom parent 2.11\r\n- Montée version droit-client en 1.4.4\r\n- Déplacement des entities dans le manager\r\n- Création du mapper et des dto\r\n- Correction des services, manager etc. pour renvoyer les dto\r\n- Exposition du getById dans le JS\r\n- Récupération d'un DTO complet (avec adresse) pour le getById\r\n- Mise en place de npm pour le code généré angularjs.\r\n\r\n## [1.0.2]() - 2017-06-21\r\n### Bugfix\r\n- Passage en version 2.10 du parent car la 2.9 est bugguée (service ne demarre pas)\r\n\r\n## [1.0.1]() 2017-06-19\r\n### Added\r\n- Montée de version du parent service en 2.9\r\n- Ajout du endpoint /info\r\n- Correction du service angular .success invalid avec angular 1.6.x\r\n\r\n## [1.0.0]() 2017-01-31\r\n### Added\r\n- Ajout du Change Log.\r\n### Modified\r\n- Changement de la version du parent afin de profiter de la version 1.12 du framework\r\n- Les constructeurs des Db deviennent public\r\n  \r\n## [1.0]() - 2016-11-18\r\n### Added\r\n- Version initiale avec la version 1.11 du framework a base de starter et non de bom.\r\n",
+    "artifactId": "societe-service-impl",
+    "version": "1.0.3-SNAPSHOT",
+    "dependencies": [
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "starter-service-impl",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\starter-service-impl\\1.20\\starter-service-impl-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-impl:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "starter-springboot-app",
+        "baseVersion": "1.20",
+        "type": "pom",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\starter-springboot-app\\1.20\\starter-springboot-app-1.20.pom"
+        },
+        "artifactHandler": {
+          "extension": "pom",
+          "type": "pom",
+          "includesDependencies": false,
+          "language": "none",
+          "addedToClasspath": false
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-impl:jar:1.20",
+          "fr.mdpa.ms.socle.technique.framework:starter-springboot-app:pom:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "springboot-config",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\springboot-config\\1.20\\springboot-config-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-impl:jar:1.20",
+          "fr.mdpa.ms.socle.technique.framework:starter-springboot-app:pom:1.20",
+          "fr.mdpa.ms.socle.technique.framework:springboot-config:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "registration-client",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\registration-client\\1.20\\registration-client-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-impl:jar:1.20",
+          "fr.mdpa.ms.socle.technique.framework:starter-springboot-app:pom:1.20",
+          "fr.mdpa.ms.socle.technique.framework:registration-client:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.services.societe",
+        "artifactId": "societe-service-manager",
+        "baseVersion": "1.0.3-SNAPSHOT",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\services\\societe\\societe-service-manager\\1.0.3-SNAPSHOT\\societe-service-manager-1.0.3-SNAPSHOT.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.societe:societe-service-manager:jar:1.0.3-SNAPSHOT"
+        ],
+        "version": "1.0.3-20170904.133106-8",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 0,
+            "incrementalVersion": 3,
+            "qualifier": "20170904.133106-8",
+            "comparable": {
+              "value": "1.0.3-20170904.133106-8",
+              "canonical": "1.0.3-20170904.133106-8",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 0
+                },
+                {
+                  "value": 3
+                },
+                [
+                  {
+                    "value": 20170904
+                  },
+                  {
+                    "value": 133106
+                  },
+                  [
+                    {
+                      "value": 8
+                    }
+                  ]
+                ]
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "starter-service-manager",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\starter-service-manager\\1.20\\starter-service-manager-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.societe:societe-service-manager:jar:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-manager:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.services.societe",
+        "artifactId": "societe-service-client",
+        "baseVersion": "1.0.3-SNAPSHOT",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\services\\societe\\societe-service-client\\1.0.3-SNAPSHOT\\societe-service-client-1.0.3-SNAPSHOT.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.societe:societe-service-manager:jar:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.societe:societe-service-client:jar:1.0.3-SNAPSHOT"
+        ],
+        "version": "1.0.3-20170904.133051-8",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 0,
+            "incrementalVersion": 3,
+            "qualifier": "20170904.133051-8",
+            "comparable": {
+              "value": "1.0.3-20170904.133051-8",
+              "canonical": "1.0.3-20170904.133051-8",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 0
+                },
+                {
+                  "value": 3
+                },
+                [
+                  {
+                    "value": 20170904
+                  },
+                  {
+                    "value": 133051
+                  },
+                  [
+                    {
+                      "value": 8
+                    }
+                  ]
+                ]
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "starter-service-entities",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\starter-service-entities\\1.20\\starter-service-entities-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.societe:societe-service-manager:jar:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.societe:societe-service-client:jar:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-entities:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.utils",
+        "artifactId": "service-utils",
+        "baseVersion": "1.0",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\utils\\service-utils\\1.0\\service-utils-1.0.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.societe:societe-service-manager:jar:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.utils:service-utils:jar:1.0"
+        ],
+        "version": "1.0",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 0,
+            "comparable": {
+              "value": "1.0",
+              "canonical": "1",
+              "items": [
+                {
+                  "value": 1
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "security-config",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\security-config\\1.20\\security-config-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:security-config:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.utils.tokenprovider",
+        "artifactId": "tokenprovider",
+        "baseVersion": "1.3",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\utils\\tokenprovider\\tokenprovider\\1.3\\tokenprovider-1.3.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:security-config:jar:1.20",
+          "fr.mdpa.ms.socle.utils.tokenprovider:tokenprovider:jar:1.3"
+        ],
+        "version": "1.3",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 3,
+            "comparable": {
+              "value": "1.3",
+              "canonical": "1.3",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 3
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "security-config-util",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\security-config-util\\1.20\\security-config-util-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:security-config:jar:1.20",
+          "fr.mdpa.ms.socle.technique.framework:security-config-util:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.credentials",
+        "artifactId": "credentials",
+        "baseVersion": "1.5",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\credentials\\credentials\\1.5\\credentials-1.5.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.technique.framework:security-config:jar:1.20",
+          "fr.mdpa.ms.socle.technique.credentials:credentials:jar:1.5"
+        ],
+        "version": "1.5",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 5,
+            "comparable": {
+              "value": "1.5",
+              "canonical": "1.5",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 5
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.services.droit",
+        "artifactId": "droit-service-client",
+        "baseVersion": "1.4.4",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\services\\droit\\droit-service-client\\1.4.4\\droit-service-client-1.4.4.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.droit:droit-service-client:jar:1.4.4"
+        ],
+        "version": "1.4.4",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 4,
+            "incrementalVersion": 4,
+            "comparable": {
+              "value": "1.4.4",
+              "canonical": "1.4.4",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 4
+                },
+                {
+                  "value": 4
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "starter-service-client",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\starter-service-client\\1.20\\starter-service-client-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.droit:droit-service-client:jar:1.4.4",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-client:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "feign-config",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\feign-config\\1.20\\feign-config-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.droit:droit-service-client:jar:1.4.4",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-client:jar:1.20",
+          "fr.mdpa.ms.socle.technique.framework:feign-config:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      },
+      {
+        "groupId": "fr.mdpa.ms.socle.technique.framework",
+        "artifactId": "springboot-config-util",
+        "baseVersion": "1.20",
+        "type": "jar",
+        "scope": "compile",
+        "file": {
+          "path": "C:\\dev_intranet\\.m2\\repository\\fr\\mdpa\\ms\\socle\\technique\\framework\\springboot-config-util\\1.20\\springboot-config-util-1.20.jar"
+        },
+        "artifactHandler": {
+          "extension": "jar",
+          "type": "jar",
+          "includesDependencies": false,
+          "language": "java",
+          "addedToClasspath": true
+        },
+        "dependencyTrail": [
+          "fr.mdpa.ms.socle.services.societe:societe-service-impl:war:1.0.3-SNAPSHOT",
+          "fr.mdpa.ms.socle.services.droit:droit-service-client:jar:1.4.4",
+          "fr.mdpa.ms.socle.technique.framework:starter-service-client:jar:1.20",
+          "fr.mdpa.ms.socle.technique.framework:springboot-config-util:jar:1.20"
+        ],
+        "version": "1.20",
+        "versionRange": {
+          "recommendedVersion": {
+            "majorVersion": 1,
+            "minorVersion": 20,
+            "comparable": {
+              "value": "1.20",
+              "canonical": "1.20",
+              "items": [
+                {
+                  "value": 1
+                },
+                {
+                  "value": 20
+                }
+              ]
+            }
+          },
+          "restrictions": []
+        },
+        "resolved": true,
+        "release": false,
+        "optional": false
+      }
+    ],
+    "update": 1504610102028
+  },
+  "state": 5
+}

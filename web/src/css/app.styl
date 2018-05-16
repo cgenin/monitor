@@ -7,6 +7,9 @@ body
   color $blue-grey-5
   background-color $background
 
+.monitor-body-color
+  color $blue-grey-5
+
 h3
   font-size 24px
   line-height 24px
@@ -212,8 +215,6 @@ h3
     display: flex
     justify-content: space-between
     align-items: center
-    .q-if
-      margin-bottom: 16px
 
 // MODAL
 .modal
@@ -264,6 +265,8 @@ h3
       .q-item
         background-color $secondary
         color white
+        .q-item-side-left
+          color white
         .q-item-sublabel
           color rgba(0, 0, 0, 0.54)
     .q-collapsible
@@ -293,6 +296,8 @@ h3
           color $tertiary
 
 // BREADCRUMB
+.breadcrumb-area
+  margin 30px 0
 .q-breadcrumbs
   div
     a
@@ -319,8 +324,8 @@ h3
         border-left-color $primary
       &:before
         left -10px
-        border-top-color: $background
-        border-bottom-color: $background
+        border-color: $primary;
+        border-left-color: transparent;
       &:hover
         background-color $secondary
         &:after
@@ -370,3 +375,13 @@ h3
 .btn-flat-primary
   background-color $primary
   color white
+
+
+// SELECT
+body
+  &.desktop
+    .q-select-highlight
+      background-color $grey-9 !important
+      color $light
+      .q-item-side-right
+        color $light

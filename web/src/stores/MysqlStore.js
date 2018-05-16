@@ -15,7 +15,7 @@ class MysqlStore {
   }
 
   migrateEvents() {
-    return fetch('/api/configuration/db/mysql/export/events', {
+    return fetch('/api/configuration/db/events/store', {
       method: 'POST'
     })
       .then(res => res.json());
@@ -24,6 +24,16 @@ class MysqlStore {
   createSchema() {
     return fetch('/api/configuration/db/mysql/schemas', {
       method: 'PUT'
+    })
+      .then(res => res.json());
+  }
+
+  test(mysql) {
+    const body = JSON.stringify(mysql);
+
+    return fetch('/api/configuration/db/mysql/connect', {
+      method: 'POST',
+      body
     })
       .then(res => res.json());
   }

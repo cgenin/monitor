@@ -1,8 +1,8 @@
 <template>
-  <div class="projects-page page-list">
+  <div class="projects-page page-list container">
     <header-app :help="txtHelp" :bc-datas="[{icon:'view_list', label:'Liste des Projets'}]"></header-app>
 
-    <q-card class="container">
+    <q-card>
       <q-card-title>
         <h3>Liste des Projets</h3>
       </q-card-title>
@@ -65,7 +65,7 @@
                 <span v-else>{{props.value.length}}&nbsp;</span>
               </q-td>
               <q-td slot="body-cell-changelog" slot-scope="props" :props="props">
-                <changelog-button :key="props.row.id" :content="props.value"></changelog-button>
+                <changelog-button :key="props.row.id" :content="props.value"/>
               </q-td>
               <q-td slot="body-cell-destinationUrl" slot-scope="props" :props="props">
                 <q-btn flat color="tertiary" @click="$router.push(props.value)" small>
@@ -167,7 +167,7 @@
             field: 'name',
             name: 'name',
             width: '270px',
-            sort: true,
+            sortable: true,
             type: 'string',
             filter: true
           },
@@ -176,7 +176,7 @@
             field: 'snapshot',
             name: 'snapshot',
             width: '170px',
-            sort: false,
+            sortable: false,
             type: 'string',
             filter: true
           },
@@ -185,7 +185,7 @@
             field: 'release',
             name: 'release',
             width: '90px',
-            sort: false,
+            sortable: false,
             type: 'string',
             filter: true
           },
@@ -227,7 +227,7 @@
             field: 'latest',
             name: 'latest',
             width: '175px',
-            sort: true,
+            sortable: true,
             type: 'date',
             filter: true
           },
@@ -236,14 +236,14 @@
             field: 'changelog',
             name: 'changelog',
             width: '57px',
-            sort: false
+            sortable: false
           },
           {
             label: 'Détail',
             field: 'destinationUrl',
             name: 'destinationUrl',
             width: '67px',
-            sort: false
+            sortable: false
           }
         ]
       };

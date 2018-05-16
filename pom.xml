@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>add-on</module>
         <module>server</module>
         <module>web-app-plugin</module>
     </modules>
@@ -52,6 +53,11 @@
             <dependency>
                 <groupId>io.vertx</groupId>
                 <artifactId>vertx-jdbc-client</artifactId>
+                <version>${vertx.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-unit</artifactId>
                 <version>${vertx.version}</version>
             </dependency>
             <dependency>
@@ -103,7 +109,7 @@
                 <artifactId>okhttp</artifactId>
                 <version>3.8.1</version>
             </dependency>
-            <!--Test dependencies-->
+           <!--Test dependencies-->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -118,6 +124,11 @@
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
                 <version>3.2.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.197</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
