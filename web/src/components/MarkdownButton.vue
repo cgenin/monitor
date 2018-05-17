@@ -1,24 +1,23 @@
 <template>
-  <span>
     <q-btn @click="openModal" :color="computedColor" v-if="content" small>
       <q-icon :name="icon"/>
-    </q-btn>
-    <q-modal ref="layoutModal" v-model="modal" :content-css="{minWidth: '55vw', minHeight: '85vh', padding:'1em'}">
-      <q-modal-layout>
-        <q-toolbar slot="header">
-          <div class="q-toolbar-title">
-            {{title}}
+      <q-modal ref="layoutModal" v-model="modal" :content-css="{minWidth: '55vw', minHeight: '85vh', padding:'1em'}">
+        <q-modal-layout>
+          <q-toolbar slot="header">
+            <div class="q-toolbar-title">
+              {{title}}
+            </div>
+            <q-btn flat @click="modal= false">
+              <q-icon name="close"/>
+            </q-btn>
+          </q-toolbar>
+          <div class="layout-padding">
+            <vue-markdown :source="content" :show="true"></vue-markdown>
           </div>
-          <q-btn flat @click="modal= false">
-            <q-icon name="close"/>
-          </q-btn>
-        </q-toolbar>
-        <div class="layout-padding">
-          <vue-markdown :source="content" :show="true"></vue-markdown>
-        </div>
-      </q-modal-layout>
-    </q-modal>
-  </span>
+        </q-modal-layout>
+      </q-modal>
+    </q-btn>
+
 </template>
 <script>
   import VueMarkdown from 'vue-markdown'

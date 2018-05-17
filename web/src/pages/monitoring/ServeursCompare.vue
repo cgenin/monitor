@@ -1,8 +1,8 @@
 <template>
-  <div class="projects-page page-list">
+  <div class="projects-page page-list container">
     <header-app :bc-datas="[{icon:'view_list', label:'Liste des Projets NPM'}]"></header-app>
 
-    <q-card class="container">
+    <q-card>
       <q-card-title>
         <h3>Comparaison de serveurs</h3>
       </q-card-title>
