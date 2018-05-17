@@ -60,11 +60,11 @@
             </q-collapsible>
             <q-item to="/npm-list" v-if="moniThorUrl">
               <q-item-side icon="view_list"/>
-              <q-item-main label="NPM" sublabel="Informations concernant les projets NPM"/>
+              <q-item-main label="NPM" sublabel="Informations sur les projets NPM"/>
             </q-item>
             <q-item to="/monitoring" v-if="moniThorUrl">
               <q-item-side icon="graphic_eq"/>
-              <q-item-main label="Monitoring" sublabel="Informations concernant les serveurs"/>
+              <q-item-main label="Monitoring" sublabel="Informations serveurs"/>
             </q-item>
             <q-item to="/configuration">
               <q-item-side icon="build"/>
