@@ -38,16 +38,16 @@
             </div>
             <q-item to="/" exact>
               <q-item-side icon="home"/>
-              <q-item-main label="Welcome" sublabel="Page de résumé"/>
+              <q-item-main label="Accueil"/>
             </q-item>
-            <q-collapsible icon="fa-cogs" label="Micro services" sublabel="Informations concernant les services">
+            <q-collapsible icon="fa-cogs" label="Micro services">
               <q-item to="/projects-list">
                 <q-item-side icon="view_list"/>
                 <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>
               </q-item>
               <q-item to="/tables">
                 <q-item-side icon="border_all"/>
-                <q-item-main label="Liste des tables" sublabel="liaisons entre les services et les tables"/>
+                <q-item-main label="Liste des tables" sublabel="liaisons services / tables"/>
               </q-item>
               <q-item to="/apis-list">
                 <q-item-side icon="explore"/>
@@ -55,16 +55,16 @@
               </q-item>
               <q-item to="/dependencies">
                 <q-item-side icon="link"/>
-                <q-item-main label="Dépendances" sublabel="Dépendance entre les Micro Services"/>
+                <q-item-main label="Dépendances" sublabel="Dép entre MicroServices"/>
               </q-item>
             </q-collapsible>
             <q-item to="/npm-list" v-if="moniThorUrl">
               <q-item-side icon="view_list"/>
-              <q-item-main label="NPM" sublabel="Informations concernant les projets NPM"/>
+              <q-item-main label="NPM" sublabel="Informations sur les projets NPM"/>
             </q-item>
             <q-item to="/monitoring" v-if="moniThorUrl">
               <q-item-side icon="graphic_eq"/>
-              <q-item-main label="Monitoring" sublabel="Informations concernant les serveurs"/>
+              <q-item-main label="Monitoring" sublabel="Informations serveurs"/>
             </q-item>
             <q-item to="/configuration">
               <q-item-side icon="build"/>
