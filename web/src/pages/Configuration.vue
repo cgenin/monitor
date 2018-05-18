@@ -1,7 +1,7 @@
 <template>
-  <div class="configuration-page">
+  <div class="configuration-page container">
     <header-app :bc-datas="[{icon:'build', label:'Console d\'administration'}]" />
-    <q-card class="container">
+    <q-card>
       <q-card-title>
         <h3>Console d'adminisration</h3>
       </q-card-title>
