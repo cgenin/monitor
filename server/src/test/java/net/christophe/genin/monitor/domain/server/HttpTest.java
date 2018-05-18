@@ -9,6 +9,7 @@ import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.core.http.HttpClient;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -39,7 +40,7 @@ public class HttpTest {
 
     @After
     public void after(TestContext context) {
-        vertx.close(context.asyncAssertSuccess());
+       // vertx.close(context.asyncAssertSuccess());
     }
 
     @Test

@@ -1,22 +1,30 @@
 package net.christophe.genin.monitor.domain.server.db.mysql;
 
+import rx.Observable;
 import rx.Single;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 
 public class AntiMonitorSchemas {
 
     private static final String[] CREATE_SCRIPTS = new String[]{
             "CREATE TABLE IF NOT EXISTS EVENTS (\n" +
-                    "  ID       BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
+                    "  ID  BIGINT AUTO_INCREMENT PRIMARY KEY,\n" +
                     "  state    INTEGER,\n" +
-                    "  document LONGTEXT\n" +
+                    "  document LONGTEXT,\n" +
                     "  ARCHIVE BOOLEAN\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS TABLES (\n" +
                     "  ID      VARCHAR(100) NOT NULL PRIMARY KEY,\n" +
                     "  NAME    TEXT NOT NULL,\n" +
                     "  SERVICE TEXT NOT NULL,\n" +
-                    "  latestUpdate BIG INT\n" +
+                    "  latestUpdate BIGINT\n" +
                     ")",
             "CREATE TABLE IF NOT EXISTS TABLES (\n" +
                     "  ID       VARCHAR(767) PRIMARY KEY,\n" +
@@ -75,12 +83,42 @@ public class AntiMonitorSchemas {
 
     /**
      * Methods for creating an schema.
+     *
      * @return The results.
      */
     public static Single<String> create() {
+        /*
         return Mysqls.Instance.get()
+
                 .batch(CREATE_SCRIPTS)
+                .map(list -> "Creation of EVENTS, PROJECTS, TABLES, API, VERSIONS if not exist :" + list);*/
+        Mysqls mysqls = Mysqls.Instance.get();
+        return Single.just("/sql/CREATE_SCHEMA.sql")
+                .map(p -> {
+                    try {
+                        return AntiMonitorSchemas.class.getResource(p).toURI();
+                    } catch (URISyntaxException e) {
+                        throw new IllegalStateException("err in creating path", e);
+                    }
+                })
+                .map(Paths::get)
+                .map(path -> {
+                    try {
+                        return Files.readAllLines(path);
+                    } catch (IOException e) {
+                        throw new IllegalStateException("err in reading file", e);
+                    }
+                })
+                .map(lines -> lines.stream().collect(Collectors.joining(" ")))
+                .map(content -> Arrays.stream(content.split(";"))
+                        .map(String::trim)
+                        .toArray(String[]::new)
+                )
+                .flatMap(all -> {
+                    return mysqls.batch(all);
+                })
                 .map(list -> "Creation of EVENTS, PROJECTS, TABLES, API, VERSIONS if not exist :" + list);
+
     }
 
 

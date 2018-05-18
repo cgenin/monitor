@@ -15,8 +15,11 @@ import rx.Single;
 import rx.schedulers.Schedulers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Instance for managing mysql's connection and current query.
@@ -77,7 +80,8 @@ public interface Mysqls {
 
         /**
          * Update the singleton
-         * @param vertx The vertx instance.
+         *
+         * @param vertx         The vertx instance.
          * @param configuration the current configuration.
          * @return the updated instance
          */
@@ -164,8 +168,14 @@ public interface Mysqls {
         @Override
         public Single<List<Integer>> batch(String... batchOperations) {
             List<Integer> initialValue = new ArrayList<>();
-            return Observable.from(batchOperations)
-                    .flatMap(sql -> execute(sql).toObservable())
+            List<Observable<UpdateResult>> collect = Arrays.stream(batchOperations)
+                    .map(sql -> {
+                        logger.info("execute : " + sql);
+                        return execute(sql)
+                                .toObservable();
+                    })
+                    .collect(Collectors.toList());
+            return Observable.concat(collect)
                     .map(UpdateResult::getUpdated)
                     .reduce(initialValue, (acc, nb) -> {
                         acc.add(nb);
