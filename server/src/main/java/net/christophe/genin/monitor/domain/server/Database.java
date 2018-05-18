@@ -90,6 +90,7 @@ public class Database extends AbstractVerticle {
                         err -> {
                             logger.error("Impossible to open connection to mysql => " + err.getMessage());
                             logger.debug("Error in activating mysql.", err);
+                            Mysqls.Instance.disabled();
                         }
                 );
         eventBusEndpoints();

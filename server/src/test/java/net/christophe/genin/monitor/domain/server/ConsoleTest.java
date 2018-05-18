@@ -11,18 +11,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Date;
 
 @RunWith(VertxUnitRunner.class)
 public class ConsoleTest {
 
+    public static final String PATH_DB = "target/ConsoleTest.db";
     Vertx vertx;
 
 
     @Before
-    public void before(TestContext context) {
+    public void before(TestContext context) throws IOException {
+        System.out.println("deleted " + Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI())));
+
         DeploymentOptions options = new DeploymentOptions()
-                .setConfig(new JsonObject().put("nitritedb", new JsonObject().put("path", "target/testInitializdb.db")));
+                .setConfig(new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB)));
 
         vertx = Vertx.vertx();
         vertx.deployVerticle(Console.class.getName(), options, context.asyncAssertSuccess());

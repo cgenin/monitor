@@ -22,12 +22,13 @@ import net.christophe.genin.monitor.domain.server.http.Services;
 public class Http extends AbstractVerticle {
 
     private static final Logger logger = LoggerFactory.getLogger(Http.class);
+    private HttpServer httpServer;
 
     @Override
     public void start()  {
         final int port = config().getInteger("server-port", 8279);
 
-        final HttpServer httpServer = vertx.createHttpServer(new HttpServerOptions().setCompressionSupported(true));
+        httpServer = vertx.createHttpServer(new HttpServerOptions().setCompressionSupported(true));
 
         final Router router = Router.router(vertx);
         router.route().handler(CorsHandler.create("*"));
@@ -56,5 +57,8 @@ public class Http extends AbstractVerticle {
         logger.info("Http server launched !");
     }
 
-
+    @Override
+    public void stop() throws Exception {
+        httpServer.close();
+    }
 }
