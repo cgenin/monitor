@@ -121,13 +121,13 @@ public class ProjectCommandTest {
         }
 
         @Override
-        public long update() {
+        public Long update() {
             return updated;
         }
 
         @Override
-        public long id() {
-            return 0;
+        public Long id() {
+            return 0L;
         }
 
         @Override
