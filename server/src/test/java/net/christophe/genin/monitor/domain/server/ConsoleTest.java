@@ -6,8 +6,10 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,18 +23,19 @@ import java.util.Date;
 public class ConsoleTest {
 
     public static final String PATH_DB = "target/ConsoleTest.db";
+    private static DeploymentOptions option;
     Vertx vertx;
+
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(MysqlDatabaseTest.class).deleteAndGetOption();
+    }
 
 
     @Before
     public void before(TestContext context) throws IOException {
-        System.out.println("deleted " + Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI())));
-
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB)));
-
         vertx = Vertx.vertx();
-        vertx.deployVerticle(Console.class.getName(), options, context.asyncAssertSuccess());
+        vertx.deployVerticle(Console.class.getName(), option, context.asyncAssertSuccess());
     }
 
 

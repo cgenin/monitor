@@ -1,4 +1,4 @@
-package net.christophe.genin.monitor.domain.server;
+package net.christophe.genin.monitor.domain.server.base;
 
 import com.wix.mysql.EmbeddedMysql;
 import com.wix.mysql.config.DownloadConfig;
@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import java.sql.SQLException;
 
 import static com.wix.mysql.config.MysqldConfig.aMysqldConfig;
+import static com.wix.mysql.config.ProxyFactory.aHttpProxy;
 import static com.wix.mysql.distribution.Version.v5_7_latest;
 
 public class DbTest {
@@ -42,7 +43,8 @@ public class DbTest {
                 .withUser(USER_DB, PWD_DB)
                 .withPort(PORT_DB)
                 .build();
-        EmbeddedMysql.Builder builder = new EmbeddedMysql.Builder(cfg, new DownloadConfig.Builder().build())
+        EmbeddedMysql.Builder builder = new EmbeddedMysql.Builder(cfg, new DownloadConfig.Builder()
+                .withProxy(aHttpProxy("mutpoit", 8085)).build())
                 .addSchema(NAM_DB);
         server.set(builder.start());
 

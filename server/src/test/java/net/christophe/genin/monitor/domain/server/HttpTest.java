@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.net.ServerSocket;
 
+@Ignore
 @RunWith(VertxUnitRunner.class)
 public class HttpTest {
 

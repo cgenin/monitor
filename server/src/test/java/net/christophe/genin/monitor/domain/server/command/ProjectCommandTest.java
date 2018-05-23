@@ -7,11 +7,14 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
+import net.christophe.genin.monitor.domain.server.NitriteDatabaseTest;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
 import net.christophe.genin.monitor.domain.server.model.Project;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import rx.Observable;
@@ -32,16 +35,17 @@ public class ProjectCommandTest {
 
 
     public static final String PATH_DB = "target/testProjectCommandTest.db";
+    private static DeploymentOptions option;
     Vertx vertx;
 
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(ProjectCommandTest.class).deleteAndGetOption();
+    }
     @Before
     public void before(TestContext context) throws Exception {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
         vertx = Vertx.vertx();
-        vertx.deployVerticle(Database.class.getName(), options, context.asyncAssertSuccess());
+        vertx.deployVerticle(Database.class.getName(), option, context.asyncAssertSuccess());
 
         URI uri = RawsTest.class.getResource("/datas/projects-1.json").toURI();
         Path path = Paths.get(uri);

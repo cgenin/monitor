@@ -7,9 +7,12 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.adapter.nitrite.NitriteConfiguration;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.model.Configuration;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,18 +26,20 @@ public class MysqlDatabaseTest extends DbTest {
 
 
     public static final String PATH_DB = "target/testMysqlDatabaseTest.db";
+    private static DeploymentOptions option;
     Vertx vertx;
 
 
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(MysqlDatabaseTest.class).deleteAndGetOption();
+    }
+
     @Before
     public void before(TestContext context) throws IOException {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB)));
-
         vertx = Vertx.vertx();
         Async async = context.async(3);
-        vertx.deployVerticle(Database.class.getName(), options, r -> {
+        vertx.deployVerticle(Database.class.getName(), option, r -> {
             async.countDown();
             Configuration conf = new NitriteConfiguration().setMysqlHost(HOST_DB)
                     .setMysqlDB(NAM_DB)

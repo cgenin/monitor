@@ -7,10 +7,12 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,25 +26,26 @@ import java.util.stream.Collectors;
 @RunWith(VertxUnitRunner.class)
 public class RawCommandTest {
 
+    private static DeploymentOptions option;
     private JsonObject data;
     public static final String PATH_DB = "target/testRawCommandTest.db";
     Vertx vertx;
 
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(RawCommandTest.class).deleteAndGetOption();
+    }
 
     @Before
     public void before(TestContext context) throws Exception {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
 
         vertx = Vertx.vertx();
         Async async = context.async(2);
-        vertx.deployVerticle(Database.class.getName(), options, (result) -> {
+        vertx.deployVerticle(Database.class.getName(), option, (result) -> {
             context.assertTrue(result.succeeded());
             async.countDown();
         });
-        vertx.deployVerticle(RawCommand.class.getName(), options, (r) -> {
+        vertx.deployVerticle(RawCommand.class.getName(), option, (r) -> {
             context.assertTrue(r.succeeded());
             async.countDown();
         });

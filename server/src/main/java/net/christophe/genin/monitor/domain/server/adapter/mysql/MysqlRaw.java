@@ -50,7 +50,7 @@ public class MysqlRaw implements Raw {
 
     @Override
     public Single<Boolean> updateState(Treatments treatments) {
-        return handler.updateState();
+        return handler.updateState(this, treatments);
     }
 
     public static class MysqlRawPort implements RawPort {
@@ -66,8 +66,7 @@ public class MysqlRaw implements Raw {
             return null;
         }
 
-        @Override
-        public Single<Boolean> updateState(MysqlRawPort raw, Treatments treatments) {
+        public Single<Boolean> updateState(MysqlRaw raw, Treatments treatments) {
             return null;
         }
 
