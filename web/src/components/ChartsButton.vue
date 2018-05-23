@@ -76,7 +76,7 @@
       async loadServiceData() {
         this.loading = true;
         if (this.serviceName && this.server) {
-          await ServicesStore.getService(this.serviceName)
+          await ServicesStore.getService(this.serviceName, this.server)
             .then((service) => {
               this.service = service.servers.find((s) => s.host === this.server);
             }).catch(() => {
