@@ -60,6 +60,15 @@ public class ProjectCommandTest {
 
     @Test
     public void should_create_project_if_update_time_is_after_0(TestContext context) {
+        create_project_if_update_time_is_after_0(context);
+    }
+
+    @Test
+    public void should_create_project_if_update_time_is_before_0(TestContext context) {
+        create_project_if_update_time_is_before_0(context);
+    }
+
+    public static void create_project_if_update_time_is_after_0(TestContext context) {
         Async async = context.async(3);
 
         MockRaw raw = new MockRaw(context, async, 500);
@@ -83,8 +92,9 @@ public class ProjectCommandTest {
         });
     }
 
-    @Test
-    public void should_create_project_if_update_time_is_before_0(TestContext context) {
+
+
+    public static void create_project_if_update_time_is_before_0(TestContext context) {
         Async async = context.async(2);
 
         MockRaw raw = new MockRaw(context, async, -12);

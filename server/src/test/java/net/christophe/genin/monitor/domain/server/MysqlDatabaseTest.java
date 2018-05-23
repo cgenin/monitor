@@ -41,28 +41,12 @@ public class MysqlDatabaseTest extends DbTest {
         Async async = context.async(3);
         vertx.deployVerticle(Database.class.getName(), option, r -> {
             async.countDown();
-            Configuration conf = new NitriteConfiguration().setMysqlHost(HOST_DB)
-                    .setMysqlDB(NAM_DB)
-                    .setMysqlPassword(PWD_DB)
-                    .setMysqlPort(PORT_DB)
-                    .setMysqlUser(USER_DB);
-            Configuration.save(conf).subscribe(
-                    bool -> {
-                        context.assertTrue(bool);
-                        async.countDown();
-                        vertx.eventBus().<JsonObject>send(Database.MYSQL_ON_OFF, new JsonObject(), msg -> {
-                            JsonObject body = msg.result().body();
-                            context.assertNotNull(body);
-                            context.assertEquals(true, body.getBoolean("active"));
-                            async.countDown();
-                        });
-                    },
-                    context::fail
-            );
+            setAntiMonitorDS(context, async, vertx);
 
         });
 
     }
+
 
 
     @After

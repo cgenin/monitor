@@ -31,7 +31,7 @@
                  v-bind:class="{ open: filtersPanel }">&nbsp;filtres
           </q-btn>
         </div>
-        <div v-if="filtersPanel" class="inputs inputs-panel">
+        <div v-if="filtersPanel" class="inputs inputs-panel" v-bind:class="{ open: filtersPanel }">
           <q-select
             float-label="Méthode"
             v-model="subFilters.method"
@@ -298,9 +298,9 @@
   }
 
   .apis-page .inputs-panel {
+    overflow: hidden;
     background: #eeeeee;
     padding: 15px;
-
   }
 
   .apis-page .inputs-panel > div {

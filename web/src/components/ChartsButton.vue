@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <q-btn @click="openModal" color="secondary" v-if="serviceName && server" small>
+  <div class="row align-stretch">
+    <q-btn class="btn-version" @click="openModal" color="secondary" v-if="serviceName && server" small>
         <span
           v-if="serviceInfos.info && serviceInfos.info.build">
-        <strong>{{serviceInfos.info.build.version}}</strong>
-        <br>
-        <span>{{formatYYYYMMDDHHmm(serviceInfos.info.build.timestamp)}}</span>
+          <strong>{{serviceInfos.info.build.version}}</strong>
+          <br>
+          <span>{{formatYYYYMMDDHHmm(serviceInfos.info.build.timestamp)}}</span>
         </span>
     </q-btn>
-    <markdown-button @click="openProperties" icon="list" color="tertiary" title="Properties" :content="properties"/>
+    <markdown-button @click="openProperties" icon="list" color="orange-4" title="Properties" :content="properties"/>
     <q-modal @hide="closingModal"
              ref="layoutModal"
              v-model="modal"
@@ -76,7 +76,7 @@
       async loadServiceData() {
         this.loading = true;
         if (this.serviceName && this.server) {
-          await ServicesStore.getService(this.serviceName)
+          await ServicesStore.getService(this.serviceName, this.server)
             .then((service) => {
               this.service = service.servers.find((s) => s.host === this.server);
             }).catch(() => {
@@ -149,3 +149,9 @@ ${this.formatKeys(this.service.env[b])}
     }
   }
 </script>
+
+<style lang="stylus">
+  .btn-version
+    margin-right 15px
+    min-width 146px
+</style>
