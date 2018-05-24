@@ -102,7 +102,7 @@ public class ProjectCommandTest {
         Func1<Raw, Observable<String>> build = new ProjectCommand().run();
 
         build.call(raw).subscribe(str -> {
-            context.assertEquals("No data for artifactId. Document must not be updated: 0 > -12", str);
+            context.assertTrue( str.startsWith("No data for artifactId. Document must not be updated: "));
             async.countDown();
         });
     }

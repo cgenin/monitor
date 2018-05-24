@@ -7,7 +7,7 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
-import net.christophe.genin.monitor.domain.server.DbTest;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import net.christophe.genin.monitor.domain.server.command.RawCommand;
 import net.christophe.genin.monitor.domain.server.command.Treatments;
 import net.christophe.genin.monitor.domain.server.command.util.RawsTest;

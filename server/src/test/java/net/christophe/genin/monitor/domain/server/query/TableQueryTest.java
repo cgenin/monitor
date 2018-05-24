@@ -50,6 +50,7 @@ public class TableQueryTest {
             Table table = Adapters.get().tableHandler().newInstance();
 
             Observable.concat(
+                    Table.removeAll().toObservable().flatMap(nb -> Observable.empty()),
                     Dependency.removeAll().toObservable().flatMap(nb -> Observable.empty()),
                     table.setLastUpdated(0L)
                             .setService("domain")

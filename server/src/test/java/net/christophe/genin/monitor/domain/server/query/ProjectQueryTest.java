@@ -88,7 +88,7 @@ public class ProjectQueryTest {
             context.assertTrue(msg.succeeded());
             JsonArray body = msg.result().body();
             context.assertNotNull(body);
-            context.assertEquals(1, body.size());
+            context.assertEquals(2, body.size());
             JsonObject obj = body.getJsonObject(0);
             context.assertNotNull(obj.getString("id"));
             obj.remove("id");
