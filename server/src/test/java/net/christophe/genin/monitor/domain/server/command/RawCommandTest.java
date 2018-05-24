@@ -28,7 +28,6 @@ public class RawCommandTest {
 
     private static DeploymentOptions option;
     private JsonObject data;
-    public static final String PATH_DB = "target/testRawCommandTest.db";
     Vertx vertx;
 
     @BeforeClass
@@ -76,7 +75,12 @@ public class RawCommandTest {
                 context.assertEquals("societe-service-impl", r.artifactId());
                 context.assertEquals(Treatments.PROJECTS, r.state());
                 context.assertTrue(r.update() > 1L);
-                //context.assertEquals(data, r.json());
+                System.out.println( r.json().encodePrettily());
+
+                JsonObject copy = data.copy();
+                copy.remove("update");
+                r.json().remove("update");
+                context.assertEquals(copy, r.json());
                 async.countDown();
             });
         });

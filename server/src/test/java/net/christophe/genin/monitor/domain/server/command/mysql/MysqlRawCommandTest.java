@@ -78,7 +78,10 @@ public class MysqlRawCommandTest extends DbTest {
                 context.assertEquals("societe-service-impl", r.artifactId());
                 context.assertEquals(Treatments.PROJECTS, r.state());
                 context.assertTrue(r.update() > 1L);
-                context.assertEquals(data, r.json());
+                JsonObject copy = data.copy();
+                copy.remove("update");
+                r.json().remove("update");
+                context.assertEquals(copy, r.json());
                 async.countDown();
             });
         });
