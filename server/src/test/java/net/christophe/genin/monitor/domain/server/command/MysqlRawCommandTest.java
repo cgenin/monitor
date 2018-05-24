@@ -7,8 +7,8 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
-import net.christophe.genin.monitor.domain.server.DbTest;
 import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
 import org.junit.Before;
@@ -16,11 +16,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
-import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 @RunWith(VertxUnitRunner.class)
 public class MysqlRawCommandTest extends DbTest implements ReadJsonFiles {

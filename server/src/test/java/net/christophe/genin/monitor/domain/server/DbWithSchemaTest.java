@@ -1,5 +1,6 @@
 package net.christophe.genin.monitor.domain.server;
 
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 

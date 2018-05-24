@@ -95,13 +95,13 @@ public class TablesCommandTest implements ReadJsonFiles {
         }
 
         @Override
-        public long update() {
+        public Long update() {
             return update;
         }
 
         @Override
-        public long id() {
-            return 666;
+        public Long id() {
+            return 666L;
         }
 
         @Override

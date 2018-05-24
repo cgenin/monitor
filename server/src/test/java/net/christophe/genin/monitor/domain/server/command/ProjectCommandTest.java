@@ -8,6 +8,7 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.NitriteDatabaseTest;
+import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
 import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
 import net.christophe.genin.monitor.domain.server.model.Project;
@@ -72,7 +73,6 @@ public class ProjectCommandTest implements ReadJsonFiles {
 
     public static void create_project_if_update_time_is_after_0(TestContext context, Async async, MockRaw raw) {
 
-        MockRaw raw = new MockRaw(context, async, 500);
 
         Func1<Raw, Observable<String>> build = new ProjectCommand().run();
 
