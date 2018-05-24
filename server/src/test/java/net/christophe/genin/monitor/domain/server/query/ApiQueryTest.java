@@ -9,8 +9,11 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
+import net.christophe.genin.monitor.domain.server.command.RawCommandTest;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -24,18 +27,21 @@ public class ApiQueryTest {
 
 
     public static final String PATH_DB = "target/testEndpointQueryTest.db";
+    private static DeploymentOptions option;
     Vertx vertx;
 
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(ApiQueryTest.class).deleteAndGetOption();
+    }
+
     @Before
-    public void before(TestContext context) throws IOException {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
+    public void before(TestContext context)  {
+
 
         vertx = Vertx.vertx();
         Async async = context.async(3);
-        vertx.deployVerticle(Database.class.getName(), options, (result) -> {
+        vertx.deployVerticle(Database.class.getName(), option, (result) -> {
             context.assertTrue(result.succeeded());
             async.countDown();
             Adapters.get().apiHandler().newInstance("GET","/path", "idProject")
@@ -55,7 +61,7 @@ public class ApiQueryTest {
                         async.countDown();
                     });
         });
-        vertx.deployVerticle(ApiQuery.class.getName(), options, (r) -> {
+        vertx.deployVerticle(ApiQuery.class.getName(), option, (r) -> {
             context.assertTrue(r.succeeded());
             async.countDown();
         });

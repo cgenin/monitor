@@ -36,7 +36,7 @@ public class ProjectCommand extends AbstractVerticle {
         return doc -> {
             final JsonObject json = doc.json();
             String artifactId = doc.artifactId();
-            long update = doc.update();
+            Long update = doc.update();
 
 
             return Configuration.load()

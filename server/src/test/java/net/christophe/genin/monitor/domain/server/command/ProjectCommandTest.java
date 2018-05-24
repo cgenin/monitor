@@ -7,11 +7,14 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
-import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
+import net.christophe.genin.monitor.domain.server.NitriteDatabaseTest;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
+import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
 import net.christophe.genin.monitor.domain.server.model.Project;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import rx.Observable;
@@ -19,8 +22,11 @@ import rx.Single;
 import rx.functions.Func1;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 @RunWith(VertxUnitRunner.class)
 public class ProjectCommandTest implements ReadJsonFiles {
@@ -29,16 +35,17 @@ public class ProjectCommandTest implements ReadJsonFiles {
 
 
     public static final String PATH_DB = "target/testProjectCommandTest.db";
+    private static DeploymentOptions option;
     Vertx vertx;
 
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(ProjectCommandTest.class).deleteAndGetOption();
+    }
     @Before
     public void before(TestContext context) throws Exception {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
         vertx = Vertx.vertx();
-        vertx.deployVerticle(Database.class.getName(), options, context.asyncAssertSuccess());
+        vertx.deployVerticle(Database.class.getName(), option, context.asyncAssertSuccess());
 
         data = load("/datas/projects-1.json");
 
@@ -65,6 +72,7 @@ public class ProjectCommandTest implements ReadJsonFiles {
 
     public static void create_project_if_update_time_is_after_0(TestContext context, Async async, MockRaw raw) {
 
+        MockRaw raw = new MockRaw(context, async, 500);
 
         Func1<Raw, Observable<String>> build = new ProjectCommand().run();
 
@@ -95,7 +103,7 @@ public class ProjectCommandTest implements ReadJsonFiles {
         Func1<Raw, Observable<String>> build = new ProjectCommand().run();
 
         build.call(raw).subscribe(str -> {
-            context.assertEquals("No data for artifactId. Document must not be updated: 0 > -12", str);
+            context.assertTrue( str.startsWith("No data for artifactId. Document must not be updated: "));
             async.countDown();
         });
     }
@@ -130,13 +138,13 @@ public class ProjectCommandTest implements ReadJsonFiles {
         }
 
         @Override
-        public long update() {
+        public Long update() {
             return updated;
         }
 
         @Override
-        public long id() {
-            return 0;
+        public Long id() {
+            return 0L;
         }
 
         @Override

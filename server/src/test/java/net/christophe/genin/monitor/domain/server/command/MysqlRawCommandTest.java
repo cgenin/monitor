@@ -16,8 +16,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 @RunWith(VertxUnitRunner.class)
 public class MysqlRawCommandTest extends DbTest implements ReadJsonFiles {
@@ -70,7 +73,10 @@ public class MysqlRawCommandTest extends DbTest implements ReadJsonFiles {
                 context.assertEquals("societe-service-impl", r.artifactId());
                 context.assertEquals(Treatments.PROJECTS, r.state());
                 context.assertTrue(r.update() > 1L);
-                context.assertEquals(data, r.json());
+                JsonObject copy = data.copy();
+                copy.remove("update");
+                r.json().remove("update");
+                context.assertEquals(copy, r.json());
                 async.countDown();
             });
         });

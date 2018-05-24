@@ -98,6 +98,10 @@ public final class NitriteDbs {
         return true;
     }
 
+    public void close() {
+        Optional.ofNullable(db).ifPresent(Nitrite::close);
+    }
+
     public static class Attributes {
         private final Document document;
 

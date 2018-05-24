@@ -7,10 +7,8 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.RunTestOnContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
 import java.io.File;
@@ -23,16 +21,18 @@ public class NitriteDatabaseTest {
 
 
     private static final String PATH_DB = "target/testXDatabaseTest.db";
+    private static DeploymentOptions option;
     private final Vertx vertx = Vertx.vertx();
 
+
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(NitriteDatabaseTest.class).deleteAndGetOption();
+    }
+
     @Before
-    public void before(TestContext context) throws IOException {
-        System.out.println("deleted " + Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI())));
-
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB)));
-
-        vertx.deployVerticle(Database.class.getName(), options, context.asyncAssertSuccess());
+    public void before(TestContext context) {
+        vertx.deployVerticle(Database.class.getName(), option, context.asyncAssertSuccess());
     }
 
 

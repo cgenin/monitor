@@ -5,7 +5,7 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
-import net.christophe.genin.monitor.domain.server.DbTest;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import org.junit.*;
 import org.junit.runner.RunWith;
 

@@ -19,9 +19,9 @@ class ServicesStore {
     instance = this;
   }
 
-  async getService(service) {
+  async getService(service,server) {
     if(this.moniThorUrl) {
-      return await fetch(`${this.moniThorUrl}/api/services/ping?service=${service}`)
+      return await fetch(`${this.moniThorUrl}/api/services/ping?service=${service}&server=${server}`)
         .then((response) => response.json())
         .then((content) => {
           return content;

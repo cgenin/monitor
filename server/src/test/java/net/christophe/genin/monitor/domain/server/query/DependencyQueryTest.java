@@ -9,10 +9,14 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
+import net.christophe.genin.monitor.domain.server.model.Dependency;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import rx.Observable;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,31 +28,36 @@ public class DependencyQueryTest {
 
 
     public static final String PATH_DB = "target/testDependencyQueryTest.db";
+    private static DeploymentOptions option;
     Vertx vertx;
 
 
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(DependencyQueryTest.class).deleteAndGetOption();
+    }
+
     @Before
     public void before(TestContext context) throws IOException {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
-
         vertx = Vertx.vertx();
         Async async = context.async(3);
-        vertx.deployVerticle(Database.class.getName(), options, (result) -> {
+        vertx.deployVerticle(Database.class.getName(), option, (result) -> {
             context.assertTrue(result.succeeded());
             async.countDown();
-            Adapters.get().dependencyHandler().create("resource", "domain")
+            Observable.concat(
+                    Dependency.removeAll().toObservable().flatMap(nb -> Observable.empty()),
+                    Adapters.get().dependencyHandler().create("resource", "domain").toObservable())
                     .subscribe(bool -> {
                         context.assertTrue(bool);
                         async.countDown();
                     });
         });
-        vertx.deployVerticle(DependencyQuery.class.getName(), options, (r) -> {
+        vertx.deployVerticle(DependencyQuery.class.getName(), option, (r) -> {
             context.assertTrue(r.succeeded());
             async.countDown();
         });
+
+
     }
 
 

@@ -1,7 +1,7 @@
 package net.christophe.genin.monitor.domain.server.model;
 
 import io.vertx.core.json.JsonObject;
-import net.christophe.genin.monitor.domain.server.adapter.nitrite.NitriteRaw;
+import net.christophe.genin.monitor.domain.server.adapter.Adapters;
 import net.christophe.genin.monitor.domain.server.command.Treatments;
 import rx.Observable;
 import rx.Single;
@@ -13,7 +13,7 @@ import rx.schedulers.Schedulers;
 public interface Raw {
 
     static Observable<Raw> findAll() {
-        return new NitriteRaw().findAll();
+        return Adapters.get().rawHandler().findAll();
     }
 
     JsonObject json();
@@ -22,9 +22,9 @@ public interface Raw {
 
     String artifactId();
 
-    long update();
+    Long update();
 
-    long id();
+    Long id();
 
     Single<Boolean> updateState(Treatments treatments);
 
@@ -35,23 +35,23 @@ public interface Raw {
      * @return The id of the created event.
      */
     static Single<Long> save(JsonObject object) {
-        return new NitriteRaw().save(object)
+        return  Adapters.get().rawHandler().save(object)
                 .observeOn(Schedulers.io());
     }
 
     static Single<Integer> updateAllStatesBy(Treatments treatments) {
-        return new NitriteRaw().updateAllStatesBy(treatments);
+        return Adapters.get().rawHandler().updateAllStatesBy(treatments);
     }
 
     static Observable<Raw> findByStateFirst(Treatments treatments) {
-        return new NitriteRaw().findByStateFirst(treatments);
+        return Adapters.get().rawHandler().findByStateFirst(treatments);
     }
 
     static Observable<Raw> findAllByState(Treatments treatments) {
-        return new NitriteRaw().findAllByState(treatments);
+        return  Adapters.get().rawHandler().findAllByState(treatments);
     }
 
     static Single<Boolean> removeById(long id) {
-        return new NitriteRaw().removeById(id);
+        return  Adapters.get().rawHandler().removeById(id);
     }
 }

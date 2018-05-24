@@ -98,6 +98,11 @@ public class Database extends AbstractVerticle {
         logger.info("started");
     }
 
+    @Override
+    public void stop() {
+        NitriteDbs.instance.close();
+    }
+
     /**
      * Create Event bus endpoints.
      */

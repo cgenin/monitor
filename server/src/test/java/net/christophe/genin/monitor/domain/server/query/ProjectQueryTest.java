@@ -9,9 +9,11 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.model.Project;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,20 +28,23 @@ public class ProjectQueryTest {
 
 
     public static final String PATH_DB = "target/testProjectQueryTest.db";
+    private static DeploymentOptions option;
     Vertx vertx;
     private Project project;
 
 
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(ProjectQueryTest.class).deleteAndGetOption();
+    }
+
+
     @Before
     public void before(TestContext context) throws IOException {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
 
         vertx = Vertx.vertx();
         Async async = context.async(3);
-        vertx.deployVerticle(Database.class.getName(), options, (result) -> {
+        vertx.deployVerticle(Database.class.getName(), option, (result) -> {
             context.assertTrue(result.succeeded());
             async.countDown();
             Adapters.get().projectHandler().readByName ("oneProject")
@@ -59,7 +64,7 @@ public class ProjectQueryTest {
                         async.countDown();
                     });
         });
-        vertx.deployVerticle(ProjectQuery.class.getName(), options, (r) -> {
+        vertx.deployVerticle(ProjectQuery.class.getName(), option, (r) -> {
             context.assertTrue(r.succeeded());
             async.countDown();
         });
@@ -72,6 +77,7 @@ public class ProjectQueryTest {
 
     @After
     public void after(TestContext context) {
+
         vertx.close(context.asyncAssertSuccess());
     }
 
@@ -82,7 +88,7 @@ public class ProjectQueryTest {
             context.assertTrue(msg.succeeded());
             JsonArray body = msg.result().body();
             context.assertNotNull(body);
-            context.assertEquals(1, body.size());
+            context.assertEquals(2, body.size());
             JsonObject obj = body.getJsonObject(0);
             context.assertNotNull(obj.getString("id"));
             obj.remove("id");
