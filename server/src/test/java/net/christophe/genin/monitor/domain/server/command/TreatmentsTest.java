@@ -1,7 +1,6 @@
 package net.christophe.genin.monitor.domain.server.command;
 
-import io.vertx.core.*;
-import io.vertx.core.impl.ContextImpl;
+import io.vertx.core.Context;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
@@ -15,10 +14,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Mockito.*;
 import rx.Observable;
 
-import java.util.List;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(VertxUnitRunner.class)

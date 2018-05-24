@@ -7,10 +7,12 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
-import net.christophe.genin.monitor.domain.server.NitriteDatabaseTest;
 import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
+import net.christophe.genin.monitor.domain.server.adapter.Adapters;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
-import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
+import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
+import net.christophe.genin.monitor.domain.server.model.Configuration;
 import net.christophe.genin.monitor.domain.server.model.Project;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
@@ -22,20 +24,12 @@ import rx.Observable;
 import rx.Single;
 import rx.functions.Func1;
 
-import java.io.File;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
-
 @RunWith(VertxUnitRunner.class)
 public class ProjectCommandTest implements ReadJsonFiles {
 
     private static JsonObject data;
 
 
-    public static final String PATH_DB = "target/testProjectCommandTest.db";
     private static DeploymentOptions option;
     Vertx vertx;
 
@@ -43,13 +37,17 @@ public class ProjectCommandTest implements ReadJsonFiles {
     public static void first() throws Exception {
         option = new NitriteDBManagemementTest(ProjectCommandTest.class).deleteAndGetOption();
     }
+
     @Before
     public void before(TestContext context) throws Exception {
+        DbTest.disabledAndSetAdapterToNitrite();
         vertx = Vertx.vertx();
-        vertx.deployVerticle(Database.class.getName(), option, context.asyncAssertSuccess());
-
+        Async async = context.async(2);
+        vertx.deployVerticle(Database.class.getName(), option, msg -> {
+            Configuration.load().subscribe(conf -> async.countDown());
+            async.countDown();
+        });
         data = load("/datas/projects-1.json");
-
     }
 
     @After
@@ -90,9 +88,8 @@ public class ProjectCommandTest implements ReadJsonFiles {
                         context.assertNotNull(project.id());
                         async.countDown();
                     });
-        });
+        }, context::fail);
     }
-
 
 
     public static void create_project_if_update_time_is_before_0(TestContext context) {
@@ -103,7 +100,7 @@ public class ProjectCommandTest implements ReadJsonFiles {
         Func1<Raw, Observable<String>> build = new ProjectCommand().run();
 
         build.call(raw).subscribe(str -> {
-            context.assertTrue( str.startsWith("No data for artifactId. Document must not be updated: "));
+            context.assertTrue(str.startsWith("No data for artifactId. Document must not be updated: "));
             async.countDown();
         });
     }
@@ -115,7 +112,7 @@ public class ProjectCommandTest implements ReadJsonFiles {
         private final JsonObject json;
 
 
-        public MockRaw(TestContext context, Async async, long updated, JsonObject data) {
+        MockRaw(TestContext context, Async async, long updated, JsonObject data) {
             this.context = context;
             this.async = async;
             this.updated = updated;
@@ -140,6 +137,11 @@ public class ProjectCommandTest implements ReadJsonFiles {
         @Override
         public Long update() {
             return updated;
+        }
+
+        @Override
+        public Boolean archive() {
+            return false;
         }
 
         @Override

@@ -8,8 +8,11 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
+import net.christophe.genin.monitor.domain.server.adapter.Adapters;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
+import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
 import org.junit.Before;
@@ -38,6 +41,7 @@ public class RawCommandTest implements ReadJsonFiles {
 
     @Before
     public void before(TestContext context) throws Exception {
+        DbTest.disabledAndSetAdapterToNitrite();
 
         vertx = Vertx.vertx();
         Async async = context.async(2);

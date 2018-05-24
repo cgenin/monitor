@@ -8,18 +8,17 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import rx.Observable;
 import rx.Single;
 import rx.functions.Func1;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @RunWith(VertxUnitRunner.class)
 public class TablesCommandTest implements ReadJsonFiles {
@@ -27,15 +26,18 @@ public class TablesCommandTest implements ReadJsonFiles {
     private static JsonObject data;
 
 
-    public static final String PATH_DB = "target/testTablesCommandTest.db";
+    private static DeploymentOptions options;
     Vertx vertx;
+
+    @BeforeClass
+    public static void first() throws Exception {
+        DbTest.disabledAndSetAdapterToNitrite();
+
+        options = new NitriteDBManagemementTest(RawCommandTest.class).deleteAndGetOption();
+    }
 
     @Before
     public void before(TestContext context) throws Exception {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
         vertx = Vertx.vertx();
         vertx.deployVerticle(Database.class.getName(), options, context.asyncAssertSuccess());
 
@@ -51,7 +53,7 @@ public class TablesCommandTest implements ReadJsonFiles {
     @Test
     public void should_create_table_if_not_exist(TestContext context) {
         Func1<Raw, Observable<? extends String>> run = new TablesCommand().run();
-        Async async = context.async(2);
+        Async async = context.async();
         MockRaw mockRaw = new MockRaw(data, 500, context, async);
         run.call(mockRaw).subscribe(
                 str -> {
@@ -97,6 +99,11 @@ public class TablesCommandTest implements ReadJsonFiles {
         @Override
         public Long update() {
             return update;
+        }
+
+        @Override
+        public Boolean archive() {
+            return false;
         }
 
         @Override

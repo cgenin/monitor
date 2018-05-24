@@ -59,10 +59,10 @@ public class NitriteRaw {
 
                 getCollection().insert(document);
                 return document.getId().getIdValue();
-            });
+            }).subscribeOn(Schedulers.io());
         }
 
-          public Single<Boolean> updateState(RawImpl raw, Treatments treatments) {
+        public Single<Boolean> updateState(RawImpl raw, Treatments treatments) {
             return Single.fromCallable(() -> {
                 getCollection().update(raw.document.put(Schemas.RAW_STATE, treatments.getState()), true);
                 return true;
@@ -152,6 +152,11 @@ public class NitriteRaw {
         @Override
         public Long update() {
             return json.getLong(Schemas.Raw.update.name(), 0L);
+        }
+
+        @Override
+        public Boolean archive() {
+            return false;
         }
 
         @Override

@@ -7,34 +7,34 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
-import net.christophe.genin.monitor.domain.server.DbWithSchemaTest;
+import net.christophe.genin.monitor.domain.server.base.DbWithSchemaTest;
 import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
 import net.christophe.genin.monitor.domain.server.base.DbTest;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @RunWith(VertxUnitRunner.class)
 public class MysqlProjectCommandTest extends DbWithSchemaTest implements ReadJsonFiles {
 
+    private static DeploymentOptions options;
     private JsonObject data;
 
 
-    public static final String PATH_DB = "target/testProjectCommandTest.db";
     Vertx vertx;
+
+    @BeforeClass
+    public static void first() throws Exception {
+        options = new NitriteDBManagemementTest(MysqlProjectCommandTest.class).deleteAndGetOption();
+    }
 
     @Before
     public void before(TestContext context) throws Exception {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
+
         vertx = Vertx.vertx();
         Async async = context.async();
         vertx.deployVerticle(Database.class.getName(), options, msg -> {

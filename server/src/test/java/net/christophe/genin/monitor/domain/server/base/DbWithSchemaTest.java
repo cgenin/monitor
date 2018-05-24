@@ -1,20 +1,21 @@
-package net.christophe.genin.monitor.domain.server;
+package net.christophe.genin.monitor.domain.server.base;
 
-import net.christophe.genin.monitor.domain.server.base.DbTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import java.sql.SQLException;
 
-public class DbWithSchemaTest {
+public class DbWithSchemaTest extends BaseDbTest {
 
     @BeforeClass
     public static void sBefore() throws SQLException {
-        DbTest.startDbServerWithSchema();
+        startDbServerWithSchema();
     }
 
     @AfterClass
     public static void sAfter() {
-        DbTest.stopDbServer();
+        stopDbServer();
     }
+
+
 }

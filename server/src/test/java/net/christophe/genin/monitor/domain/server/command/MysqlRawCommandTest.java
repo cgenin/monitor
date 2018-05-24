@@ -7,42 +7,40 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
+import net.christophe.genin.monitor.domain.server.base.DbWithSchemaTest;
 import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
-import net.christophe.genin.monitor.domain.server.base.DbTest;
+import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 @RunWith(VertxUnitRunner.class)
-public class MysqlRawCommandTest extends DbTest implements ReadJsonFiles {
+public class MysqlRawCommandTest extends DbWithSchemaTest implements ReadJsonFiles {
 
 
+    private static DeploymentOptions option;
     private JsonObject data;
-    public static final String PATH_DB = "target/testMysqlRawCommandTest.db";
     Vertx vertx;
 
+    @BeforeClass
+    public static void first() throws Exception {
+        option = new NitriteDBManagemementTest(MysqlRawCommandTest.class).deleteAndGetOption();
+    }
 
     @Before
     public void before(TestContext context) throws Exception {
-        Files.deleteIfExists(Paths.get(new File(PATH_DB).toURI()));
-        JsonObject config = new JsonObject().put("nitritedb", new JsonObject().put("path", PATH_DB));
-        DeploymentOptions options = new DeploymentOptions()
-                .setConfig(config);
 
         vertx = Vertx.vertx();
-        Async async = context.async(3);
-        vertx.deployVerticle(Database.class.getName(), options, (result) -> {
+        Async async = context.async(4);
+        vertx.deployVerticle(Database.class.getName(), option, (result) -> {
             context.assertTrue(result.succeeded());
             async.countDown();
             setAntiMonitorDS(context, async, vertx);
         });
-        vertx.deployVerticle(RawCommand.class.getName(), options, (r) -> {
+        vertx.deployVerticle(RawCommand.class.getName(), option, (r) -> {
             context.assertTrue(r.succeeded());
             async.countDown();
         });
@@ -62,8 +60,8 @@ public class MysqlRawCommandTest extends DbTest implements ReadJsonFiles {
         vertx.eventBus().<Long>send(RawCommand.SAVING, data, msg -> {
             context.assertTrue(msg.succeeded());
             Long id = msg.result().body();
-            context.assertTrue(id > 1L);
-            async.complete();
+            context.assertTrue(id == 1L);
+            async.countDown();
 
             Raw.findAll().subscribe(r -> {
 
@@ -75,7 +73,7 @@ public class MysqlRawCommandTest extends DbTest implements ReadJsonFiles {
                 r.json().remove("update");
                 context.assertEquals(copy, r.json());
                 async.countDown();
-            });
+            }, context::fail);
         });
     }
 }
