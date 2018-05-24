@@ -8,71 +8,62 @@
       </q-card-title>
       <q-card-separator/>
       <q-card-main>
-        <div>
-          <br>
-          Sélectionner un (ou plusieurs) serveurs :
-          <br>
-        </div>
-
-        <div>
-          <q-select
-            v-model="serverList"
-            :options="servers"
-            @input="serverChanged"
-            v-if="servers"
-            multiple
-          >
-          </q-select>
-        </div>
+        <q-select
+          class="selectServer"
+          float-label="Sélectionner un (ou plusieurs) serveurs"
+          v-model="serverList"
+          :options="servers"
+          @input="serverChanged"
+          v-if="servers"
+          multiple
+        />
         <div v-if="services">
           <q-inner-loading :visible="loading">
             <q-spinner-gears size="50px" color="primary"/>
           </q-inner-loading>
-          <q-list v-if="columns.length > 1"
+          <q-table
+            v-if="columns.length > 1"
+            :data="services"
+            :columns="columns"
+            row-key="field"
+            :filter="filter"
+            :separator="separator"
+            :no-data-label="noData"
+            :pagination.sync="pagination"
+            :no-results-label="noDataAfterFiltering"
+            :rowsPerPageOptions="rowsPerPageOptions"
+            @refresh="refresh"
           >
-            <q-table
-              :data="services"
-              :columns="columns"
-              row-key="field"
-              :filter="filter"
-              :separator="separator"
-              :no-data-label="noData"
-              :pagination.sync="pagination"
-              :no-results-label="noDataAfterFiltering"
-              :rowsPerPageOptions="rowsPerPageOptions"
-              @refresh="refresh"
-            >
-              <template slot="top-left" slot-scope="props">
-                <q-search
-                  v-model="filter"
-                  class="col-auto"
-                />
-              </template>
-              <template slot="top-right" slot-scope="props">
-                <q-select
-                  color="secondary"
-                  v-model="separator"
-                  :options="separatorOptions"
-                  hide-underline
-                />
-              </template>
-              <q-td slot="body-cell-compare" slot-scope="props" :props="props">
-                <div
-                  v-if="servicesByServer[props.col.label][props.value].info && servicesByServer[props.col.label][props.value].info.build">
-                  <charts-button :serviceInfos="servicesByServer[props.col.label][props.value]"
-                                 :serviceName="props.value" :server="props.col.label"></charts-button>
-                </div>
-                <span
-                  v-if="!servicesByServer[props.col.label][props.value].responding">
+            <template slot="top-left" slot-scope="props">
+              <q-search
+                v-model="filter"
+                class="col-auto"
+              />
+            </template>
+            <template slot="top-right" slot-scope="props">
+              <q-select
+                color="secondary"
+                v-model="separator"
+                :options="separatorOptions"
+                hide-underline
+              />
+            </template>
+            <q-td slot="body-cell-compare" slot-scope="props" :props="props">
+              <div
+                v-if="servicesByServer[props.col.label][props.value].info && servicesByServer[props.col.label][props.value].info.build">
+                <charts-button :serviceInfos="servicesByServer[props.col.label][props.value]"
+                               :serviceName="props.value" :server="props.col.label"></charts-button>
+              </div>
+              <span
+                v-if="!servicesByServer[props.col.label][props.value].responding">
                   <q-item-side class="down" icon="portable_wifi_off"/>
                 </span>
-                <span
-                  v-if="!(servicesByServer[props.col.label][props.value].info && servicesByServer[props.col.label][props.value].info.build) && servicesByServer[props.col.label][props.value].responding">
+              <span
+                v-if="!(servicesByServer[props.col.label][props.value].info && servicesByServer[props.col.label][props.value].info.build) && servicesByServer[props.col.label][props.value].responding">
                   <q-item-side class="up" icon="graphic_eq"/> Up but no infos...
                 </span>
-              </q-td>
-            </q-table>
-          </q-list>
+            </q-td>
+          </q-table>
         </div>
       </q-card-main>
     </q-card>
@@ -210,17 +201,17 @@
     }
   }
 </script>
-<style>
-  .q-item:hover {
-    background-color: #f2f4f8;
-    cursor: pointer;
-  }
+<style lang="stylus" scoped>
+  .q-item:hover
+    background-color #f2f4f8
+    cursor pointer
 
-  .up {
-    color: #00cb4b;
-  }
+  .up
+    color #00cb4b
 
-  .down {
-    color: #cb2832;
-  }
+  .down
+    color #cb2832
+
+  .selectServer
+    margin 15px
 </style>

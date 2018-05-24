@@ -9,42 +9,40 @@
       <q-card-separator/>
       <q-card-main>
         <div v-if="list">
-              <q-list>
-                <q-table
-                  :data="list"
-                  :columns="columns"
-                  row-key="field"
-                  :filter="filter"
-                  :separator="separator"
-                  :no-data-label="noData"
-                  :pagination.sync="pagination"
-                  :no-results-label="noDataAfterFiltering"
-                  :rowsPerPageOptions="rowsPerPageOptions"
-                  @refresh="refresh"
-                >
-                  <template slot="top-left" slot-scope="props">
-                    <q-search
-                      v-model="filter"
-                      class="col-auto"
-                    />
-                  </template>
-                  <template slot="top-right" slot-scope="props">
-                    <q-select
-                      color="secondary"
-                      v-model="separator"
-                      :options="separatorOptions"
-                      hide-underline
-                    />
-                  </template>
-                  <q-td slot="body-cell-readme" slot-scope="props" :props="props">
-                    <markdown-button title="Readme" color="tertiary" icon="description" :key="props.row.id" :content="props.value" v-if="props.value !== 'ERROR: No README data found!'"></markdown-button>
-                  </q-td>
-                  <q-td slot="body-cell-infos" slot-scope="props" :props="props">
-                    <markdown-button title="Infos" icon="info" :key="props.row.id" :content="props.value"></markdown-button>
-                  </q-td>
-                </q-table>
-              </q-list>
-            </div>
+          <q-table
+            :data="list"
+            :columns="columns"
+            row-key="field"
+            :filter="filter"
+            :separator="separator"
+            :no-data-label="noData"
+            :pagination.sync="pagination"
+            :no-results-label="noDataAfterFiltering"
+            :rowsPerPageOptions="rowsPerPageOptions"
+            @refresh="refresh"
+          >
+            <template slot="top-left" slot-scope="props">
+              <q-search
+                v-model="filter"
+                class="col-auto"
+              />
+            </template>
+            <template slot="top-right" slot-scope="props">
+              <q-select
+                color="secondary"
+                v-model="separator"
+                :options="separatorOptions"
+                hide-underline
+              />
+            </template>
+            <q-td slot="body-cell-readme" slot-scope="props" :props="props">
+              <markdown-button title="Readme" color="tertiary" icon="description" :key="props.row.id" :content="props.value" v-if="props.value !== 'ERROR: No README data found!'"></markdown-button>
+            </q-td>
+            <q-td slot="body-cell-infos" slot-scope="props" :props="props">
+              <markdown-button title="Infos" icon="info" :key="props.row.id" :content="props.value"></markdown-button>
+            </q-td>
+          </q-table>
+        </div>
       </q-card-main>
     </q-card>
   </div>

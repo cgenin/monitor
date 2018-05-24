@@ -1,5 +1,5 @@
 <template>
-  <div class="apis-page page-list container">
+  <div class="apis-page container">
     <header-app :bc-datas="[{icon:'explore', label:'Liste des Apis'}]"/>
 
     <q-card>

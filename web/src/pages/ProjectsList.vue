@@ -166,7 +166,6 @@
             label: 'Nom',
             field: 'name',
             name: 'name',
-            width: '270px',
             sortable: true,
             type: 'string',
             filter: true
@@ -175,7 +174,6 @@
             label: 'Snapshot',
             field: 'snapshot',
             name: 'snapshot',
-            width: '170px',
             sortable: false,
             type: 'string',
             filter: true
@@ -184,7 +182,6 @@
             label: 'Release',
             field: 'release',
             name: 'release',
-            width: '90px',
             sortable: false,
             type: 'string',
             filter: true
@@ -193,7 +190,6 @@
             label: 'Java',
             field: 'javaDeps',
             name: 'javaDeps',
-            width: '73px',
             sort(a, b) {
               return (a.length - b.length);
             },
@@ -204,7 +200,6 @@
             label: 'Apis',
             field: 'apis',
             name: 'apis',
-            width: '73px',
             sort(a, b) {
               return (a.length - b.length);
             },
@@ -215,7 +210,6 @@
             label: 'Tables',
             field: 'tables',
             name: 'tables',
-            width: '73px',
             sort(a, b) {
               return (a.length - b.length);
             },
@@ -226,7 +220,6 @@
             label: 'Dernière Mise à jour',
             field: 'latest',
             name: 'latest',
-            width: '175px',
             sortable: true,
             type: 'date',
             filter: true
@@ -235,14 +228,12 @@
             label: 'Log',
             field: 'changelog',
             name: 'changelog',
-            width: '57px',
             sortable: false
           },
           {
             label: 'Détail',
             field: 'destinationUrl',
             name: 'destinationUrl',
-            width: '67px',
             sortable: false
           }
         ]
