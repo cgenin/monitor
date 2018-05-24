@@ -24,7 +24,8 @@ public final class Raws {
     }
 
     public static List<String> extractJavaDeps(JsonObject json) {
-        return Jsons.builder(json.getJsonArray(Schemas.Raw.Dependencies.collection())).toStream()
+        JsonArray jsonArray = json.getJsonArray(Schemas.Raw.Dependencies.collection());
+        return Jsons.builder(jsonArray).toStream()
                 .map(js -> js.getString(Schemas.Raw.Dependencies.artifactId.name(), ""))
                 .distinct()
                 .collect(Collectors.toList());

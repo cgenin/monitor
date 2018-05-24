@@ -35,7 +35,7 @@ public class DbTest {
     public static final String USER_DB = "vertx";
     public static final String PWD_DB = "password";
     public static final String NAM_DB = "antimonitor";
-    protected static JsonObject config = new JsonObject()
+    public static JsonObject config = new JsonObject()
             .put("host", HOST_DB)
             .put("port", PORT_DB)
             .put("username", USER_DB)

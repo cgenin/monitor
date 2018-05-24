@@ -87,11 +87,6 @@ public class AntiMonitorSchemas {
      * @return The results.
      */
     public static Single<String> create() {
-        /*
-        return Mysqls.Instance.get()
-
-                .batch(CREATE_SCRIPTS)
-                .map(list -> "Creation of EVENTS, PROJECTS, TABLES, API, VERSIONS if not exist :" + list);*/
         Mysqls mysqls = Mysqls.Instance.get();
         return Single.just("/sql/CREATE_SCHEMA.sql")
                 .map(p -> {
@@ -114,9 +109,7 @@ public class AntiMonitorSchemas {
                         .map(String::trim)
                         .toArray(String[]::new)
                 )
-                .flatMap(all -> {
-                    return mysqls.batch(all);
-                })
+                .flatMap(mysqls::batch)
                 .map(list -> "Creation of EVENTS, PROJECTS, TABLES, API, VERSIONS if not exist :" + list);
 
     }

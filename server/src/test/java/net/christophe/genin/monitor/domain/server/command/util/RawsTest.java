@@ -1,6 +1,7 @@
 package net.christophe.genin.monitor.domain.server.command.util;
 
 import io.vertx.core.json.JsonObject;
+import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RawsTest {
+public class RawsTest implements ReadJsonFiles {
     private JsonObject data;
 
     @Test
@@ -24,10 +25,9 @@ public class RawsTest {
 
     @Before
     public void before() throws Exception {
-        URI uri = RawsTest.class.getResource("/datas/projects-1.json").toURI();
-        Path path = Paths.get(uri);
-        String str = Files.readAllLines(path).stream().collect(Collectors.joining("\n"));
-        data = new JsonObject(str).getJsonObject("json");
+
+        data = load("/datas/projects-1.json");
+
     }
 
     @Test

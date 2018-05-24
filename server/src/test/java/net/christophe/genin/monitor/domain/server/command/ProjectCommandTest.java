@@ -7,7 +7,7 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
-import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
+import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
 import net.christophe.genin.monitor.domain.server.model.Project;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
@@ -19,14 +19,11 @@ import rx.Single;
 import rx.functions.Func1;
 
 import java.io.File;
-import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 @RunWith(VertxUnitRunner.class)
-public class ProjectCommandTest {
+public class ProjectCommandTest implements ReadJsonFiles {
 
     private static JsonObject data;
 
@@ -43,10 +40,8 @@ public class ProjectCommandTest {
         vertx = Vertx.vertx();
         vertx.deployVerticle(Database.class.getName(), options, context.asyncAssertSuccess());
 
-        URI uri = RawsTest.class.getResource("/datas/projects-1.json").toURI();
-        Path path = Paths.get(uri);
-        String str = Files.readAllLines(path).stream().collect(Collectors.joining("\n"));
-        data = new JsonObject(str).getJsonObject("json");
+        data = load("/datas/projects-1.json");
+
     }
 
     @After
@@ -56,18 +51,20 @@ public class ProjectCommandTest {
 
     @Test
     public void should_create_project_if_update_time_is_after_0(TestContext context) {
-        create_project_if_update_time_is_after_0(context);
+        Async async = context.async(3);
+
+        MockRaw raw = new MockRaw(context, async, 500, data);
+        create_project_if_update_time_is_after_0(context, async, raw);
     }
 
     @Test
     public void should_create_project_if_update_time_is_before_0(TestContext context) {
+
         create_project_if_update_time_is_before_0(context);
     }
 
-    public static void create_project_if_update_time_is_after_0(TestContext context) {
-        Async async = context.async(3);
+    public static void create_project_if_update_time_is_after_0(TestContext context, Async async, MockRaw raw) {
 
-        MockRaw raw = new MockRaw(context, async, 500);
 
         Func1<Raw, Observable<String>> build = new ProjectCommand().run();
 
@@ -93,7 +90,7 @@ public class ProjectCommandTest {
     public static void create_project_if_update_time_is_before_0(TestContext context) {
         Async async = context.async(2);
 
-        MockRaw raw = new MockRaw(context, async, -12);
+        MockRaw raw = new MockRaw(context, async, -12, data);
 
         Func1<Raw, Observable<String>> build = new ProjectCommand().run();
 
@@ -107,17 +104,19 @@ public class ProjectCommandTest {
         private final TestContext context;
         private final Async async;
         private final long updated;
+        private final JsonObject json;
 
 
-        public MockRaw(TestContext context, Async async, long updated) {
+        public MockRaw(TestContext context, Async async, long updated, JsonObject data) {
             this.context = context;
             this.async = async;
             this.updated = updated;
+            this.json = data;
         }
 
         @Override
         public JsonObject json() {
-            return data;
+            return json;
         }
 
         @Override

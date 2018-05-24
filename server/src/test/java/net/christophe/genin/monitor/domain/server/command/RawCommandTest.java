@@ -7,6 +7,7 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
+import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
 import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
@@ -22,7 +23,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 @RunWith(VertxUnitRunner.class)
-public class RawCommandTest {
+public class RawCommandTest implements ReadJsonFiles {
 
     private JsonObject data;
     public static final String PATH_DB = "target/testRawCommandTest.db";
@@ -47,10 +48,9 @@ public class RawCommandTest {
             async.countDown();
         });
 
-        URI uri = RawsTest.class.getResource("/datas/projects-1.json").toURI();
-        Path path = Paths.get(uri);
-        String str = Files.readAllLines(path).stream().collect(Collectors.joining("\n"));
-        data = new JsonObject(str).getJsonObject("json");
+
+        data = load("/datas/projects-1.json");
+
     }
 
 
