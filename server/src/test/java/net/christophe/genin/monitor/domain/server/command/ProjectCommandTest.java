@@ -139,10 +139,6 @@ public class ProjectCommandTest implements ReadJsonFiles {
             return updated;
         }
 
-        @Override
-        public Boolean archive() {
-            return false;
-        }
 
         @Override
         public Long id() {

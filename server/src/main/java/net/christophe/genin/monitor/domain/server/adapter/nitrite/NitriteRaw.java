@@ -154,10 +154,6 @@ public class NitriteRaw {
             return json.getLong(Schemas.Raw.update.name(), 0L);
         }
 
-        @Override
-        public Boolean archive() {
-            return false;
-        }
 
         @Override
         public Long id() {

@@ -101,10 +101,6 @@ public class TablesCommandTest implements ReadJsonFiles {
             return update;
         }
 
-        @Override
-        public Boolean archive() {
-            return false;
-        }
 
         @Override
         public Long id() {

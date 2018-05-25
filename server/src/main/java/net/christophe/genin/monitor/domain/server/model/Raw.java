@@ -24,8 +24,6 @@ public interface Raw {
 
     Long update();
 
-    Boolean archive();
-
     Long id();
 
     Single<Boolean> updateState(Treatments treatments);
