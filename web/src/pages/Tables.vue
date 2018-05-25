@@ -26,16 +26,6 @@
     }
   }
 </script>
-<style lang="stylus">
-  @import '~variables'
-  .tables-page
-    .tabs-container
-      border-left: 1px solid $border
-      border-top: 1px solid $border
-      border-right: 1px solid $border
-    .q-tabs-normal
-      .q-tabs-head:not(.scrollable)
-        padding 0
-      .q-tabs-bar
-        color: $primary
+<style lang="stylus" scoped>
+  @import "../css/pages/tables.styl"
 </style>

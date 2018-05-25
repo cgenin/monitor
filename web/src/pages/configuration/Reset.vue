@@ -111,18 +111,6 @@
     }
   }
 </script>
-<style lang="stylus">
-  .reset-page
-    margin-top 2em
-    .reset-btn
-      margin-top 15px
-
-   .modal.reset-modal
-    .modal-body
-      padding .5em
-      font-size 1.75em
-    .modal-footer
-      justify-content flex-end
-    h5.title
-      margin 2px
+<style lang="stylus" scoped>
+  @import "../../css/pages/reset.styl"
 </style>

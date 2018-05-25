@@ -270,8 +270,9 @@
     }
   }
 </script>
-<style>
-  .projects-page .q-table-control .q-search {
-    min-width: 30vw;
-  }
+<style lang="stylus" scoped>
+  .projects-page
+    .q-table-control
+      .q-search
+        min-width 30vw
 </style>

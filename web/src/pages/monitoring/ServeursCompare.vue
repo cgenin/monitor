@@ -201,17 +201,6 @@
     }
   }
 </script>
-<style lang="stylus" scoped>
-  .q-item:hover
-    background-color #f2f4f8
-    cursor pointer
-
-  .up
-    color #00cb4b
-
-  .down
-    color #cb2832
-
-  .selectServer
-    margin 15px
+<style lang="stylus">
+  @import "../../css/pages/serveursCompare.styl"
 </style>

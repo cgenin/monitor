@@ -50,30 +50,7 @@
     }
   }
 </script>
-<style scoped>
-  .export-page {
-    margin-top: 2em;
-  }
-
-  .none {
-    display: none;
-  }
-
-  .fullwidthbtn {
-    width: 100%;
-  }
-
-  .buttons {
-    margin-top: 2em;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  .buttons .button {
-    margin-left: 1em;
-    margin-right: 1em;
-  }
-
+<style lang="stylus" scoped>
+  @import "../../css/pages/monithor.styl"
 </style>
 

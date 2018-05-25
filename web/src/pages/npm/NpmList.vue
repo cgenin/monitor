@@ -173,8 +173,4 @@
   }
 </script>
 <style>
-  .q-item:hover {
-    background-color: #f2f4f8;
-    cursor: pointer;
-  }
 </style>

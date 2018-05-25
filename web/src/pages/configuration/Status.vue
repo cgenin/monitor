@@ -91,5 +91,5 @@
   }
 </script>
 <style lang="stylus" scoped>
-  @import "configuration-status"
+  @import "../../css/pages/configuration-status"
 </style>
