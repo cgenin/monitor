@@ -143,33 +143,6 @@
     }
   }
 </script>
-<style scoped>
-  .administration-page {
-    margin-top: 2em;
-  }
-
-  .administration-page .buttons {
-    margin-top: 2em;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
-
-  .administration-page .buttons .button {
-    margin-left: 1em;
-    margin-right: 1em;
-  }
-
-  .administration-page .row.mysql-buttons {
-    margin-top: 1.5em;
-  }
-
-  .administration-page .row.mysql-buttons div {
-    margin-left: .5em;
-    margin-right: .5em;
-  }
-
-  .administration-page .mysql-field:not(:first-child) {
-    margin-top: 1em;
-  }
+<style lang="stylus" scoped>
+  @import "../../css/pages/administration.styl"
 </style>

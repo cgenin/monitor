@@ -81,5 +81,5 @@
   }
 </script>
 <style lang="stylus">
-  @import "dependencies/dependencies.styl"
+  @import "../css/pages/dependencies.styl"
 </style>

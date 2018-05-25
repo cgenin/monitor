@@ -39,8 +39,8 @@
     }
   }
 </script>
-<style scoped>
-  .tables-chart-page .chart-title {
-    margin-bottom: 1em;
-  }
+<style lang="stylus" scoped>
+  .tables-chart-page
+    .chart-title
+      margin-bottom 1em
 </style>
