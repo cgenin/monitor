@@ -74,18 +74,5 @@
 </script>
 
 <style lang="stylus" scoped>
-  .welcome-container
-    display flex
-    align-items center
-    justify-content center
-    width 100%
-
-  .panel-information
-    min-height 75vh
-    min-width 75vw
-    background-color: rgba(6, 6, 6, 0.67);
-    .q-btn
-      margin 15px 0
-
-
+  @import "../css/pages/welcome.styl"
 </style>

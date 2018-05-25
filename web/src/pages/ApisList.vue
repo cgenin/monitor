@@ -1,5 +1,5 @@
 <template>
-  <div class="apis-page page-list container">
+  <div class="apis-page container">
     <header-app :bc-datas="[{icon:'explore', label:'Liste des Apis'}]"/>
 
     <q-card>
@@ -276,76 +276,6 @@
 
   }
 </script>
-<style>
-  .apis-page .inputs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-
-  .apis-page .inputs > div {
-    padding-right: 20px;
-  }
-
-  .apis-page .inputs > div:last-child {
-    padding-right: 0;
-  }
-
-  .apis-page .inputs .q-field {
-    flex: 5;
-    margin: 0;
-  }
-
-  .apis-page .inputs-panel {
-    overflow: hidden;
-    background: #eeeeee;
-    padding: 15px;
-  }
-
-  .apis-page .inputs-panel > div {
-    flex: 1;
-    margin: 0 10px;
-  }
-
-  .apis-page .q-card-separator {
-    margin-bottom: 15px;
-
-  }
-
-  .apis-page .caption {
-    font-weight: bold;
-  }
-
-  .apis-page .awaiting {
-    margin: 1em auto;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-  }
-
-  .apis-page .card-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
-    flex-flow: row wrap;
-    align-content: space-between;
-    width: 100%;
-  }
-
-  .apis-page .list-apis-table .q-item-label {
-    word-break: break-all;
-    padding: 5px;
-  }
-
-  .apis-page .list-apis-table .q-item-sublabel {
-    word-break: break-all;
-    padding: 5px;
-  }
-
-  .apis-page .card-container .apis-card {
-    width: 35vw;
-  }
-
-
+<style lang="stylus">
+  @import "../css/pages/apilist.styl"
 </style>

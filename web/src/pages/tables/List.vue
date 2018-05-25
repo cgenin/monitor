@@ -144,8 +144,10 @@
     }
   }
 </script>
-<style>
-   .page-list .sql-table-and-project .q-table-control .q-search {
-    min-width: 30vw;
-  }
+<style lang="stylus" scoped>
+   .page-list
+    .sql-table-and-project
+      .q-table-control
+        .q-search
+          min-width 30vw
 </style>
