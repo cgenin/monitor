@@ -7,8 +7,12 @@ import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
+import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
+import net.christophe.genin.monitor.domain.server.adapter.Adapters;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.command.util.RawsTest;
+import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.monitor.domain.server.model.Raw;
 import org.junit.After;
 import org.junit.Before;
@@ -24,7 +28,7 @@ import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 @RunWith(VertxUnitRunner.class)
-public class RawCommandTest {
+public class RawCommandTest implements ReadJsonFiles {
 
     private static DeploymentOptions option;
     private JsonObject data;
@@ -37,6 +41,7 @@ public class RawCommandTest {
 
     @Before
     public void before(TestContext context) throws Exception {
+        DbTest.disabledAndSetAdapterToNitrite();
 
         vertx = Vertx.vertx();
         Async async = context.async(2);
@@ -49,10 +54,9 @@ public class RawCommandTest {
             async.countDown();
         });
 
-        URI uri = RawsTest.class.getResource("/datas/projects-1.json").toURI();
-        Path path = Paths.get(uri);
-        String str = Files.readAllLines(path).stream().collect(Collectors.joining("\n"));
-        data = new JsonObject(str).getJsonObject("json");
+
+        data = load("/datas/projects-1.json");
+
     }
 
 

@@ -14,7 +14,7 @@ public class Adapters extends AbstractVerticle {
 
     public static final String CHANGE_DATABASE = Adapters.class.getName() + ".change.database";
 
-    private static Singleton type = new Singleton();
+    public static Singleton type = new Singleton();
 
 
     public static Adapters get() {

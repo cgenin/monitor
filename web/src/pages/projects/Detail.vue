@@ -118,13 +118,11 @@
     }
   };
 </script>
-<style scoped>
-  .main {
-    background: inherit;
-  }
+<style lang="stylus" scoped>
+  .main
+    background inherit
 
-  .selected-list {
-    padding: 10px 0;
-    background: none;
-  }
+  .selected-list
+    padding 10px 0
+    background none
 </style>

@@ -9,8 +9,10 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.command.RawCommandTest;
+import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,7 +28,6 @@ import java.nio.file.Paths;
 public class ApiQueryTest {
 
 
-    public static final String PATH_DB = "target/testEndpointQueryTest.db";
     private static DeploymentOptions option;
     Vertx vertx;
 
@@ -37,8 +38,7 @@ public class ApiQueryTest {
 
     @Before
     public void before(TestContext context)  {
-
-
+        DbTest.disabledAndSetAdapterToNitrite();
         vertx = Vertx.vertx();
         Async async = context.async(3);
         vertx.deployVerticle(Database.class.getName(), option, (result) -> {
@@ -59,7 +59,7 @@ public class ApiQueryTest {
                     .subscribe(bool -> {
                         context.assertTrue(bool);
                         async.countDown();
-                    });
+                    }, context::fail);
         });
         vertx.deployVerticle(ApiQuery.class.getName(), option, (r) -> {
             context.assertTrue(r.succeeded());

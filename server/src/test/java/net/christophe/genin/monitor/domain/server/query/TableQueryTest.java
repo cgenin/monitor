@@ -9,7 +9,9 @@ import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
+import net.christophe.genin.monitor.domain.server.base.DbTest;
 import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
+import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.monitor.domain.server.model.Dependency;
 import net.christophe.genin.monitor.domain.server.model.Table;
 import net.christophe.genin.monitor.domain.server.query.TableQuery;
@@ -40,6 +42,7 @@ public class TableQueryTest {
 
     @Before
     public void before(TestContext context) throws IOException {
+        DbTest.disabledAndSetAdapterToNitrite();
 
         vertx = Vertx.vertx();
         Async async = context.async(3);
@@ -59,7 +62,7 @@ public class TableQueryTest {
                     .subscribe(bool -> {
                         context.assertTrue(bool);
                         async.countDown();
-                    });
+                    }, context::fail);
         });
         vertx.deployVerticle(TableQuery.class.getName(), option, (r) -> {
             context.assertTrue(r.succeeded());

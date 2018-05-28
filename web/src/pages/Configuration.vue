@@ -46,5 +46,5 @@
 </script>
 
 <style lang="stylus" scoped>
-  @import "configuration/configuration"
+  @import "../css/pages/configuration.styl"
 </style>

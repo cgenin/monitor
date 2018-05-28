@@ -35,7 +35,7 @@ public interface Raw {
      * @return The id of the created event.
      */
     static Single<Long> save(JsonObject object) {
-        return  Adapters.get().rawHandler().save(object)
+        return Adapters.get().rawHandler().save(object)
                 .observeOn(Schedulers.io());
     }
 
@@ -48,10 +48,12 @@ public interface Raw {
     }
 
     static Observable<Raw> findAllByState(Treatments treatments) {
-        return  Adapters.get().rawHandler().findAllByState(treatments);
+        return Adapters.get().rawHandler().findAllByState(treatments);
     }
 
     static Single<Boolean> removeById(long id) {
-        return  Adapters.get().rawHandler().removeById(id);
+        return Adapters.get().rawHandler().removeById(id);
     }
+
+
 }
