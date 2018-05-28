@@ -1,0 +1,9 @@
+{
+  "app": "http",
+  "server-port": 8279,
+  "nitritedb": {
+    "path": "test.db",
+    "user": "user",
+    "pwd": "password"
+  }
+}

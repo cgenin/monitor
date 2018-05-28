@@ -9,6 +9,7 @@ import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Mojo(name = "sendToMonitor", defaultPhase = LifecyclePhase.INSTALL, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 @Execute(goal = "sendToMonitor", phase = LifecyclePhase.INSTALL)
@@ -26,7 +27,7 @@ public class SendToMojo extends AbstractMojo {
     private Boolean sendResult = Boolean.FALSE;
 
     @Parameter()
-    private String url = "http://localhost:8082/application-monitor/app";
+    private String url = "http://localhost:8082/webapps";
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {

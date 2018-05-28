@@ -28,6 +28,7 @@ public class ProjectCommand extends AbstractVerticle {
     private synchronized Observable<String> periodic() {
 
         return Raw.findByStateFirst(Treatments.PROJECTS)
+
                 .flatMap(run());
 
     }

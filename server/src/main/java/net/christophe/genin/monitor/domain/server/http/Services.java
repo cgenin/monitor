@@ -61,7 +61,7 @@ public class Services {
         router.mountSubRouter("/configuration", configuration());
         router.mountSubRouter("/dump", dump());
         router.mountSubRouter("/apps", apps());
-        router.mountSubRouter("/fronts", fronts());
+        router.mountSubRouter("/webapps", fronts());
         logger.info("building router : OK.");
 
         return router;
@@ -180,8 +180,8 @@ public class Services {
         router.post("/").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson()
                     .put("updateState", new Date().getTime());
-
-            new Https.EbCaller(vertx, rc).created(Front.SAVING, body);
+            logger.info("Received " + body.encodePrettily());
+           // new Https.EbCaller(vertx, rc).created(Front.SAVING, body);
         });
 
 
