@@ -52,9 +52,13 @@ public class TablesCommandTest implements ReadJsonFiles {
 
     @Test
     public void should_create_table_if_not_exist(TestContext context) {
-        Func1<Raw, Observable<? extends String>> run = new TablesCommand().run();
-        Async async = context.async();
+        Async async = context.async(2);
         MockRaw mockRaw = new MockRaw(data, 500, context, async);
+        test_should_create_table_if_not_exist(context, data, mockRaw, async);
+    }
+
+    public static void test_should_create_table_if_not_exist(TestContext context, JsonObject data, Raw mockRaw, Async async) {
+        Func1<Raw, Observable<? extends String>> run = new TablesCommand().run();
         run.call(mockRaw).subscribe(
                 str -> {
                     context.assertEquals("Table 'SOCIETE' for 'artifactId' creation true", str);

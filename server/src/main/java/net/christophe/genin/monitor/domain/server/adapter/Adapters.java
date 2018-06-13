@@ -43,13 +43,11 @@ public class Adapters extends AbstractVerticle {
 
     public RawPort rawHandler() {
         switch (type.getType()) {
-//            case MYSQL:
-//                return new MysqlRaw.MysqlRawPort(Mysqls.Instance.get());
+            case MYSQL:
+                return new MysqlRaw.MysqlRawPort(Mysqls.Instance.get());
             case NITRITE:
-
             default:
                 return new NitriteRaw.NitriteRawPort(NitriteDbs.instance);
-                //throw new IllegalStateException("No type found " + type);
         }
     }
 
