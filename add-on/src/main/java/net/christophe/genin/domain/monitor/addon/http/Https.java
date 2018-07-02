@@ -13,24 +13,29 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public final class Https {
 
     private static final Logger logger = LoggerFactory.getLogger(Https.class);
+    static final String CONTENT_TYPE_JSON = "application/json";
+    static final String NO_CACHE = "private, no cache";
+    static final Integer CREATED_STATUS = 204;
+    static final int ERROR_STATUS = 500;
 
-    public static Integer toStatusCreated(AsyncResult as) {
-        return toStatus(as, 204);
+    static Integer toStatusCreated(AsyncResult as) {
+        return toStatus(as, CREATED_STATUS);
     }
 
-    public static Integer toStatus(AsyncResult reply, int okStatus) {
+    private static Integer toStatus(AsyncResult reply, int okStatus) {
         return Optional.of(reply)
                 .filter(AsyncResult::succeeded)
                 .map(r -> okStatus)
                 .orElseGet(() -> {
                     logger.error("Error", reply.cause());
-                    return 500;
+                    return ERROR_STATUS;
                 });
     }
 
@@ -40,55 +45,73 @@ public final class Https {
     public static class EbCaller {
         private final Vertx vertx;
         private final RoutingContext rc;
+        private Handler<Boolean> handler;
 
         public EbCaller(Vertx vertx, RoutingContext rc) {
             this.vertx = vertx;
             this.rc = rc;
         }
 
-        private <T> void consume(String addr, Object obj, Consumer<T> consumer) {
+        private <T> EbCaller consume(String addr, Object obj, Consumer<T> consumer) {
+            Objects.requireNonNull(addr);
             vertx.eventBus()
                     .send(addr, obj, new DeliveryOptions(), (Handler<AsyncResult<Message<T>>>) (reply) -> {
                         if (reply.succeeded()) {
                             T jsonArray = reply.result().body();
                             consumer.accept(jsonArray);
+                            Optional.ofNullable(handler).ifPresent(h -> h.handle(true));
                             return;
                         }
                         logger.error("Error - " + addr, reply.cause());
-                        rc.response().setStatusCode(500).end();
+                        rc.response().setStatusCode(ERROR_STATUS).end();
+                        Optional.ofNullable(handler).ifPresent(h -> h.handle(false));
+
                     });
+            return this;
         }
 
-        public void created(String addr, JsonObject data) {
+        public EbCaller handle(Handler<Boolean> result) {
+            this.handler = result;
+            return this;
+        }
+
+        public EbCaller created(String addr, JsonObject data) {
             vertx.eventBus()
                     .send(addr, data, new DeliveryOptions(), (Handler<AsyncResult<Message<JsonArray>>>) (reply) -> {
                         final Integer status = Https.toStatusCreated(reply);
                         rc.response().setStatusCode(status).end();
+                        boolean state = CREATED_STATUS.equals(status);
+                        Optional.ofNullable(handler).ifPresent(h -> h.handle(state));
                     });
+            return this;
         }
 
-        public void arrAndReply(String addr) {
-            arrAndReply(addr, new JsonObject());
+        public EbCaller arrAndReply(String addr) {
+            return arrAndReply(addr, new JsonObject());
         }
 
-        public void arrAndReply(String addr, JsonObject data) {
-            consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
+        public EbCaller arrAndReply(String addr, JsonObject data) {
+            Objects.requireNonNull(data);
+            return consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
         }
 
-        public void arrAndReply(String addr, String data) {
-            consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
+        public EbCaller arrAndReply(String addr, String data) {
+            Objects.requireNonNull(data);
+            return consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
         }
 
-        public void arrAndReply(String addr, Buffer data) {
-            consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
+        public EbCaller arrAndReply(String addr, Buffer data) {
+            Objects.requireNonNull(data);
+            return consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
         }
 
-        public void jsonAndReply(String addr, JsonObject data) {
-            consume(addr, data, (Consumer<JsonObject>) (obj) -> new Https.Json(rc).send(obj));
+        public EbCaller jsonAndReply(String addr, JsonObject data) {
+            Objects.requireNonNull(data);
+            return consume(addr, data, (Consumer<JsonObject>) (obj) -> new Https.Json(rc).send(obj));
         }
 
-        public void jsonAndReply(String addr) {
-            jsonAndReply(addr, new JsonObject());
+        public EbCaller jsonAndReply(String addr) {
+            return jsonAndReply(addr, new JsonObject());
         }
     }
 
@@ -113,8 +136,9 @@ public final class Https {
 
         public void send(String data) {
             rc.response()
-                    .putHeader(HttpHeaders.CONTENT_TYPE, "application/json")
-                    .putHeader(HttpHeaders.CACHE_CONTROL, "private, no cache")
+                    .setStatusCode(200)
+                    .putHeader(HttpHeaders.CONTENT_TYPE, CONTENT_TYPE_JSON)
+                    .putHeader(HttpHeaders.CACHE_CONTROL, NO_CACHE)
                     .end(data);
         }
     }

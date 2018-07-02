@@ -2,7 +2,7 @@
 # Anti-Monitor
 #
 
-server/target: web/dist
+server/target: web/dist add/on
 	@echo "package Fat Jar"
 	cd server && mvn clean install
 
@@ -15,6 +15,9 @@ web/dist: clean
 	@echo "package web"
 	cd web && yarn install && yarn build
 
+add/on : clean
+	@echo "package Vertx addon"
+	cd add-on && mvn clean install
 
 docker: server/target
 	@echo "package Docker Image"
