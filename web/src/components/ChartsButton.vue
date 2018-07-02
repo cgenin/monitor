@@ -151,7 +151,10 @@ ${this.formatKeys(this.service.env[b])}
 </script>
 
 <style lang="stylus">
-  .btn-version
-    margin-right 15px
-    min-width 146px
+  .page-list
+    .q-table
+      .q-btn
+        &.btn-version
+          margin 3px 7px 3px 0
+          min-width 146px
 </style>
