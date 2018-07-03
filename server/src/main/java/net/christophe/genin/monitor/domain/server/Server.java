@@ -6,6 +6,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
 import net.christophe.genin.monitor.domain.server.command.*;
+import net.christophe.genin.monitor.domain.server.db.mysql.FlywayVerticle;
 import net.christophe.genin.monitor.domain.server.migration.Nitrite2Mysql;
 import net.christophe.genin.monitor.domain.server.migration.MigrateInQueue;
 import net.christophe.genin.monitor.domain.server.query.*;
@@ -78,6 +79,7 @@ public class Server extends AbstractVerticle {
         vertx.deployVerticle(new ArchiveCommand());
         vertx.deployVerticle(new ConfigurationCommand());
         vertx.deployVerticle(new NitriteCommand());
+        vertx.deployVerticle(new FlywayVerticle());
         vertx.deployVerticle(new ResetCommand(), new DeploymentOptions().setWorker(true));
         vertx.deployVerticle(new ApisCommand(), new DeploymentOptions().setWorker(true));
     }

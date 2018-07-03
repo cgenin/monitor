@@ -72,6 +72,10 @@ public interface Mysqls {
         return Observable.<List<Integer>>empty().toSingle();
     }
 
+    default JsonObject configuration() {
+        return new JsonObject();
+    }
+
     /**
      * Singleton which store the current instance.
      */
@@ -124,11 +128,22 @@ public interface Mysqls {
             this.config = config;
         }
 
+        @Override
+        public JsonObject configuration() {
+            JsonObject copy = config.copy();
+            String host = copy.getString("host");
+            Integer port = copy.getInteger("port");
+            String database = copy.getString("database");
+            String url = "jdbc:mysql://" + host + ":" + port +"/" + database;
+            return copy.put("url", url);
+        }
+
         private Mysqls initialize() {
             AsyncSQLClient shared = getShared();
             logger.info("db mysql initialized : " + shared);
             return this;
         }
+
 
         private AsyncSQLClient getShared() {
             return MySQLClient.createShared(vertx, config, "antimonitor.pool");

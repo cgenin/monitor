@@ -6,8 +6,9 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.core.Vertx;
+import io.vertx.rxjava.core.eventbus.Message;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
-import net.christophe.genin.monitor.domain.server.db.mysql.AntiMonitorSchemas;
+import net.christophe.genin.monitor.domain.server.db.mysql.FlywayVerticle;
 import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
 import net.christophe.genin.monitor.domain.server.model.Configuration;
@@ -122,16 +123,18 @@ public class Database extends AbstractVerticle {
         vertx.eventBus().consumer(MYSQL_CREATE_SCHEMA, msg -> {
             Mysqls mysqls = Mysqls.Instance.get();
             if (mysqls.active()) {
-                AntiMonitorSchemas.create().subscribe(
-                        (report) -> msg.reply(new JsonObject()
-                                .put("active", true)
-                                .put("creation", true)
-                                .put("report", report)
-                        ),
-                        err -> {
-                            logger.error("Error in creating table", err);
-                            msg.fail(500, "Error in creating table");
-                        });
+                vertx.eventBus().<JsonObject>rxSend(FlywayVerticle.UPGRADE, mysqls.configuration())
+                        .map(Message::body)
+                        .subscribe(
+                                (report) -> msg.reply(new JsonObject()
+                                        .put("active", true)
+                                        .put("creation", true)
+                                        .put("report", report)
+                                ),
+                                err -> {
+                                    logger.error("Error in creating table", err);
+                                    msg.fail(500, "Error in creating table");
+                                });
             } else {
                 msg.reply(new JsonObject().put("active", false).put("creation", false));
             }

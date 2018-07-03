@@ -60,7 +60,7 @@ public class BaseDbTest {
 
     public synchronized static void startDbServerWithSchema() {
         EmbeddedMysql.Builder builder = getBuilder()
-                .addSchema(NAM_DB, ScriptResolver.classPathScript("sql/CREATE_SCHEMA.sql"));
+                .addSchema(NAM_DB, ScriptResolver.classPathScript("db/migration/V1.0.0__CREATE_SCHEMA.sql"));
         server.set(builder.start());
 
 
