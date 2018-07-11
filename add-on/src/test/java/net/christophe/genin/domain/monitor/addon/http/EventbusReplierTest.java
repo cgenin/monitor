@@ -16,7 +16,7 @@ import org.mockito.ArgumentCaptor;
 import static org.mockito.Mockito.*;
 
 @RunWith(VertxUnitRunner.class)
-public class HttpsTest {
+public class EventbusReplierTest {
 
     private Vertx vertx;
     private RoutingContext routingContext;
@@ -37,36 +37,46 @@ public class HttpsTest {
     @Test
     public void should_send_jsonAndReply(TestContext context) {
         Async async = context.async();
-        new Https.EbCaller(vertx, routingContext).jsonAndReply(TestVerticle.JSON)
-                .handle(defaultTest200(context, async));
+        EventBusReplier.builder(vertx, routingContext)
+                .json()
+                .adress(TestVerticle.JSON)
+                .handle(defaultTest200(context, async))
+                .withNoBody();
 
     }
 
     @Test
     public void should_send_jsonAndReply_500_when_failed(TestContext context) {
         Async async = context.async();
-        new Https.EbCaller(vertx, routingContext).jsonAndReply(TestVerticle.ERROR)
+        EventBusReplier.builder(vertx, routingContext)
+                .json()
+                .adress(TestVerticle.ERROR)
                 .handle(res -> {
                     context.assertFalse(res);
                     verify(response, times(1)).end();
                     context.assertEquals(Https.ERROR_STATUS, extractStatus());
                     async.countDown();
-                });
-
+                })
+                .withNoBody();
     }
 
     @Test
     public void should_send_jsonAndReply_with_body(TestContext context) {
         Async async = context.async();
-        new Https.EbCaller(vertx, routingContext).jsonAndReply(TestVerticle.JSON, new JsonObject().put("an","body"))
-                .handle(defaultTest200(context, async));
+        EventBusReplier.builder(vertx, routingContext)
+                .json()
+                .adress(TestVerticle.JSON)
+                .handle(defaultTest200(context, async))
+                .withBody(new JsonObject().put("an", "body"));
 
     }
 
     @Test
     public void should_send_arrAndReply(TestContext context) {
         Async async = context.async();
-        new Https.EbCaller(vertx, routingContext).arrAndReply(TestVerticle.ARRAY)
+        EventBusReplier.builder(vertx, routingContext)
+                .array()
+                .adress(TestVerticle.ARRAY)
                 .handle(res -> {
                     context.assertTrue(res);
                     ArgumentCaptor<String> captor = ArgumentCaptor.forClass(String.class);
@@ -74,7 +84,8 @@ public class HttpsTest {
                     context.assertEquals("[{\"test\":true}]", captor.getValue());
                     context.assertEquals(200, extractStatus());
                     async.countDown();
-                });
+                })
+                .withNoBody();
 
     }
 
@@ -89,7 +100,7 @@ public class HttpsTest {
         };
     }
 
-    private Integer extractStatus(){
+    private Integer extractStatus() {
         ArgumentCaptor<Integer> captor = ArgumentCaptor.forClass(Integer.class);
         verify(response, times(1)).setStatusCode(captor.capture());
         return captor.getValue();
@@ -98,7 +109,8 @@ public class HttpsTest {
     @Test
     public void should_send_created(TestContext context) {
         Async async = context.async();
-        new Https.EbCaller(vertx, routingContext).created(TestVerticle.JSON, new JsonObject().put("created", true))
+        EventBusReplier.builder(vertx, routingContext).created()
+                .adress(TestVerticle.JSON)
                 .handle(res -> {
                     context.assertTrue(res);
 
@@ -106,19 +118,22 @@ public class HttpsTest {
                     context.assertEquals(Https.CREATED_STATUS, extractStatus());
 
                     async.countDown();
-                });
+                }).withBody(new JsonObject().put("created", true));
 
     }
 
     @Test
     public void should_send_created_500_when_failed(TestContext context) {
         Async async = context.async();
-        new Https.EbCaller(vertx, routingContext).created(TestVerticle.ERROR, new JsonObject().put("created", true))
+        EventBusReplier.builder(vertx, routingContext)
+                .created()
+                .adress(TestVerticle.ERROR)
                 .handle(res -> {
                     context.assertFalse(res);
                     verify(response, times(1)).end();
                     context.assertEquals(Https.ERROR_STATUS, extractStatus());
                     async.countDown();
-                });
+                })
+                .withBody(new JsonObject().put("created", true));
     }
 }

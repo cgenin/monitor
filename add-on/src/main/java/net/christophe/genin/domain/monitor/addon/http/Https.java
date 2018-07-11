@@ -19,101 +19,13 @@ import java.util.function.Consumer;
 
 public final class Https {
 
-    private static final Logger logger = LoggerFactory.getLogger(Https.class);
     static final String CONTENT_TYPE_JSON = "application/json";
     static final String NO_CACHE = "private, no cache";
     static final Integer CREATED_STATUS = 204;
     static final int ERROR_STATUS = 500;
 
-    static Integer toStatusCreated(AsyncResult as) {
-        return toStatus(as, CREATED_STATUS);
-    }
 
-    private static Integer toStatus(AsyncResult reply, int okStatus) {
-        return Optional.of(reply)
-                .filter(AsyncResult::succeeded)
-                .map(r -> okStatus)
-                .orElseGet(() -> {
-                    logger.error("Error", reply.cause());
-                    return ERROR_STATUS;
-                });
-    }
 
-    /**
-     * Class for transform event bus result to Http request
-     */
-    public static class EbCaller {
-        private final Vertx vertx;
-        private final RoutingContext rc;
-        private Handler<Boolean> handler;
-
-        public EbCaller(Vertx vertx, RoutingContext rc) {
-            this.vertx = vertx;
-            this.rc = rc;
-        }
-
-        private <T> EbCaller consume(String addr, Object obj, Consumer<T> consumer) {
-            Objects.requireNonNull(addr);
-            vertx.eventBus()
-                    .send(addr, obj, new DeliveryOptions(), (Handler<AsyncResult<Message<T>>>) (reply) -> {
-                        if (reply.succeeded()) {
-                            T jsonArray = reply.result().body();
-                            consumer.accept(jsonArray);
-                            Optional.ofNullable(handler).ifPresent(h -> h.handle(true));
-                            return;
-                        }
-                        logger.error("Error - " + addr, reply.cause());
-                        rc.response().setStatusCode(ERROR_STATUS).end();
-                        Optional.ofNullable(handler).ifPresent(h -> h.handle(false));
-
-                    });
-            return this;
-        }
-
-        public EbCaller handle(Handler<Boolean> result) {
-            this.handler = result;
-            return this;
-        }
-
-        public EbCaller created(String addr, JsonObject data) {
-            vertx.eventBus()
-                    .send(addr, data, new DeliveryOptions(), (Handler<AsyncResult<Message<JsonArray>>>) (reply) -> {
-                        final Integer status = Https.toStatusCreated(reply);
-                        rc.response().setStatusCode(status).end();
-                        boolean state = CREATED_STATUS.equals(status);
-                        Optional.ofNullable(handler).ifPresent(h -> h.handle(state));
-                    });
-            return this;
-        }
-
-        public EbCaller arrAndReply(String addr) {
-            return arrAndReply(addr, new JsonObject());
-        }
-
-        public EbCaller arrAndReply(String addr, JsonObject data) {
-            Objects.requireNonNull(data);
-            return consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
-        }
-
-        public EbCaller arrAndReply(String addr, String data) {
-            Objects.requireNonNull(data);
-            return consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
-        }
-
-        public EbCaller arrAndReply(String addr, Buffer data) {
-            Objects.requireNonNull(data);
-            return consume(addr, data, (Consumer<JsonArray>) (jsonArray) -> new Https.Json(rc).send(jsonArray));
-        }
-
-        public EbCaller jsonAndReply(String addr, JsonObject data) {
-            Objects.requireNonNull(data);
-            return consume(addr, data, (Consumer<JsonObject>) (obj) -> new Https.Json(rc).send(obj));
-        }
-
-        public EbCaller jsonAndReply(String addr) {
-            return jsonAndReply(addr, new JsonObject());
-        }
-    }
 
     /**
      * Manage Json response.
