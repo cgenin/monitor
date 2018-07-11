@@ -6,7 +6,6 @@
   "description": "A Quasar App",
   "author": "Your Name <your@email.com>",
   "scripts": {
-    "clean": "node build/script.clean.js",
     "dev": "quasar dev",
     "build": "quasar build",
     "lint": "eslint --ext .js,.vue src"
@@ -22,7 +21,7 @@
   },
   "devDependencies": {
     "json-loader": "^0.5.7",
-    "quasar-cli": "^0.15.11",
+    "quasar-cli": "^0.16.4",
     "raw-loader": "^0.5.1",
     "sockjs": "0.3.19"
   },

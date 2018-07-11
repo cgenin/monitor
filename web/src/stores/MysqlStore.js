@@ -28,6 +28,11 @@ class MysqlStore {
       .then(res => res.json());
   }
 
+  infoSchema() {
+    return fetch('/api/configuration/db/mysql')
+      .then(res => res.json());
+  }
+
   test(mysql) {
     const body = JSON.stringify(mysql);
 

@@ -39,7 +39,7 @@ public class SendToMojo extends AbstractMojo {
     }
 
 
-    public String createJson(MavenProject project, String packageJsonPath) {
+    String createJson(MavenProject project, String packageJsonPath) {
         HashMap<String, Object> jsons = new HashMap<>();
         jsons.put("artifactId", project.getArtifactId());
         jsons.put("groupId", project.getGroupId());

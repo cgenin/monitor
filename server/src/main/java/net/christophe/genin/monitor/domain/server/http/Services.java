@@ -116,6 +116,7 @@ public class Services {
         });
 
         router.put("/db/mysql/schemas").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_CREATE_SCHEMA));
+        router.get("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(Database.MYSQL_INFO_SCHEMA));
         router.post("/db/events/store").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ArchiveCommand.ARCHIVE));
         router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_ON_OFF));
         router.post("/db/mysql/connect").handler(rc -> {
@@ -181,10 +182,10 @@ public class Services {
             final JsonObject body = rc.getBodyAsJson()
                     .put("updateState", new Date().getTime());
 
-            new Https.EbCaller(vertx, rc).created(Front.SAVING, body);
+            new Https.EbCaller(vertx, rc).created(FrontCommand.SAVING, body);
         });
 
-
+        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(FrontAppsQuery.FIND_ALL));
         return router;
     }
 
