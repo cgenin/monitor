@@ -58,7 +58,7 @@ public class Services {
         );
         router.mountSubRouter("/projects", projects());
         router.mountSubRouter("/tables", tables());
-        router.mountSubRouter("/endpoints", apis());
+        router.mountSubRouter("/endpoints", endpoints());
         router.mountSubRouter("/dependencies", dependencies());
         router.mountSubRouter("/configuration", configuration());
         router.mountSubRouter("/dump", dump());
@@ -74,7 +74,7 @@ public class Services {
      *
      * @return the router
      */
-    private Router apis() {
+    private Router endpoints() {
         Router router = Router.router(vertx);
         router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(ApiQuery.FIND).withNoBody());
         return router;
@@ -182,6 +182,7 @@ public class Services {
         });
 
         router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.FIND_ALL).withNoBody());
+        router.get("/groupby").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.FIND_BY_GROUP).withNoBody());
         return router;
     }
 

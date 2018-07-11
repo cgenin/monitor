@@ -19,6 +19,10 @@ import java.util.function.Consumer;
 import static net.christophe.genin.domain.monitor.addon.http.Https.CREATED_STATUS;
 import static net.christophe.genin.domain.monitor.addon.http.Https.ERROR_STATUS;
 
+/**
+ * Utils class for automatic mapping an rest api to an event bus endpoints.
+ *
+ */
 public final class EventBusReplier {
     private static final Logger logger = LoggerFactory.getLogger(EventBusReplier.class);
 

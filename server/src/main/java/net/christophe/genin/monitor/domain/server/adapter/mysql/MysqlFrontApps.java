@@ -33,6 +33,7 @@ public class MysqlFrontApps extends FrontApps {
         public Observable<FrontApps> findBy(String groupId, String artifactId, String version) {
 
             return mysqls.select("SELECT ID, LATEST, document  from FRONT_APPS WHERE GROUP_ID=? AND ARTIFACT_ID=? AND VERSION=?", new JsonArray().add(groupId).add(artifactId).add(version))
+                    .first()
                     .flatMap(resultSet -> Observable.from(resultSet.getResults()))
                     .map(arr -> {
                         String id = arr.getString(0);
@@ -53,8 +54,11 @@ public class MysqlFrontApps extends FrontApps {
         }
 
         private Single<Boolean> update(MysqlFrontApps fa) {
-            JsonArray params = new JsonArray().add(fa.lastUpdate()).add(fa.packagesJson().encode()).add(fa.id());
-            return mysqls.execute("update FRONT_APPS SET LATEST=? AND document=?  WHERE ID=?", params)
+            long lastUpdate = fa.lastUpdate();
+            String encode = fa.packagesJson().encode();
+            String id = fa.id();
+            JsonArray params = new JsonArray().add(lastUpdate).add(encode).add(id);
+            return mysqls.execute("update FRONT_APPS SET LATEST=?, document=? WHERE ID=?", params)
                     .map(updateResult -> updateResult.getUpdated() == 1);
         }
 

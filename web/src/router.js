@@ -24,10 +24,10 @@ export default new VueRouter({
   scrollBehavior: () => ({y: 0}),
 
   routes: [
-    {name:'welcome', path: '/', component: load('Welcome')},
-    {name:'projectsList',path: '/projects-list', component: load('ProjectsList')},
-    {name:'npmList',path: '/npm-list', component: load('npm/NpmList')},
-    {name:'serveursCompare',path: '/monitoring', component: load('monitoring/ServeursCompare')},
+    {name: 'welcome', path: '/', component: load('Welcome')},
+    {name: 'projectsList', path: '/projects-list', component: load('ProjectsList')},
+    {name: 'npmList', path: '/npm-list', component: load('npm/NpmList')},
+    {name: 'serveursCompare', path: '/monitoring', component: load('monitoring/ServeursCompare')},
     {
       path: '/tables',
       component: load('Tables'),
@@ -45,7 +45,6 @@ export default new VueRouter({
         {path: 'administration', component: load('configuration/Administration')},
         {path: 'status', component: load('configuration/Status')},
         {path: 'import-export', component: load('configuration/ImportExport')},
-        //{path: 'export', component: load('configuration/Export')},
         {path: 'reset', component: load('configuration/Reset')},
         {path: 'monithor', component: load('configuration/MoniThor')},
         {path: '', redirect: 'status'},
@@ -59,6 +58,11 @@ export default new VueRouter({
         {path: 'search/:resource', component: load('dependencies/Search')},
         {path: '', component: load('dependencies/None')},
       ]
+    },
+    {
+      path: '/fronts-list',
+      component: () => import(`./pages/fronts/FrontList.vue`),
+
     },
     // Always leave this last one
     {path: '*', component: load('Error404')} // Not found

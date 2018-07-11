@@ -10,6 +10,8 @@ import net.christophe.genin.monitor.domain.server.model.FrontApps;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
+import java.util.Date;
+
 public class FrontCommand extends AbstractVerticle {
     private static final Logger logger = LoggerFactory.getLogger(FrontCommand.class);
 
@@ -28,7 +30,7 @@ public class FrontCommand extends AbstractVerticle {
             JsonObject packagesJson = body.getJsonObject("packagesJson", new JsonObject());
             FrontApps.findBy(groupId, artifactId, version)
                     .observeOn(Schedulers.io())
-                    .map(fa -> fa.setPackageJson(packagesJson))
+                    .map(fa -> fa.setPackageJson(packagesJson).setLastUpdate(new Date().getTime()))
                     .switchIfEmpty(Observable.fromCallable(() -> FrontApps.newInstance(packagesJson, groupId, artifactId, version)))
                     .toSingle()
                     .flatMap(FrontApps::save)

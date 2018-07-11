@@ -58,8 +58,14 @@
                 <q-item-main label="Dépendances" sublabel="Dép entre MicroServices"/>
               </q-item>
             </q-collapsible>
-            <q-item to="/npm-list" v-if="moniThorUrl">
-              <q-item-side icon="view_list"/>
+            <q-collapsible icon="fab fa-chrome" label="Web apps">
+              <q-item to="/fronts-list">
+                <q-item-side icon="list_alt"/>
+                <q-item-main label="Liste des applications" sublabel="Résumé des derniers build"/>
+              </q-item>
+            </q-collapsible>
+              <q-item to="/npm-list" v-if="moniThorUrl">
+              <q-item-side icon="featured_play_list"/>
               <q-item-main label="NPM" sublabel="Informations sur les projets NPM"/>
             </q-item>
             <q-item to="/monitoring" v-if="moniThorUrl">

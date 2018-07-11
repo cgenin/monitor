@@ -1,26 +1,17 @@
 package net.christophe.genin.domain.monitor.addon.http;
 
-import io.vertx.core.AsyncResult;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
-import io.vertx.core.buffer.Buffer;
-import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.core.eventbus.Message;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.RoutingContext;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Consumer;
-
+/**
+ * Utils class for https.
+ */
 public final class Https {
 
-    static final String CONTENT_TYPE_JSON = "application/json";
-    static final String NO_CACHE = "private, no cache";
+    private static final String CONTENT_TYPE_JSON = "application/json";
+    private static final String NO_CACHE = "private, no cache";
     static final Integer CREATED_STATUS = 204;
     static final int ERROR_STATUS = 500;
 
