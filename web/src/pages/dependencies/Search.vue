@@ -23,7 +23,7 @@
               </ul>
             </div>
             <div class="print-button">
-              <q-btn outline icon="fa-print" @click="print">&nbsp;Imprimer</q-btn>
+              <q-btn outline icon="print" @click="print">&nbsp;Imprimer</q-btn>
             </div>
 
           </div>

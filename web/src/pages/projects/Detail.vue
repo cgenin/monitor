@@ -1,6 +1,6 @@
 <template>
   <div class="main container">
-    <header-app :help="txtHelp" :bc-datas="[{icon:'view_list', label:'Liste des Projets', path : '/projects-list'},{icon:'ion-document-text', label:title}]"></header-app>
+    <header-app :help="txtHelp" :bc-datas="[{icon:'view_list', label:'Liste des Projets', path : '/projects-list'},{icon:'fas fa-file-alt', label:title}]"></header-app>
     <q-card>
       <q-card-title>
         <h3>{{title}}</h3>
@@ -15,7 +15,7 @@
       <div>
       </div>
       <q-list separator class="bg-white">
-        <q-collapsible icon="ion-coffee" label="Librairies Java" v-if="selected.javaDeps"
+        <q-collapsible icon="fas fa-coffee" label="Librairies Java" v-if="selected.javaDeps"
                        :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">
           <div class="list-table">
             <ul>

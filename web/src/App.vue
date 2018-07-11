@@ -40,7 +40,7 @@
               <q-item-side icon="home"/>
               <q-item-main label="Accueil"/>
             </q-item>
-            <q-collapsible icon="fa-cogs" label="Micro services">
+            <q-collapsible icon="fas fa-cogs" label="Micro services">
               <q-item to="/projects-list">
                 <q-item-side icon="view_list"/>
                 <q-item-main label="Liste des projets" sublabel="Résumé des derniers build"/>

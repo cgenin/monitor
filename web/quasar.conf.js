@@ -10,7 +10,7 @@ module.exports = function (ctx) {
     extras: [
       ctx.theme.mat ? 'roboto-font' : null,
       'material-icons',
-      'ionicons',
+      //'ionicons',
       // 'mdi',
       'fontawesome'
     ],
@@ -18,7 +18,7 @@ module.exports = function (ctx) {
     build: {
       scopeHoisting: true,
       vueRouterMode: 'history',
-      // gzip: true,
+      gzip: true,
       // analyze: true,
       // extractCSS: false,
       // useNotifier: false,
