@@ -183,6 +183,11 @@ public class Services {
 
         router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.FIND_ALL).withNoBody());
         router.get("/groupby").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.FIND_BY_GROUP).withNoBody());
+        router.get("/services").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.SERVICES_LIST).withNoBody());
+        router.get("/by/:domain").handler(rc -> {
+            String domain = rc.request().params().get("domain");
+            EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.FIND_WEB_APP_BY_DOMAIN).withBody(domain);
+        });
         return router;
     }
 

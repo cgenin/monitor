@@ -3,15 +3,20 @@
 
     <div class="panel-information column items-center justify-around">
       <div class="column justify-between items-stretch" style="width: 500px;">
-          <q-btn outline color="white" label="Projets" size="lg" icon="view_list" @click="$router.push('/projects-list')">
-            <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbProjects}}</q-chip>
-          </q-btn>
-          <q-btn outline color="white" label="Tables" size="lg" icon="border_all" @click="$router.push('/tables/list')">
-            <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbTables}}</q-chip>
-          </q-btn>
-          <q-btn outline color="white" label="Apis" size="lg" icon="explore" @click="$router.push('/apis-list')">
-            <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbApis}}</q-chip>
-          </q-btn>
+        <q-btn outline color="white" label="Services" size="lg" icon="fas fa-cogs"
+               @click="$router.push('/projects-list')">
+          <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbProjects}}</q-chip>
+        </q-btn>
+        <q-btn outline color="white" label="Tables" size="lg" icon="border_all" @click="$router.push('/tables/list')">
+          <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbTables}}</q-chip>
+        </q-btn>
+        <q-btn outline color="white" label="Apis" size="lg" icon="explore" @click="$router.push('/apis-list')">
+          <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbApis}}</q-chip>
+        </q-btn>
+        <q-btn outline color="white" label="Web-apps" size="lg" icon="fab fa-chrome"
+               @click="$router.push('/fronts-list')">
+          <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbfronts}}</q-chip>
+        </q-btn>
       </div>
     </div>
   </div>
@@ -21,6 +26,7 @@
   import ProjectStore from '../stores/ProjectsStore'
   import TablesStore from '../stores/TablesStore'
   import EndpointsStore from '../stores/EndpointsStore'
+  import FrontStore from '../stores/FrontStore'
   import CardChart from '../components/CardChart'
   import QItem from "quasar-framework/src/components/list/QItem";
 
@@ -35,6 +41,7 @@
         nbProjects: 0,
         nbTables: 0,
         nbApis: 0,
+        nbfronts: 0,
         datacollection: {}
       };
     },
@@ -43,13 +50,9 @@
         this.datacollection = {
           projects: this.nbProjects,
           tables: this.nbTables,
-          apis: this.nbApis
+          apis: this.nbApis,
+          fronts: this.fronts
         }
-      }
-    },
-    computed: {
-      label() {
-        return `Projets ${this.nbProjects}, Tables : ${this.nbTables}, Apis: ${this.nbApis}`;
       }
     },
     mounted() {
@@ -67,8 +70,11 @@
         .then((list) => {
           this.nbApis = list.length
         });
-
-      Promise.all([promiseProject, promiseTables, promiseApis]).then(this.fillData);
+      let promiseFronts = FrontStore.resume()
+        .then((list) => {
+          this.nbfronts = list.length
+        });
+      Promise.all([promiseProject, promiseTables, promiseApis, promiseFronts]).then(this.fillData);
     },
   }
 </script>
