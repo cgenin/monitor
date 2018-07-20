@@ -79,21 +79,20 @@
   </div>
 </template>
 <script>
-  import {date} from 'quasar'
-  import FrontStore from '../../stores/FrontStore'
-  import HeaderApp from '../../components/HeaderApp'
+  import { createNamespacedHelpers } from 'vuex';
+  import { namespace as namespaceFronts, resume, loadResume } from '../../store/fronts/constants';
+  import HeaderApp from '../../components/HeaderApp';
   import {
     noData,
     noDataAfterFiltering,
     separator,
     separatorOptions,
     pagination,
-    rowsPerPageOptions
-  } from '../../datatable-utils'
+    rowsPerPageOptions,
+  } from '../../datatable-utils';
 
-  function formatDate(dt) {
-    return (dt) ? date.formatDate(new Date(dt), 'YYYY-MM-DD HH:mm:ss') : '';
-  }
+
+  const frontsStore = createNamespacedHelpers(namespaceFronts);
 
   export default {
     name: 'FrontList',
@@ -103,7 +102,6 @@
 
     data() {
       return {
-        frontApps: [],
         listServices: [],
         filter: '',
         modal: false,
@@ -123,7 +121,7 @@
             align: 'left',
             sortable: true,
             type: 'string',
-            filter: true
+            filter: true,
           },
           {
             label: 'Dernière Mise à jour',
@@ -137,11 +135,12 @@
           {
             label: 'Snapshot',
             field: 'snapshotVersion',
-            name: 'snapshotVersion', align: 'left',
+            name: 'snapshotVersion',
+align: 'left',
 
             sortable: false,
             type: 'string',
-            filter: true
+            filter: true,
           },
           {
             label: '-',
@@ -154,11 +153,12 @@
           {
             label: 'Release',
             field: 'releaseVersion',
-            name: 'releaseVersion', align: 'left',
+            name: 'releaseVersion',
+align: 'left',
 
             sortable: false,
             type: 'string',
-            filter: true
+            filter: true,
           },
           {
             label: '-',
@@ -172,32 +172,23 @@
             label: 'Services',
             field: 'servicesClient',
             name: 'servicesClient',
-            sortable: false
+            sortable: false,
           },
           {
             label: 'Package.json',
             field: 'packageJsonTxt',
             name: 'packageJsonTxt',
             align: 'left',
-            sortable: false
-          },]
+            sortable: false,
+          }],
       };
+    },
+    computed: {
+      ...frontsStore.mapGetters({ frontApps: resume }),
     },
     methods: {
       refresh() {
-        FrontStore.resume()
-          .then(l => {
-            this.frontApps = l.map(obj => {
-
-              const name = `${obj.groupId}.${obj.artifactId}`;
-              const lastUpdateDate = formatDate(obj.lastUpdate);
-              const lastUpdateSnapshotDate = (obj.snapshotVersion) ? formatDate(obj.lastUpdateSnapshot) : null;
-              const lastUpdateReleaseDate = (obj.releaseVersion) ? formatDate(obj.lastUpdateRelease) : null;
-              const packageJsonTxt = JSON.stringify(obj.packageJson, null, 3);
-              return {name, lastUpdateDate, lastUpdateSnapshotDate, lastUpdateReleaseDate, packageJsonTxt, ...obj};
-            });
-          });
-
+        this.loadResume();
       },
       openPackageJson(obj) {
         this.modalTxt = obj;
@@ -206,10 +197,11 @@
       openServices(services) {
         this.listServices = services;
         this.modalServices = true;
-      }
+      },
+      ...frontsStore.mapActions([loadResume]),
     },
     mounted() {
       this.refresh();
-    }
-  }
+    },
+  };
 </script>

@@ -32,9 +32,13 @@
   </div>
 </template>
 <script>
-  import {filter} from 'quasar';
-  import DependenciesStore from '../stores/DependenciesStore'
+  import { createNamespacedHelpers } from 'vuex';
+  import { filter } from 'quasar';
+  // import DependenciesStore from '../stores-old/DependenciesStore';
   import HeaderApp from '../components/HeaderApp';
+  import { initialize, namespace, resources } from '../store/dependencies/constants';
+
+  const dependenciesStore = createNamespacedHelpers(namespace);
 
   export default {
     name: 'Configuration',
@@ -44,41 +48,34 @@
     data() {
       return {
         terms: null,
-        resources: []
       };
+    },
+    computed: {
+      ...dependenciesStore.mapGetters([resources]),
     },
     methods: {
       search(terms, done) {
         const t = terms.toUpperCase();
-        done(filter(t, {field: 'value', list: this.resources}))
+        done(filter(t, { field: 'value', list: this.resources }));
       },
       selected(result) {
         this.$router.push(`/dependencies/search/${result.value.toUpperCase()}`);
       },
       reset() {
         this.terms = '';
-        this.$router.push(`/dependencies`)
-      }
+        this.$router.push('/dependencies');
+      },
+      ...dependenciesStore.mapActions([initialize]),
     },
     mounted() {
-      DependenciesStore.initialize().then(
-        rs => {
-          this.resources = rs.map(resource => {
-            return {
-              label: resource.toLowerCase(),
-              sublabel: 'Java',
-              value: resource.toLowerCase()
-            };
-          });
-          const resource = this.$router.history.current.params.resource;
-          if (resource) {
-            this.terms = resource;
-          }
+      this.initialize().then(() => {
+        const { resource } = this.$router.history.current.params;
+        if (resource) {
+          this.terms = resource;
         }
-      );
-
-    }
-  }
+      });
+    },
+  };
 </script>
 <style lang="stylus">
   @import "../css/pages/dependencies.styl"

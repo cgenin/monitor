@@ -18,10 +18,10 @@ export function formatYYYYMMDDHHmm(long) {
 export function mavenToDate(string) {
   return new Date(
     string.substring(0, 4),
-    string.substring(4, 6)-1,
+    string.substring(4, 6) - 1,
     string.substring(6, 8),
     string.substring(8, 10),
     string.substring(10, 12),
-    string.substring(12, 14)
+    string.substring(12, 14),
   );
 }

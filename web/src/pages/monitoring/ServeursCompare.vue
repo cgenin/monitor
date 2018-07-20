@@ -70,7 +70,8 @@
   </div>
 </template>
 <script>
-  import ConfigurationStore from '../../stores/ConfigurationStore';
+  import { createNamespacedHelpers } from 'vuex';
+  import { namespace, loadServers, servers as serverFromStore, pingServer } from '../../store/moniThor/constants';
   import ChangelogButton from '../../components/ChangeLogButton';
   import ChartsButton from '../../components/ChartsButton';
   import HeaderApp from '../../components/HeaderApp';
@@ -81,15 +82,17 @@
     pagination,
     rowsPerPageOptions,
     separator,
-    separatorOptions
-  } from '../../datatable-utils'
+    separatorOptions,
+  } from '../../datatable-utils';
+
+  const serverStore = createNamespacedHelpers(namespace);
 
   export default {
     name: 'ServeursCompare',
     components: {
       HeaderApp,
       ChangelogButton,
-      ChartsButton
+      ChartsButton,
     },
     data() {
       return {
@@ -110,15 +113,18 @@
         columns: [],
         runningPromise: null,
         cancelRunningPromise: false,
-        moniThorUrl: null
-      }
+        moniThorUrl: null,
+      };
+    },
+    computed: {
+      ...serverStore.mapGetters({ serverFromStore }),
     },
     methods: {
       async refresh() {
         this.filter = '';
       },
       objectAsArray(obj) {
-        return Object.keys(obj).map((key) => obj[key]);
+        return Object.keys(obj).map(key => obj[key]);
       },
       serverChanged(servers) {
         this.cancelRunningPromise = !!this.runningPromise;
@@ -129,31 +135,25 @@
           name: 'serviceName',
           type: 'string',
           filter: true,
-          align: 'left'
+          align: 'left',
         }];
-        const responsePromises = [];
-        for (let i in servers) {
-          const server = servers[i];
-          responsePromises.push(fetch(`${this.moniThorUrl}/api/services/ping/all?server=${server}`)
-            .then((res) => res.json())
-            .then((services) => {
-              this.servicesByServer[server] = services.reduce((a, b) => {
-                  a[b.serviceName] = b;
-                  return a;
-                }, {}
-              );
-              this.services = services.map((s) => {
-                return {serviceName: s.serviceName};
-              }).sort((a, b) => a.serviceName.localeCompare(b.serviceName));
-              return server;
-            })
-          );
-        }
+        const responsePromises = servers.map(server => this.pingServer({ server })
+          .then((services) => {
+            this.servicesByServer[server] = services.reduce((a, b) => {
+              a[b.serviceName] = b;
+              return a;
+            }, {});
+            this.services = services
+              .map(s => ({ serviceName: s.serviceName }))
+              .sort((a, b) => a.serviceName.localeCompare(b.serviceName));
+            return server;
+          }));
+
         this.runningPromise = Promise.all(responsePromises)
-          .then((servers) => {
+          .then((results) => {
             if (!this.cancelRunningPromise) {
-              servers.forEach((server) => {
-                if (this.serverList.includes(server) && this.columns.filter((c) => c.label === server).length === 0) {
+              results.forEach((server) => {
+                if (this.serverList.includes(server) && this.columns.filter(c => c.label === server).length === 0) {
                   this.columns.push({
                     label: server,
                     field: 'serviceName',
@@ -161,7 +161,7 @@
                     sortable: true,
                     type: 'string',
                     filter: true,
-                    align: 'left'
+                    align: 'left',
                   });
                 }
               });
@@ -175,31 +175,25 @@
           .then(() => {
             this.loading = false;
             this.runningPromise = null;
-          })
+          });
       },
       filtering() {
         this.services = filtering(this.original, this.filter);
       },
+      ...serverStore.mapActions([loadServers, pingServer]),
     },
     mounted() {
       this.pagination.rowsPerPage = 50;
-      this.moniThorUrl = null;
-      ConfigurationStore.initialize()
+      this.loadServers()
         .then(() => {
-          this.moniThorUrl = ConfigurationStore.moniThorUrl;
-
-          fetch(`${this.moniThorUrl}/api/servers`)
-            .then((res) => res.json())
-            .then((serversWrappers) => this.servers = serversWrappers.servers.map(s => {
-              return {
-                label: s,
-                value: s
-              };
-            }));
+          this.servers = this.serverFromStore.map(s => ({
+            label: s,
+            value: s,
+          }));
         });
       this.refresh();
-    }
-  }
+    },
+  };
 </script>
 <style lang="stylus">
   @import "../../css/pages/serveursCompare.styl"

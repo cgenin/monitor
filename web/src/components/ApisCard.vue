@@ -44,7 +44,7 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="p in parameters">
+              <tr v-for="p in parameters" :key="p.name">
                 <td>{{p.type}}</td>
                 <td>{{p.object}}</td>
                 <td>{{p.name}}</td>
@@ -64,13 +64,13 @@
   </q-card>
 </template>
 <script>
-  import MethodIcon from './MethodIcon'
+  import MethodIcon from './MethodIcon';
 
   export default {
     name: 'ApisCard',
     props: ['api'],
     components: {
-      MethodIcon
+      MethodIcon,
     },
     computed: {
       parameters() {
@@ -78,9 +78,9 @@
           return [];
         }
         return JSON.parse(this.api.params);
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 <style>
 

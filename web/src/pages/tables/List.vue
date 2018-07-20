@@ -10,7 +10,7 @@
           <div v-if="!loading" style="width:100%">
             <div class="sql-table-and-project">
               <q-table
-                :data="list"
+                :data="tables"
                 :columns="columns"
                 row-key="name"
                 :visible-columns="visibleColumns"
@@ -42,7 +42,7 @@
                 </template>
                 <q-td slot="body-cell-services" slot-scope="props" :props="props">
                   <ul>
-                    <li v-for="s in props.value">{{s}}</li>
+                    <li v-for="s in props.value" :key="s">{{s}}</li>
                   </ul>
                 </q-td>
               </q-table>
@@ -57,19 +57,21 @@
   </div>
 </template>
 <script>
+  import { createNamespacedHelpers } from 'vuex';
+  import {
+    namespace,
+    loadTables,
+    tables,
+  } from '../../store/microservices/constants';
+  import { sortString } from '../../FiltersAndSorter';
+  import { pagination, separator, separatorOptions, noDataAfterFiltering, noData, rowsPerPageOptions } from '../../datatable-utils';
 
-  import TablesStore from '../../stores/TablesStore';
-  import {format} from '../../Dates';
-  import {sortString} from '../../FiltersAndSorter'
-  import {pagination, separator, separatorOptions, noDataAfterFiltering, noData, rowsPerPageOptions} from '../../datatable-utils'
+  const microservices = createNamespacedHelpers(namespace);
 
   export default {
     name: 'TablesList',
     data() {
       return {
-        list: [],
-        tableDatas: [],
-        original: [],
         filter: '',
         loading: false,
         pagination,
@@ -88,7 +90,7 @@
             width: '400px',
             sortable: true,
             type: 'string',
-            filter: true
+            filter: true,
           },
           {
             label: 'Projet(s) lié(s)',
@@ -102,7 +104,7 @@
                 return sortString(a[0], b[0]);
               }
               return a.length - b.length;
-            }
+            },
           },
           {
             label: 'Dernière Mise à jour',
@@ -112,37 +114,31 @@
             width: '230px',
             sortable: true,
             type: 'date',
-            filter: true
-          }
-        ]
+            filter: true,
+          },
+        ],
       };
+    },
+    computed: {
+      ...microservices.mapGetters([tables]),
     },
     methods: {
       refresh() {
         this.loading = true;
-        TablesStore.initialize()
-          .then(res => {
-            const l = res
-              .map(o => {
-                const latest = format(o.latestUpdate);
-                return Object.assign({}, o, {latest});
-              })
-              .sort((a, b) => {
-                return a.name.localeCompare(b.name);
-              });
-            this.list = l;
-            this.original = l;
+        this.loadTables()
+          .then(() => {
             this.filter = '';
             setTimeout(() => {
               this.loading = false;
             }, 300);
           });
       },
+      ...microservices.mapActions([loadTables]),
     },
     mounted() {
       this.refresh();
-    }
-  }
+    },
+  };
 </script>
 <style lang="stylus" scoped>
    .page-list

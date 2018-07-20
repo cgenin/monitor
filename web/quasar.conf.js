@@ -19,7 +19,7 @@ module.exports = function (ctx) {
       scopeHoisting: true,
       vueRouterMode: 'history',
       gzip: true,
-      // analyze: true,
+      analyze: true,
       // extractCSS: false,
       // useNotifier: false,
       extendWebpack(cfg) {
@@ -28,6 +28,12 @@ module.exports = function (ctx) {
             test: /\.md$/,
             loader: 'raw-loader'
           });
+        cfg.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules|quasar)/
+        });
       }
     },
     devServer: {
@@ -39,6 +45,11 @@ module.exports = function (ctx) {
           target: 'http://localhost:8279',
           changeOrigin: true,
         },
+        '/eventbus/*': {
+          target: 'ws://localhost:8279',
+          changeOrigin: true,
+          ws: true
+        }
       }
     },
     // framework: 'all' --- includes everything; for dev only!

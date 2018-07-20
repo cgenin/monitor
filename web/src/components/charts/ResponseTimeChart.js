@@ -1,5 +1,5 @@
 // CommitChart.js
-import {Line} from 'vue-chartjs';
+import { Line } from 'vue-chartjs';
 import Vue from 'vue';
 
 
@@ -11,28 +11,27 @@ export default Vue.component('response-time-chart', {
     },
     methods: {
         getStats() {
-            let service = this.service;
-            let filteredMetrics = Object.keys(service.metrics)
+            const { service } = this;
+            const filteredMetrics = Object.keys(service.metrics)
                 .filter(key => key.startsWith('gauge') && !key.includes('hystrix'))
-                .sort((a, b) => service.metrics[a] - service.metrics[b])
-            ;
-            const metrics = filteredMetrics
+                .sort((a, b) => service.metrics[a] - service.metrics[b]);
+const metrics = filteredMetrics
                 .splice(0, this.limit || filteredMetrics.length)
                 .reduce((obj, key) => {
                     obj[key] = service.metrics[key];
                     return obj;
                 }, {});
             this.renderChart({
-                labels: Object.keys(metrics).map((key) => key.replace(/(gauge\.response\.)/g, '').replace(/\./g, '/')),
+                labels: Object.keys(metrics).map(key => key.replace(/(gauge\.response\.)/g, '').replace(/\./g, '/')),
                 datasets: [
                     {
 
                         label: 'ms',
                         backgroundColor: 'white',
                         borderColor: '#ff5722',
-                        data: Object.values(metrics)
-                    }
-                ]
+                        data: Object.values(metrics),
+                    },
+                ],
             }, {
                 animation: {
                     duration: 0, // general animation time
@@ -44,7 +43,7 @@ export default Vue.component('response-time-chart', {
                 responsive: true,
                 maintainAspectRatio: false,
                 legend: {
-                    display: false
+                    display: false,
                 },
                 scales: {
                     xAxes: [{
@@ -56,12 +55,12 @@ export default Vue.component('response-time-chart', {
                         left: 0,
                         right: 10,
                         top: 0,
-                        bottom: 0
-                    }
-                }
+                        bottom: 0,
+                    },
+                },
 
-            })
-        }
+            });
+        },
     },
     watch: {
         service() {
@@ -69,7 +68,7 @@ export default Vue.component('response-time-chart', {
         },
         limit() {
             this.getStats();
-        }
-    }
+        },
+    },
 
 });

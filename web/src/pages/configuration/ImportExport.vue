@@ -18,7 +18,7 @@
 
   export default {
     name: 'ConfigurationImportExport',
-    components: {Import, Export}
-  }
+    components: { Import, Export },
+  };
 
 </script>

@@ -20,14 +20,14 @@
   </div>
 </template>
 <script>
-  import VueMarkdown from 'vue-markdown'
+  import VueMarkdown from 'vue-markdown';
 
   export default {
     name: 'HelpButton',
     props: ['text'],
-    components: {VueMarkdown},
+    components: { VueMarkdown },
     data() {
-      return {modal: false};
-    }
-  }
+      return { modal: false };
+    },
+  };
 </script>

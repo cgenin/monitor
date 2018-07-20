@@ -21,9 +21,9 @@
             case 'PUT':
               return 'add_box';
             case 'HEAD':
-              return 'face'
+              return 'face';
             default:
-              console.error('method unkonwn' + this.method);
+              console.error(`method unkonwn${this.method}`);
           }
         }
         return '';
@@ -40,9 +40,10 @@
             return 'green';
           case 'HEAD':
             return 'orange';
+          default:
+            return '';
         }
-        return '';
-      }
-    }
-  }
+      },
+    },
+  };
 </script>

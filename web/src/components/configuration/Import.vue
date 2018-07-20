@@ -12,15 +12,18 @@
   </div>
 </template>
 <script>
-  import {success, error} from '../../Toasts';
-  import ConfigurationStore from '../../stores/ConfigurationStore'
+  import { createNamespacedHelpers } from 'vuex';
+  import { importDb, namespace } from '../../store/server/constants';
+  import { success, error } from '../../Toasts';
+
+  const server = createNamespacedHelpers(namespace);
 
   export default {
     name: 'ConfigurationImport',
     data() {
       return {
-        jsonImport: null
-      }
+        jsonImport: null,
+      };
     },
     methods: {
       fileSelected() {
@@ -33,7 +36,7 @@
       },
       doImport() {
         if (this.jsonImport) {
-          ConfigurationStore.importDb(this.jsonImport)
+          this.importDb(this.jsonImport)
             .then(() => {
               this.jsonImport = null;
               success();
@@ -42,9 +45,10 @@
               error(err);
             });
         }
-      }
-    }
-  }
+      },
+      ...server.mapActions([importDb]),
+    },
+  };
 </script>
 <style scoped>
   .import-page {

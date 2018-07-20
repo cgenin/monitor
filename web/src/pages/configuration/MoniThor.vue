@@ -20,35 +20,39 @@
   </div>
 </template>
 <script>
-  import ConfigurationStore from '../../stores/ConfigurationStore'
-  import {error, success} from '../../Toasts'
+  import { createNamespacedHelpers } from 'vuex';
+  import { namespace, global, initialize, save as saveConfiguration } from '../../store/configuration/constants';
+  import { error, success } from '../../Toasts';
 
+  const conf = createNamespacedHelpers(namespace);
   export default {
     name: 'MoniThor',
     data() {
       return {
-        moniThorUrl: null
-      }
+        moniThorUrl: null,
+      };
+    },
+    computed: {
+      ...conf.mapGetters([global]),
     },
     methods: {
       refresh() {
-        ConfigurationStore.initialize()
-          .then(() => {
-            this.moniThorUrl = ConfigurationStore.moniThorUrl || '';
-          });
+        this.initialize().then(() => {
+          this.moniThorUrl = this.global.moniThorUrl || '';
+        });
       },
       save() {
-        const configuration = Object.assign({}, ConfigurationStore._state, {moniThorUrl: this.moniThorUrl});
-        ConfigurationStore.save(configuration)
+        const configuration = Object.assign({}, this.global, { moniThorUrl: this.moniThorUrl });
+        this.saveConfiguration(configuration)
           .then(() => success())
-          .catch((err) => error(err));
-      }
-
+          .catch(err => error(err));
+      },
+      ...conf.mapActions({ initialize, saveConfiguration }),
     },
     mounted() {
       this.refresh();
-    }
-  }
+    },
+  };
 </script>
 <style lang="stylus" scoped>
   @import "../../css/pages/monithor.styl"

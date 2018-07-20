@@ -38,17 +38,17 @@
 <script>
 
 export default {
-  data () {
+  data() {
     return {
-      canGoBack: window.history.length > 1
-    }
+      canGoBack: window.history.length > 1,
+    };
   },
   methods: {
-    goBack () {
-      window.history.go(-1)
-    }
-  }
-}
+    goBack() {
+      window.history.go(-1);
+    },
+  },
+};
 </script>
 
 <style lang="stylus" scoped>

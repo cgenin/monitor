@@ -64,7 +64,7 @@
                 <q-item-main label="Liste des applications" sublabel="Résumé des derniers build"/>
               </q-item>
             </q-collapsible>
-              <q-item to="/npm-list" v-if="moniThorUrl">
+            <q-item to="/npm-list" v-if="moniThorUrl">
               <q-item-side icon="featured_play_list"/>
               <q-item-main label="NPM" sublabel="Informations sur les projets NPM"/>
             </q-item>
@@ -87,10 +87,12 @@
 </template>
 
 <script>
+  import { createNamespacedHelpers } from 'vuex';
+  import { initialize, namespace as namespaceConf, moniThorUrl } from './store/configuration/constants';
+  import { namespace as namespaceMonithor, loadNpmList } from './store/moniThor/constants';
 
-  import NpmStore from './stores/NpmStore';
-  import ConfigurationStore from './stores/ConfigurationStore';
-
+  const confStore = createNamespacedHelpers(namespaceConf);
+  const monithorStore = createNamespacedHelpers(namespaceMonithor);
   /*
    * Root component
    */
@@ -99,26 +101,21 @@
     data() {
       return {
         opened: this.$q.platform.is.desktop,
-        npms: null,
-        moniThorUrl: null
-      }
+      };
+    },
+    computed: {
+      ...confStore.mapGetters([moniThorUrl]),
     },
     methods: {
       menuExpand() {
-        if (!this.opened) {
-          this.opened = true
-        }
-        else {
-          this.opened = false
-        }
-      }
+        this.opened = !this.opened;
+      },
+      ...confStore.mapActions([initialize]),
+      ...monithorStore.mapActions([loadNpmList]),
     },
     mounted() {
-      NpmStore.initialize().then((npms) => this.npms = npms);
-      ConfigurationStore.initialize()
-        .then(() => {
-          this.moniThorUrl = ConfigurationStore.moniThorUrl;
-        });
-    }
-  }
+      this.initialize()
+        .then(() => this.loadNpmList());
+    },
+  };
 </script>

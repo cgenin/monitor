@@ -65,62 +65,43 @@
           </q-item-side>
         </template>
         <div>
-          <q-item class="row">
-            <div class="clear-postion">
-              <q-btn
-                round
-                color="negative"
-                @click="erase"
-              >
-                <q-icon name="delete_forever"/>
-              </q-btn>
-            </div>
-            <div class="console">
-              <pre>@nti-monitor ~ $ Console</pre>
-              <pre v-for="txt in ConsoleStore.state">{{txt.formattedDate}} - {{txt.msg}}</pre>
-            </div>
-          </q-item>
+          <console></console>
         </div>
       </q-collapsible>
     </q-list>
   </div>
 </template>
 <script>
-
-  import ConfigurationStore from '../../stores/ConfigurationStore'
-  import MysqlStore from '../../stores/MysqlStore'
-  import ConsoleStore from '../../stores/ConsoleStore'
+  import { createNamespacedHelpers } from 'vuex';
+  import { namespace as namespaceConf, mysql } from '../../store/configuration/constants';
+  import { namespace as namespaceMysql, startOrStop } from '../../store/mysql/constants';
+  import { namespace as namespaceServer, getHealth, health, nitrite } from '../../store/server/constants';
   import DbMigration from '../../components/configuration/DbMigration';
+  import Console from '../../components/configuration/Console';
+
+  const confStore = createNamespacedHelpers(namespaceConf);
+  const server = createNamespacedHelpers(namespaceServer);
+  const mysqlStore = createNamespacedHelpers(namespaceMysql);
 
   export default {
     name: 'ConfigurationStatus',
-    components: {DbMigration},
-    data() {
-      return {health: {}, nitrite: false, mysql: false, ConsoleStore};
-    },
+    components: { DbMigration, Console },
     methods: {
-      initialize() {
-        ConfigurationStore.health().then(health => {
-          this.health = health;
-          this.mysql = health.mysql;
-          this.nitrite = health.health[0] && health.health[0].db;
-        });
-      },
       changeMysql() {
-        MysqlStore.startOrStop()
+        this.startOrStop()
           .then(() => {
-            this.initialize();
+            // this.initialize();
           });
       },
-      erase() {
-        ConsoleStore.clear();
-      }
+      ...server.mapActions([getHealth]),
+      ...mysqlStore.mapActions([startOrStop]),
+    },
+    computed: {
+      ...confStore.mapGetters([mysql]),
+      ...server.mapGetters([health, nitrite]),
     },
     mounted() {
-      this.initialize();
-    }
-  }
+      this.getHealth();
+    },
+  };
 </script>
-<style lang="stylus" scoped>
-  @import "../../css/pages/configuration-status"
-</style>

@@ -1,10 +1,10 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 function load(component) {
-  return () => import(`./pages/${component}.vue`)
+  return () => import(`./pages/${component}.vue`);
 }
 
 export default new VueRouter({
@@ -21,50 +21,50 @@ export default new VueRouter({
    */
 
   mode: 'hash',
-  scrollBehavior: () => ({y: 0}),
+  scrollBehavior: () => ({ y: 0 }),
 
   routes: [
-    {name: 'welcome', path: '/', component: load('Welcome')},
-    {name: 'projectsList', path: '/projects-list', component: load('ProjectsList')},
-    {name: 'npmList', path: '/npm-list', component: load('npm/NpmList')},
-    {name: 'serveursCompare', path: '/monitoring', component: load('monitoring/ServeursCompare')},
+    { name: 'welcome', path: '/', component: load('Welcome') },
+    { name: 'projectsList', path: '/projects-list', component: load('ProjectsList') },
+    { name: 'npmList', path: '/npm-list', component: load('npm/NpmList') },
+    { name: 'serveursCompare', path: '/monitoring', component: load('monitoring/ServeursCompare') },
     {
       path: '/tables',
       component: load('Tables'),
       children: [
-        {path: 'list', component: load('tables/List')},
-        {path: 'chart', component: load('tables/Chart')},
-        {path: '', redirect: 'list'},
-      ]
+        { path: 'list', component: load('tables/List') },
+        { path: 'chart', component: load('tables/Chart') },
+        { path: '', redirect: 'list' },
+      ],
     },
-    {path: '/apis-list', component: load('ApisList')},
+    { path: '/apis-list', component: load('ApisList') },
     {
       path: '/configuration',
       component: load('Configuration'),
       children: [
-        {path: 'administration', component: load('configuration/Administration')},
-        {path: 'status', component: load('configuration/Status')},
-        {path: 'import-export', component: load('configuration/ImportExport')},
-        {path: 'reset', component: load('configuration/Reset')},
-        {path: 'monithor', component: load('configuration/MoniThor')},
-        {path: '', redirect: 'status'},
-      ]
+        { path: 'administration', component: load('configuration/Administration') },
+        { path: 'status', component: load('configuration/Status') },
+        { path: 'import-export', component: load('configuration/ImportExport') },
+        { path: 'reset', component: load('configuration/Reset') },
+        { path: 'monithor', component: load('configuration/MoniThor') },
+        { path: '', redirect: 'status' },
+      ],
     },
-    {path: '/projects/:id', component: load('projects/Detail')},
+    { path: '/projects/:id', component: load('projects/Detail') },
     {
       path: '/dependencies',
       component: load('Dependencies'),
       children: [
-        {path: 'search/:resource', component: load('dependencies/Search')},
-        {path: '', component: load('dependencies/None')},
-      ]
+        { path: 'search/:resource', component: load('dependencies/Search') },
+        { path: '', component: load('dependencies/None') },
+      ],
     },
     {
       path: '/fronts-list',
-      component: () => import(`./pages/fronts/FrontList.vue`),
+      component: () => import('./pages/fronts/FrontList.vue'),
 
     },
     // Always leave this last one
-    {path: '*', component: load('Error404')} // Not found
-  ]
-})
+    { path: '*', component: load('Error404') }, // Not found
+  ],
+});

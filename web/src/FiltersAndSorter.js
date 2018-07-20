@@ -1,4 +1,4 @@
-export function sortStringForSorter(converter = (a) => a) {
+export function sortStringForSorter(converter = a => a) {
   return (a, b) => {
     const strA = converter(a) || '';
     const strB = converter(b) || '';
@@ -8,14 +8,14 @@ export function sortStringForSorter(converter = (a) => a) {
 
 export function filteringByAttribute(attr) {
   if (!attr) {
-    return (l) => l;
+    return l => l;
   }
   return (original, filter) => {
     if (!filter || filter.length === 0) {
       return original;
     }
     const upFilter = filter.toUpperCase();
-    return original.filter(o => {
+    return original.filter((o) => {
       const value = o[attr];
       const v = (value || '').toUpperCase();
       return v.indexOf(upFilter) !== -1;
@@ -30,7 +30,7 @@ export default function filtering(original, filter) {
 
   const upFilter = filter.toUpperCase();
   return original
-    .filter(p => {
+    .filter((p) => {
       const data = JSON.stringify(Object.values(p)).toUpperCase();
       return data.indexOf(upFilter) !== -1;
     });

@@ -15,7 +15,7 @@
   export default {
     name: 'BreadCrumb',
     props: ['datas'],
-  }
+  };
 </script>
 <style lang="stylus">
 </style>

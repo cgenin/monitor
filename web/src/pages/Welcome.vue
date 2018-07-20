@@ -15,7 +15,7 @@
         </q-btn>
         <q-btn outline color="white" label="Web-apps" size="lg" icon="fab fa-chrome"
                @click="$router.push('/fronts-list')">
-          <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbfronts}}</q-chip>
+          <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbFronts}}</q-chip>
         </q-btn>
       </div>
     </div>
@@ -23,60 +23,39 @@
 </template>
 
 <script>
-  import ProjectStore from '../stores/ProjectsStore'
-  import TablesStore from '../stores/TablesStore'
-  import EndpointsStore from '../stores/EndpointsStore'
-  import FrontStore from '../stores/FrontStore'
-  import CardChart from '../components/CardChart'
-  import QItem from "quasar-framework/src/components/list/QItem";
+  import { createNamespacedHelpers } from 'vuex';
+  import {
+    namespace as namespaceMicroService,
+    loadTables,
+    nbTables,
+    nbApis,
+    loadApis, loadProjects, nbProjects,
+  } from '../store/microservices/constants';
+  import { namespace as namespaceFronts, nbFronts, loadResume } from '../store/fronts/constants';
+
+  const microServicesStore = createNamespacedHelpers(namespaceMicroService);
+  const frontsStore = createNamespacedHelpers(namespaceFronts);
 
   export default {
     name: 'Welcome',
-    components: {
-      QItem,
-      CardChart
-    },
-    data() {
-      return {
-        nbProjects: 0,
-        nbTables: 0,
-        nbApis: 0,
-        nbfronts: 0,
-        datacollection: {}
-      };
-    },
     methods: {
-      async fillData() {
-        this.datacollection = {
-          projects: this.nbProjects,
-          tables: this.nbTables,
-          apis: this.nbApis,
-          fronts: this.fronts
-        }
-      }
+      ...microServicesStore.mapActions([loadTables, loadApis, loadProjects]),
+      ...frontsStore.mapActions([loadResume]),
+
+    },
+    computed: {
+      ...microServicesStore.mapGetters([nbTables, nbApis, nbProjects]),
+      ...frontsStore.mapGetters([nbFronts]),
     },
     mounted() {
-      let promiseProject = ProjectStore
-        .initialize()
-        .then((list) => {
-          this.nbProjects = list.length
-        });
-      let promiseTables = TablesStore
-        .initialize()
-        .then((list) => {
-          this.nbTables = list.length
-        });
-      let promiseApis = EndpointsStore.find({})
-        .then((list) => {
-          this.nbApis = list.length
-        });
-      let promiseFronts = FrontStore.resume()
-        .then((list) => {
-          this.nbfronts = list.length
-        });
-      Promise.all([promiseProject, promiseTables, promiseApis, promiseFronts]).then(this.fillData);
+      const promiseProject = this.loadProjects();
+      const promiseTables = this.loadTables();
+      const promiseApis = this.loadApis({});
+      const promiseFronts = this.loadResume();
+      Promise.all([promiseProject, promiseTables, promiseApis, promiseFronts])
+        .then(() => console.log('all loaded'));
     },
-  }
+  };
 </script>
 
 <style lang="stylus" scoped>

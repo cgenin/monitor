@@ -10,12 +10,12 @@
   </q-modal>
 </template>
 <script>
-  import VueMarkdown from 'vue-markdown'
+  import VueMarkdown from 'vue-markdown';
 
   export default {
     name: 'StacktraceModal',
     props: ['message', 'stacktrace', 'opened', 'callback'],
-    components: {VueMarkdown},
+    components: { VueMarkdown },
     computed: {
       showStackTrace() {
         return this.stacktrace !== null
@@ -24,14 +24,14 @@
       },
       isOpen() {
         return this.opened;
-      }
+      },
     },
     methods: {
       escape() {
         this.callback();
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 <style scoped>
   h4 {
