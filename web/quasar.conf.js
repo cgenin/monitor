@@ -19,7 +19,7 @@ module.exports = function (ctx) {
       scopeHoisting: true,
       vueRouterMode: 'history',
       gzip: true,
-      analyze: true,
+      // analyze: true,
       // extractCSS: false,
       // useNotifier: false,
       extendWebpack(cfg) {
@@ -34,6 +34,10 @@ module.exports = function (ctx) {
           loader: 'eslint-loader',
           exclude: /(node_modules|quasar)/
         });
+        if (cfg.output)
+          cfg.output.chunkFilename = 'js/[name].[id].[chunkhash:8].js';
+        const webpack = require('webpack');
+        cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
       }
     },
     devServer: {

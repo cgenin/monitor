@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import 'moment/locale/fr';
+import 'moment/locale/en-gb';
 
 Vue.use(VueRouter);
 
-function load(component) {
-  return () => import(`./pages/${component}.vue`);
-}
+const Welcome = () => import(/* webpackChunkName: "welcome" */ './pages/Welcome.vue');
 
 export default new VueRouter({
   /*
@@ -24,47 +24,47 @@ export default new VueRouter({
   scrollBehavior: () => ({ y: 0 }),
 
   routes: [
-    { name: 'welcome', path: '/', component: load('Welcome') },
-    { name: 'projectsList', path: '/projects-list', component: load('ProjectsList') },
-    { name: 'npmList', path: '/npm-list', component: load('npm/NpmList') },
-    { name: 'serveursCompare', path: '/monitoring', component: load('monitoring/ServeursCompare') },
+    { name: 'welcome', path: '/', component: Welcome },
+    { name: 'projectsList', path: '/projects-list', component: () => import(/* webpackChunkName: "project-list" */ './pages/ProjectsList.vue') },
+    { name: 'npmList', path: '/npm-list', component: () => import(/* webpackChunkName: "npm-list" */ './pages/npm/NpmList.vue') },
+    { name: 'serveursCompare', path: '/monitoring', component: () => import(/* webpackChunkName: "serveur-compare" */ './pages/monitoring/ServeursCompare.vue') },
     {
       path: '/tables',
-      component: load('Tables'),
+      component: () => import(/* webpackChunkName: "tables" */ './pages/Tables.vue'),
       children: [
-        { path: 'list', component: load('tables/List') },
-        { path: 'chart', component: load('tables/Chart') },
+        { path: 'list', component: () => import(/* webpackChunkName: "tables-list" */ './pages/tables/List.vue') },
+        { path: 'chart', component: () => import(/* webpackChunkName: "tables-chart" */ './pages/tables/Chart.vue') },
         { path: '', redirect: 'list' },
       ],
     },
-    { path: '/apis-list', component: load('ApisList') },
+    { path: '/apis-list', component: () => import(/* webpackChunkName: "apis-list" */ './pages/ApisList.vue') },
     {
       path: '/configuration',
-      component: load('Configuration'),
+      component: () => import(/* webpackChunkName: "configuration" */ './pages/Configuration.vue'),
       children: [
-        { path: 'administration', component: load('configuration/Administration') },
-        { path: 'status', component: load('configuration/Status') },
-        { path: 'import-export', component: load('configuration/ImportExport') },
-        { path: 'reset', component: load('configuration/Reset') },
-        { path: 'monithor', component: load('configuration/MoniThor') },
+        { path: 'administration', component: () => import(/* webpackChunkName: "conf-administration" */ './pages/configuration/Administration.vue') },
+        { path: 'status', component: () => import(/* webpackChunkName: "conf-status" */ './pages/configuration/Status.vue') },
+        { path: 'import-export', component: () => import(/* webpackChunkName: "conf-import-export" */ './pages/configuration/ImportExport.vue') },
+        { path: 'reset', component: () => import(/* webpackChunkName: "conf-reset" */ './pages/configuration/Reset.vue') },
+        { path: 'monithor', component: () => import(/* webpackChunkName: "conf-monithor" */ './pages/configuration/MoniThor.vue') },
         { path: '', redirect: 'status' },
       ],
     },
-    { path: '/projects/:id', component: load('projects/Detail') },
+    { path: '/projects/:id', component: () => import(/* webpackChunkName: "project-detail" */ './pages/projects/Detail.vue') },
     {
       path: '/dependencies',
-      component: load('Dependencies'),
+      component: () => import(/* webpackChunkName: "dependencies" */ './pages/Dependencies.vue'),
       children: [
-        { path: 'search/:resource', component: load('dependencies/Search') },
-        { path: '', component: load('dependencies/None') },
+        { path: 'search/:resource', component: () => import(/* webpackChunkName: "dep-search" */ './pages/dependencies/Search.vue') },
+        { path: '', component: () => import(/* webpackChunkName: "dep-none" */ './pages/dependencies/None.vue') },
       ],
     },
     {
       path: '/fronts-list',
-      component: () => import('./pages/fronts/FrontList.vue'),
+      component: () => import(/* webpackChunkName: "fronts-resume" */ './pages/fronts/FrontList.vue'),
 
     },
     // Always leave this last one
-    { path: '*', component: load('Error404') }, // Not found
+    { path: '*', component: () => import(/* webpackChunkName: "error" */ './pages/Error404.vue') }, // Not found
   ],
 });
