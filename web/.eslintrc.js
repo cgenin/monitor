@@ -33,6 +33,7 @@ module.exports = {
     'import/export': 2,
     'import/extensions': 0,
     'import/no-unresolved': 0,
+    'linebreak-style': 0,
     'import/no-extraneous-dependencies': 0,
     'max-len': [ "error", {
       "code": 200,
