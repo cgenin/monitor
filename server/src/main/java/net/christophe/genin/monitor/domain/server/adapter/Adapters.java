@@ -106,6 +106,17 @@ public class Adapters extends AbstractVerticle {
         }
     }
 
+    public FrontAppsPort frontAppsHandler() {
+        switch (type.getType()) {
+            case MYSQL:
+                return new MysqlFrontApps.MysqlFrontAppsPort(Mysqls.Instance.get());
+            case NITRITE:
+                return new NitriteFrontApps.NitriteFrontAppsPort(NitriteDbs.instance);
+            default:
+                throw new IllegalStateException("Only in mysql mode " + type);
+        }
+    }
+
     public enum Type {
         NITRITE, MYSQL
     }

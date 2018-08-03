@@ -1,8 +1,8 @@
 <template>
   <li @click="click" :class="{nopointer:notOpens, withpointer:!notOpens}">
     <p>
-      <i v-if="!notOpens && open" class="fa fa-minus-circle"></i>
-      <i v-if="!notOpens && !open" class="fa fa-plus-circle"></i>
+      <i v-if="!notOpens && open" class="fas fa-minus-circle"></i>
+      <i v-if="!notOpens && !open" class="fas fa-plus-circle"></i>
       {{resource}}
     </p>
     <ul v-if="open">
@@ -11,13 +11,20 @@
   </li>
 </template>
 <script>
-  import DependenciesStore from '../stores/DependenciesStore';
+  import { createNamespacedHelpers } from 'vuex';
+  import { namespace, usedBy, dependencies } from '../store/dependencies/constants';
+
+  const dependenciesStore = createNamespacedHelpers(namespace);
+
 
   export default {
     name: 'SubTree',
     props: ['resource'],
     data() {
-      return {open: false, subs: [], notOpens: false};
+      return { open: false, subs: [], notOpens: false };
+    },
+    computed: {
+      ...dependenciesStore.mapGetters([dependencies]),
     },
     methods: {
       click() {
@@ -27,18 +34,18 @@
 
         this.open = !this.open;
         if (this.open) {
-          DependenciesStore.usedBy(this.resource)
-            .then(subs => {
+          this.usedBy(this.resource)
+            .then((subs) => {
               this.subs = subs;
             });
-        }
-        else {
+        } else {
           this.subs = [];
         }
-      }
+      },
+      ...dependenciesStore.mapActions([usedBy]),
     },
     mounted() {
-      this.notOpens = DependenciesStore.dependencies[this.resource];
-    }
-  }
+      this.notOpens = this.dependencies[this.resource];
+    },
+  };
 </script>

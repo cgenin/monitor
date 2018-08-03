@@ -1,13 +1,14 @@
 <template>
   <div class="main container">
-    <header-app :help="txtHelp" :bc-datas="[{icon:'view_list', label:'Liste des Projets', path : '/projects-list'},{icon:'ion-document-text', label:title}]"></header-app>
+    <header-app :help="txtHelp"
+                :bc-datas="[{icon:'view_list', label:'Liste des Projets', path : '/projects-list'},{icon:'fas fa-file-alt', label:title}]"></header-app>
     <q-card>
       <q-card-title>
         <h3>{{title}}</h3>
       </q-card-title>
       <q-card-main>
         <p class="caption">Sélectionner une version</p>
-        <q-select v-model="id" :options="selectVersions"  @change="changeVersion">
+        <q-select v-model="id" :options="selectVersions" @change="changeVersion">
         </q-select>
       </q-card-main>
     </q-card>
@@ -15,15 +16,17 @@
       <div>
       </div>
       <q-list separator class="bg-white">
-        <q-collapsible icon="ion-coffee" label="Librairies Java" v-if="selected.javaDeps"
-                       :disable="selected.javaDeps.length === 0" :sublabel="`Nombre : ${selected.javaDeps.length}`">
+        <q-collapsible icon="fas fa-coffee" label="Librairies Java" v-if="selected.javaDeps"
+                       :disable="selected.javaDeps.length === 0"
+                       :sublabel="`Nombre : ${selected.javaDeps.length}`">
           <div class="list-table">
             <ul>
               <li v-for="deps in selected.javaDeps" :key="deps">{{deps}}</li>
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="border_all" label="Tables" v-if="selected.tables" :disable="selected.tables.length === 0"
+        <q-collapsible icon="border_all" label="Tables" v-if="selected.tables"
+                       :disable="selected.tables.length === 0"
                        :sublabel="`Nombre : ${selected.tables.length}`">
           <div class="list-table">
             <ul>
@@ -31,7 +34,8 @@
             </ul>
           </div>
         </q-collapsible>
-        <q-collapsible icon="explore" label="Apis" v-if="selected.apis" :disable="selected.apis.length === 0"
+        <q-collapsible icon="explore" label="Apis" v-if="selected.apis"
+                       :disable="selected.apis.length === 0"
                        :sublabel="`Nombre : ${selected.apis.length}`">
           <div class="list-table">
             <ul>
@@ -48,11 +52,17 @@
   </div>
 </template>
 <script>
+  import { createNamespacedHelpers } from 'vuex';
+  import {
+    namespace as namespaceMicroService,
+    getProject, getVersionsForProject, project, versions,
+  } from '../../store/microservices/constants';
   import HeaderApp from '../../components/HeaderApp';
-  import VueMarkdown from 'vue-markdown'
-  import ProjectsStore from '../../stores/ProjectsStore';
-  import {formatYYYYMMDDHHmm} from '../../Dates';
-  import {sortStringForSorter} from '../../FiltersAndSorter'
+  import VueMarkdown from 'vue-markdown';
+  import { sortStringForSorter } from '../../FiltersAndSorter';
+  import txtHelp from './help.md';
+
+  const microServicesStore = createNamespacedHelpers(namespaceMicroService);
 
   export default {
     name: 'ProjectDetail',
@@ -63,31 +73,28 @@
     data() {
       return {
         id: null,
-        project: {},
+        txtHelp,
         selected: {},
-        versions: [],
         selectVersions: [],
         title: '',
-      }
+      };
+    },
+    computed: {
+      ...microServicesStore.mapGetters([project, versions]),
     },
     methods: {
       changeVersion(id) {
         this.selected = this.versions.find(v => v.id === id);
-      }
+      },
+      ...microServicesStore.mapActions([getProject, getVersionsForProject]),
     },
     mounted() {
-      let id = this.$route.params.id;
-      Promise.all([ProjectsStore.getProject(id), ProjectsStore.getVersion(id)])
+      const { id } = this.$route.params;
+      Promise.all([this.getProject(id), this.getVersionsForProject(id)])
         .then(() => {
-          this.project = ProjectsStore.project;
           this.title = `Détail du projet : ${this.project.name}`;
-          this.versions = ProjectsStore.versions
-            .map(o => {
-              const latest = formatYYYYMMDDHHmm(o.latestUpdate);
-              return Object.assign({}, o, {latest});
-            });
           this.latest = this.versions
-            .map(v => {
+            .map((v) => {
               v.table = v.tables.sort();
               v.javaDeps = v.javaDeps.sort();
               v.apis = v.apis.sort();
@@ -103,19 +110,18 @@
           this.id = this.latest.id;
           this.selected = this.latest;
           this.selectVersions = this.versions
-            .map(v => {
+            .map((v) => {
               const stamp = (v.isSnapshot) ? 'snapshot' : 'release';
               return {
                 label: v.name,
                 value: v.id,
-                stamp
-              }
+                stamp,
+              };
             })
-            .sort(sortStringForSorter((a) => a.label));
-          console.log(this.selectVersions)
+            .sort(sortStringForSorter(a => a.label));
         })
         .catch(err => console.error(err));
-    }
+    },
   };
 </script>
 <style lang="stylus" scoped>

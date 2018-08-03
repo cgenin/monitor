@@ -11,6 +11,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.CorsHandler;
+import net.christophe.genin.domain.monitor.addon.http.EventBusReplier;
 import net.christophe.genin.domain.monitor.addon.http.Https;
 import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.query.*;
@@ -52,16 +53,17 @@ public class Services {
                 .allowedMethod(HttpMethod.OPTIONS)
                 .allowedHeader("Content-Type"));
         router.get("/_health").handler(rc ->
-                new Https.EbCaller(vertx, rc).jsonAndReply(Database.HEALTH)
+                EventBusReplier.builder(vertx, rc)
+                        .json().adress(Database.HEALTH).withNoBody()
         );
         router.mountSubRouter("/projects", projects());
         router.mountSubRouter("/tables", tables());
-        router.mountSubRouter("/endpoints", apis());
+        router.mountSubRouter("/endpoints", endpoints());
         router.mountSubRouter("/dependencies", dependencies());
         router.mountSubRouter("/configuration", configuration());
         router.mountSubRouter("/dump", dump());
         router.mountSubRouter("/apps", apps());
-        router.mountSubRouter("/webapps", fronts());
+        router.mountSubRouter("/fronts", fronts());
         logger.info("building router : OK.");
 
         return router;
@@ -72,15 +74,15 @@ public class Services {
      *
      * @return the router
      */
-    private Router apis() {
+    private Router endpoints() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(ApiQuery.FIND));
+        router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(ApiQuery.FIND).withNoBody());
         return router;
     }
 
     private Router dependencies() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(DependencyQuery.FIND));
+        router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(DependencyQuery.FIND).withNoBody());
 
         router.get("/:resource")
                 .handler(rc -> {
@@ -89,7 +91,7 @@ public class Services {
                         rc.fail(400);
                         return;
                     }
-                    new Https.EbCaller(vertx, rc).arrAndReply(DependencyQuery.USED_BY, resource);
+                    EventBusReplier.builder(vertx, rc).array().adress(DependencyQuery.USED_BY).withBody(resource);
                 });
         return router;
     }
@@ -112,24 +114,19 @@ public class Services {
                 }));
         router.put("/db/import").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson();
-            new Https.EbCaller(vertx, rc).created(ImportCommand.IMPORT, body);
+            EventBusReplier.builder(vertx, rc).created().adress(ImportCommand.IMPORT).withBody(body);
         });
 
-        router.put("/db/mysql/schemas").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_CREATE_SCHEMA));
-        router.post("/db/events/store").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ArchiveCommand.ARCHIVE));
-        router.post("/db/mysql").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(Database.MYSQL_ON_OFF));
-        router.post("/db/mysql/connect").handler(rc -> {
-            final JsonObject body = rc.getBodyAsJson();
-            new Https.EbCaller(vertx, rc).jsonAndReply(Database.TEST_MYSQL_CONNECTION, body);
-        });
+        router.put("/db/mysql/schemas").handler(rc -> EventBusReplier.builder(vertx, rc).json().adress(Database.MYSQL_CREATE_SCHEMA).withNoBody());
+        router.get("/db/mysql").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(Database.MYSQL_INFO_SCHEMA).withNoBody());
+        router.post("/db/events/store").handler(rc -> EventBusReplier.builder(vertx, rc).json().adress(ArchiveCommand.ARCHIVE).withNoBody());
+        router.post("/db/mysql").handler(rc -> EventBusReplier.builder(vertx, rc).json().adress(Database.MYSQL_ON_OFF).withNoBody());
+        router.post("/db/mysql/connect").handler(rc -> EventBusReplier.builder(vertx, rc).json().adress(Database.TEST_MYSQL_CONNECTION).withBodyFromRequest());
 
         router.get("/").handler(
-                rc -> new Https.EbCaller(vertx, rc).jsonAndReply(ConfigurationQuery.GET)
+                rc -> EventBusReplier.builder(vertx, rc).json().adress(ConfigurationQuery.GET).withNoBody()
         );
-        router.put("/").handler(rc -> {
-            final JsonObject body = rc.getBodyAsJson();
-            new Https.EbCaller(vertx, rc).created(ConfigurationCommand.SAVE, body);
-        });
+        router.put("/").handler(rc -> EventBusReplier.builder(vertx, rc).created().adress(ConfigurationCommand.SAVE).withBodyFromRequest());
         return router;
     }
 
@@ -140,8 +137,8 @@ public class Services {
      */
     private Router tables() {
         Router router = Router.router(vertx);
-        router.get("/projects").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(TableQuery.BY_PROJECT));
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(TableQuery.LIST));
+        router.get("/projects").handler(rc -> EventBusReplier.builder(vertx, rc).json().adress(TableQuery.BY_PROJECT).withNoBody());
+        router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(TableQuery.LIST).withNoBody());
         return router;
     }
 
@@ -155,17 +152,17 @@ public class Services {
         router.post("/").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson()
                     .put("updateState", new Date().getTime());
-            new Https.EbCaller(vertx, rc).created(RawCommand.SAVING, body);
+            EventBusReplier.builder(vertx, rc).created().adress(RawCommand.SAVING).withBody(body);
         });
-        router.delete("/").handler(rc -> new Https.EbCaller(vertx, rc).created(ResetCommand.RUN, new JsonObject()));
-        router.delete("/calculate/datas").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(NitriteCommand.CLEAR_CALCULATE_DATA, new JsonObject()));
+        router.delete("/").handler(rc -> EventBusReplier.builder(vertx, rc).created().adress(ResetCommand.RUN).withNoBody());
+        router.delete("/calculate/datas").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(NitriteCommand.CLEAR_CALCULATE_DATA).withNoBody());
 
         return router;
     }
 
     private Router dump() {
         Router router = Router.router(vertx);
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).jsonAndReply(BackupQuery.DUMP));
+        router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).json().adress(BackupQuery.DUMP).withNoBody());
         return router;
     }
 
@@ -180,11 +177,17 @@ public class Services {
         router.post("/").handler(rc -> {
             final JsonObject body = rc.getBodyAsJson()
                     .put("updateState", new Date().getTime());
-            logger.info("Received " + body.encodePrettily());
-           // new Https.EbCaller(vertx, rc).created(Front.SAVING, body);
+
+            EventBusReplier.builder(vertx, rc).created().adress(FrontCommand.SAVING).withBody(body);
         });
 
-
+        router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.FIND_ALL).withNoBody());
+        router.get("/groupby").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.FIND_BY_GROUP).withNoBody());
+        router.get("/services").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.SERVICES_LIST).withNoBody());
+        router.get("/by/:domain").handler(rc -> {
+            String domain = rc.request().params().get("domain");
+            EventBusReplier.builder(vertx, rc).array().adress(FrontAppsQuery.FIND_WEB_APP_BY_DOMAIN).withBody(domain);
+        });
         return router;
     }
 
@@ -198,9 +201,9 @@ public class Services {
         Router router = Router.router(vertx);
         router.get("/:id").handler(rc -> {
             String id = rc.request().params().get("id");
-            new Https.EbCaller(vertx, rc).arrAndReply(ProjectQuery.GET, new JsonObject().put(ProjectQuery.ID, id));
+            EventBusReplier.builder(vertx, rc).array().adress(ProjectQuery.GET).withBody(new JsonObject().put(ProjectQuery.ID, id));
         });
-        router.get("/").handler(rc -> new Https.EbCaller(vertx, rc).arrAndReply(ProjectQuery.LIST));
+        router.get("/").handler(rc -> EventBusReplier.builder(vertx, rc).array().adress(ProjectQuery.LIST).withNoBody());
         return router;
     }
 }

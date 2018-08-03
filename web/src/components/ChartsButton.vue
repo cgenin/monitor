@@ -49,12 +49,15 @@
   </div>
 </template>
 <script>
+  import { createNamespacedHelpers } from 'vuex';
+  import { namespace, getServiceForServer } from '../store/moniThor/constants';
   import ResponseTimeChart from './charts/ResponseTimeChart';
   import CounterChart from './charts/CounterChart';
   import SuccessChart from './charts/SuccessChart';
-  import ServicesStore from '../stores/ServicesStore';
-  import {formatYYYYMMDDHHmm, mavenToDate} from '../Dates';
-  import MarkdownButton from "./MarkdownButton";
+  import { formatYYYYMMDDHHmm, mavenToDate } from '../Dates';
+  import MarkdownButton from './MarkdownButton';
+
+  const monithorStore = createNamespacedHelpers(namespace);
 
   export default {
     name: 'ChartsButton',
@@ -64,23 +67,26 @@
         service: null,
         displayGraph: false,
         loading: false,
-        properties: ' '
+        properties: ' ',
       };
     },
     props: ['serviceName', 'server', 'serviceInfos'],
     components: {
       MarkdownButton,
-      ResponseTimeChart, CounterChart, SuccessChart
+      ResponseTimeChart,
+      CounterChart,
+      SuccessChart,
     },
     methods: {
       async loadServiceData() {
         this.loading = true;
         if (this.serviceName && this.server) {
-          await ServicesStore.getService(this.serviceName, this.server)
+          const payload = { service: this.serviceName, server: this.server };
+          await this.getServiceForServer(payload)
             .then((service) => {
-              this.service = service.servers.find((s) => s.host === this.server);
-            }).catch(() => {
-              console.error("Error while recuperating datas");
+              this.service = service.servers.find(s => s.host === this.server);
+            }).catch((err) => {
+              console.error('Error while recuperating datas', err);
             })
             .then(() => {
               // Sans le timeout je n'arrive pas a afficher le graph...
@@ -88,7 +94,7 @@
                 this.loading = false;
                 this.displayGraph = true;
               }, 0);
-            })
+            });
         }
       },
       getAverage() {
@@ -98,11 +104,10 @@
       get80() {
         const metrics = this.getMetrics();
         return metrics
-          .sort((a, b) => a - b)
-          [Math.floor(metrics.length * 0.80)];
+          .sort((a, b) => a - b)[Math.floor(metrics.length * 0.80)];
       },
       getMetrics() {
-        let filteredMetrics = Object.keys(this.service.metrics)
+        const filteredMetrics = Object.keys(this.service.metrics)
           .filter(key => key.startsWith('gauge') && !key.includes('hystrix'));
         return filteredMetrics
           .reduce((obj, key) => {
@@ -116,7 +121,7 @@
       },
       formatKeys(a) {
         return (Object.keys(a)
-          .sort((a, b) => a.localeCompare(b))
+          .sort((c, b) => c.localeCompare(b))
           .reduce((a1, b1) => `
 ${a1}
 ${b1}=${a[b1]}
@@ -125,8 +130,8 @@ ${b1}=${a[b1]}
       async openProperties() {
         this.properties = 'Chargement des données en cours...';
         await this.loadServiceData();
-        let env = Object.keys(this.service.env)
-          .filter((k) => k !== 'systemProperties' && k !== 'systemEnvironment' && k !== 'servletContextInitParams')
+        const env = Object.keys(this.service.env)
+          .filter(k => k !== 'systemProperties' && k !== 'systemEnvironment' && k !== 'servletContextInitParams')
           .sort((a, b) => a.localeCompare(b))
           .reduce((a, b) => `
 ${a}
@@ -142,12 +147,11 @@ ${this.formatKeys(this.service.env[b])}
       },
       formatYYYYMMDDHHmm(date) {
         return formatYYYYMMDDHHmm(mavenToDate(date));
-      }
+      },
 
     },
-    mounted() {
-    }
-  }
+    ...monithorStore.mapActions([getServiceForServer]),
+  };
 </script>
 
 <style lang="stylus">

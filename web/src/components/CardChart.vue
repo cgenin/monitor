@@ -2,38 +2,38 @@
   <canvas ref="chart"></canvas>
 </template>
 <script>
-  import Chart from 'chart.js'
+  import Chart from 'chart.js';
 
   export default {
     data() {
       return {
-        chart: ''
-      }
+        chart: '',
+      };
     },
     props: {
       data: {
         type: Object,
-        required: true
+        required: true,
       },
       type: {
         default() {
-          return 'bar'
-        }
+          return 'bar';
+        },
       },
       cardTitle: {
         default() {
-          return 'Graph'
-        }
-      }
+          return 'Graph';
+        },
+      },
     },
     watch: {
       data() {
-        this.startChart()
+        this.startChart();
       },
       type() {
-        this.chart.destroy()
-        this.startChart()
-      }
+        this.chart.destroy();
+        this.startChart();
+      },
     },
     computed: {
       dataForChart() {
@@ -55,37 +55,39 @@
               '#F8BBD0',
               '#689F38',
               '#536DFE',
-              '#8BC34A'
+              '#8BC34A',
 
             ],
             borderColor: [
               'rgba(255,99,132,1)',
               'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)'
+              'rgba(255, 206, 86, 1)',
             ],
-            borderWidth: 1
-          }]
-        }
-      }
+            borderWidth: 1,
+          }],
+        };
+      },
     },
     methods: {
       startChart() {
-        this.chart = new Chart(this.$refs.chart,
+        this.chart = new Chart(
+this.$refs.chart,
           {
             type: this.type,
             data: this.dataForChart,
             options: {
               legend: {
-                display: false
-              }
-            }
-          })
+                display: false,
+              },
+            },
+          },
+);
       },
       toImage() {
         window.open(this.chart.toBase64Image());
-      }
-    }
-  }
+      },
+    },
+  };
 </script>
 <style>
 

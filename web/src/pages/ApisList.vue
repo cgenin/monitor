@@ -59,9 +59,10 @@
           </q-list>
         </div>
         <div v-if="viewCard">
-          <q-infinite-scroll :handler="loadMore">
+          <q-infinite-scroll :handler="loadMore" ref="infiniteScroll">
             <div class="card-container">
-              <apis-card :api="api" v-for="api in listCards" :key="`card-${api.method}-${api.absolutePath}`"></apis-card>
+              <apis-card :api="api" v-for="api in listCards"
+                         :key="`card-${api.method}-${api.absolutePath}`"></apis-card>
             </div>
             <div class="awaiting" slot="message">
               <q-spinner-dots color="red" :size="40"></q-spinner-dots>
@@ -90,36 +91,66 @@
   </div>
 </template>
 <script>
+  import { createNamespacedHelpers } from 'vuex';
+  import {
+    namespace as namespaceMicroService,
+    apis,
+    loadApis,
+  } from '../store/microservices/constants';
+  import filtering, { filteringByAttribute } from '../FiltersAndSorter';
   import MethodIcon from '../components/MethodIcon';
   import ApisCard from '../components/ApisCard';
-  import filtering, {filteringByAttribute} from '../FiltersAndSorter';
-  import EndpointsStore from '../stores/EndpointsStore';
   import HeaderApp from '../components/HeaderApp';
 
-  const sortApis = (a, b) => {
-    return a.absolutePath.localeCompare(b.absolutePath);
-  };
-
-  const extractQueryParams = (path) => {
-    if (!path || path.indexOf('&') === -1) {
-      return [];
-    }
-    return path.replace(/^(.*)\?/, '')
-      .split('&');
-  };
-
+  const microServicesStore = createNamespacedHelpers(namespaceMicroService);
   const methodFiltering = filteringByAttribute('method');
   const artifactIdFiltering = filteringByAttribute('artifactId');
   const absolutePathFiltering = filteringByAttribute('absolutePath');
 
   const maxLoadedCard = 20;
 
+  const adaptForQTree = (entry = {}, i) => Object
+    .keys(entry)
+    .map((k, index) => {
+      if (k === 'method' || k === 'comment') {
+        return null;
+      }
+      const nb = i + index;
+      return {
+        id: k + nb,
+        label: k,
+        children: [...adaptForQTree(entry[k], nb)].filter(el => el),
+        body: 'method',
+        method: entry[k].method,
+        comment: entry[k].comment,
+        header: 'generic',
+      };
+    });
+
+  const createTree = (data) => {
+    const datasPrepareAsTree = {};
+    data.forEach((api) => {
+      datasPrepareAsTree[api.artifactId] = datasPrepareAsTree[api.artifactId] || {};
+      let previous = datasPrepareAsTree[api.artifactId];
+      api.path.split('/').forEach((entry) => {
+        if (entry) {
+          previous[entry] = previous[entry] || {};
+          previous = previous[entry];
+        }
+      });
+      previous.method = api.method;
+      previous.comment = api.comment;
+    });
+    const i = 0;
+    return adaptForQTree(datasPrepareAsTree, i);
+  };
+
   export default {
     name: 'ApisList',
     components: {
       HeaderApp,
       MethodIcon,
-      ApisCard
+      ApisCard,
     },
     data() {
       return {
@@ -128,8 +159,6 @@
         page: 1,
         datas: [],
         datasAsTree: {},
-        datasPrepareAsTree: {},
-        original: [],
         listCards: [],
         viewTable: true,
         viewTree: false,
@@ -137,12 +166,12 @@
         filtersPanel: false,
         subFilters: {},
         methodsOptions: [
-          {label: '', value: null},
-          {label: 'GET', value: 'GET'},
-          {label: 'POST', value: 'POST'},
-          {label: 'PUT', value: 'PUT'},
-          {label: 'DELETE', value: 'DELETE'},
-          {label: 'HEAD', value: 'HEAD'},
+          { label: '', value: null },
+          { label: 'GET', value: 'GET' },
+          { label: 'POST', value: 'POST' },
+          { label: 'PUT', value: 'PUT' },
+          { label: 'DELETE', value: 'DELETE' },
+          { label: 'HEAD', value: 'HEAD' },
         ],
         columns: [
           {
@@ -165,9 +194,12 @@
             field: 'comment',
             align: 'left',
             sortable: true,
-          }
-        ]
+          },
+        ],
       };
+    },
+    computed: {
+      ...microServicesStore.mapGetters([apis]),
     },
     methods: {
       showOrHideFilterPanel() {
@@ -178,27 +210,28 @@
         }
       },
       filtering() {
-        const mF = methodFiltering(this.original, this.subFilters.method);
+        const mF = methodFiltering(this.apis, this.subFilters.method);
         const aF = absolutePathFiltering(mF, this.subFilters.path);
         const aiF = artifactIdFiltering(aF, this.subFilters.domain);
         this.datas = filtering(aiF, this.filter);
         this.listCards = this.datas.filter((o, index) => index < maxLoadedCard);
-        this.createTree(this.datas);
+        this.datasAsTree = createTree(this.datas);
       },
       loadMore(index, done) {
         if (index < (this.datas.length - 1)) {
-          setTimeout(() => {
-            if ((index + maxLoadedCard) >= this.datas.length) {
-              this.listCards = this.datas;
-            }
-            else {
-              this.listCards = this.datas.filter((o, i) => i < index + maxLoadedCard);
-            }
-            done();
-          }, 600);
-        }
-        else {
+          if ((index + maxLoadedCard) >= this.datas.length) {
+            this.listCards = this.datas;
+          } else {
+            this.listCards = this.datas
+              .filter((o, i) => i < index + maxLoadedCard);
+          }
           done();
+        } else {
+          if (this.listCards.length !== this.datas.length) {
+            this.listCards = this.datas;
+          }
+          done(true);
+          this.$refs.infiniteScroll.stop();
         }
       },
       changedTable(v) {
@@ -222,59 +255,18 @@
         this.viewTable = false;
         this.viewCard = false;
       },
-      createTree(data) {
-        this.datasPrepareAsTree = {};
-        data.forEach((api) => {
-          this.datasPrepareAsTree[api.artifactId] = this.datasPrepareAsTree[api.artifactId] || {};
-          let previous = this.datasPrepareAsTree[api.artifactId];
-          api.path.split('/').forEach((entry) => {
-            if (entry) {
-              previous[entry] = previous[entry] || {};
-              previous = previous[entry];
-            }
-          });
-          previous.method = api.method;
-          previous.comment = api.comment;
-        });
-        let i = 0;
-        this.datasAsTree = this.adaptForQTree(this.datasPrepareAsTree, i);
-      },
-      adaptForQTree(entry = {}, i) {
-        return Object.keys(entry).map((k) => {
-          if (k === 'method' || k === 'comment') {
-            return null;
-          }
-          i++;
-          return {
-            id: k + i,
-            label: k,
-            children: [...this.adaptForQTree(entry[k], i)].filter((el) => el),
-            body: 'method',
-            method: entry[k].method,
-            comment: entry[k].comment,
-            header: 'generic'
-          };
-        })
-      }
+      ...microServicesStore.mapActions([loadApis]),
     },
     mounted() {
-      const {nb, page} = this;
-      EndpointsStore.find({nb, page})
-        .then(list => {
-          let l = list.map(o => {
-            const context = (o.artifactId || '').replace('-client', '');
-            const absolutePath = `/${context}${o.path}`
-              .replace(/\?(.*)$/, '');
-            const queryParams = extractQueryParams(`/${context}${o.path}`);
-            return Object.assign({}, o, {absolutePath, queryParams});
-          }).sort(sortApis);
-          this.original = l;
-          this.datas = l;
-          this.createTree(l);
+      const { nb, page } = this;
+      this.loadApis({ nb, page })
+        .then(() => {
+          this.datas = this.apis;
+          this.datasAsTree = createTree(this.apis);
         });
-    }
+    },
 
-  }
+  };
 </script>
 <style lang="stylus">
   @import "../css/pages/apilist.styl"

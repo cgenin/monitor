@@ -58,27 +58,32 @@
   </div>
 </template>
 <script>
-  import {success, error} from '../../Toasts'
-  import AppsStore from '../../stores/AppsStore';
-  import MysqlStore from '../../stores/MysqlStore';
+  import { createNamespacedHelpers } from 'vuex';
+  import { namespace as namespaceMysql, createSchema } from '../../store/mysql/constants';
+  import { namespace as namespaceServer, remove, clearDatas, deletedCollections } from '../../store/server/constants';
+  import { success, error } from '../../Toasts';
+
+  const mysqlStore = createNamespacedHelpers(namespaceMysql);
+  const serverStore = createNamespacedHelpers(namespaceServer);
 
   export default {
     name: 'ConfigurationReset',
     data() {
       return {
         showResultOfClearing: false,
-        deletedCollections: [],
-      }
+      };
+    },
+    computed: {
+      ...serverStore.mapGetters([deletedCollections]),
     },
     methods: {
       doCreateSchemaMysql() {
-        MysqlStore.createSchema()
+        this.createSchema()
           .then((res) => {
             if (res.creation) {
-              success(`<strong>${res.report}</strong>`);
-            }
-            else {
-              success(`<strong>Aucune table créée</strong>`);
+              success(`Nombre de migrations effectuées : ${res.report.nbMigration}`);
+            } else {
+              success('Impossible d\'exécuter la requête');
             }
           })
           .catch((err) => {
@@ -86,7 +91,7 @@
           });
       },
       doReset() {
-        AppsStore.remove()
+        this.remove()
           .then(() => {
             success();
           })
@@ -95,21 +100,21 @@
           });
       },
       doClearDatas() {
-        AppsStore
-          .clearDatas()
-          .then(json => {
-            this.deletedCollections = json;
+        this.clearDatas()
+          .then(() => {
             this.showResultOfClearing = true;
           })
           .catch((err) => {
             error(err);
-          })
+          });
       },
       closeModal() {
         this.showResultOfClearing = false;
-      }
-    }
-  }
+      },
+      ...mysqlStore.mapActions([createSchema]),
+      ...serverStore.mapActions([clearDatas, remove]),
+    },
+  };
 </script>
 <style lang="stylus" scoped>
   @import "../../css/pages/reset.styl"

@@ -3,7 +3,7 @@
     <div class="row sm-gutter">
       <div class="col-md-6 row justify-center">
         <a class="none" ref="link" href="/api/configuration/db/export.json" target="_blank">export</a>
-        <q-btn @click="doExportJson" icon="file_download"  color="primary">Exporter sous format JSON
+        <q-btn @click="doExportJson" icon="file_download" color="primary">Exporter sous format JSON
         </q-btn>
       </div>
       <div class="col-md-6 row justify-center">
@@ -16,8 +16,11 @@
   </div>
 </template>
 <script>
-  import MysqlStore from '../../stores/MysqlStore'
-  import {success, error} from '../../Toasts'
+  import { createNamespacedHelpers } from 'vuex';
+  import { namespace, migrateEvents } from '../../store/mysql/constants';
+  import { success, error } from '../../Toasts';
+
+  const mysqlStore = createNamespacedHelpers(namespace);
 
   export default {
     name: 'ConfigurationExport',
@@ -26,15 +29,16 @@
         this.$refs.link.click();
       },
       doExportToMysqlEvents() {
-        MysqlStore.migrateEvents()
-          .then(result => {
+        this.migrateEvents()
+          .then((result) => {
             console.log(result);
             success(`Migration effectuée avec succès pour ${result.numberOfExported}`);
           })
           .catch(err => error(err));
-      }
-    }
-  }
+      },
+      ...mysqlStore.mapActions([migrateEvents]),
+    },
+  };
 </script>
 <style scoped>
   .export-page {
@@ -46,8 +50,5 @@
     display: none;
   }
 
-  .fullwidthbtn {
-    width: 100%;
-  }
 </style>
 

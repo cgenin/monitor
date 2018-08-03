@@ -17,27 +17,36 @@
   </div>
 </template>
 <script>
-  import CardChart from '../../components/CardChart'
-  import TablesStore from '../../stores/TablesStore'
+  import { createNamespacedHelpers } from 'vuex';
+  import {
+    namespace,
+    groupByProjects,
+  } from '../../store/microservices/constants';
+  import CardChart from '../../components/CardChart';
+
+  const microservices = createNamespacedHelpers(namespace);
 
   export default {
     name: 'TablesChart',
     components: {
-      CardChart
+      CardChart,
     },
     data() {
-      return {chart1: {}, median1: 0};
+      return { chart1: {}, median1: 0 };
+    },
+    methods: {
+      ...microservices.mapActions([groupByProjects]),
     },
     mounted() {
-      TablesStore.groupByProjects()
-        .then(chart1 => {
+      this.groupByProjects()
+        .then((chart1) => {
           this.chart1 = chart1;
           const sum = Object.values(chart1).reduce((acc, nb) => acc + nb, 0);
           const res = sum / Object.values(chart1).length;
           this.median1 = Math.floor(res);
         });
-    }
-  }
+    },
+  };
 </script>
 <style lang="stylus" scoped>
   .tables-chart-page

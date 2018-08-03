@@ -9,20 +9,20 @@
   </div>
 </template>
 <script>
-  import BreadCrumb from './BreadCrumb'
-  import HelpButton from './HelpButton'
+  import BreadCrumb from './BreadCrumb';
+  import HelpButton from './HelpButton';
 
   export default {
     name: 'HeaderApp',
     props: ['help', 'bcDatas'],
     components: {
-      BreadCrumb, HelpButton
+      BreadCrumb, HelpButton,
     },
     computed: {
       showHelpButton() {
         return (this.help);
-      }
-    }
+      },
+    },
 
-  }
+  };
 </script>

@@ -30,7 +30,7 @@
                 <q-search
                   v-model="filter"
                   class="col-auto"
-                />
+                ></q-search>
               </template>
               <template slot="top-right" slot-scope="props">
                 <q-select
@@ -38,7 +38,7 @@
                   v-model="separator"
                   :options="separatorOptions"
                   hide-underline
-                />
+                ></q-select>
               </template>
               <q-td slot="body-cell-javaDeps" slot-scope="props" :props="props">
                 <a href="#" v-if="props.value.length > 0" v-on:click.prevent="openInfos(props.value, 'Dépendance Java')"
@@ -69,7 +69,7 @@
               </q-td>
               <q-td slot="body-cell-destinationUrl" slot-scope="props" :props="props">
                 <q-btn flat color="tertiary" @click="$router.push(props.value)" small>
-                  <q-icon name="description"/>
+                  <q-icon name="description"></q-icon>
                 </q-btn>
               </q-td>
             </q-table>
@@ -102,11 +102,14 @@
   </div>
 </template>
 <script>
-  import txtHelp from './projects/help.md'
-  import ChangelogButton from '../components/ChangeLogButton'
-  import ProjectsStore from '../stores/ProjectsStore';
-  import {formatYYYYMMDDHHmm} from '../Dates';
-  import filtering from '../FiltersAndSorter'
+  import { createNamespacedHelpers } from 'vuex';
+  import {
+    namespace as namespaceMicroService,
+    loadProjects, projects,
+  } from '../store/microservices/constants';
+  import txtHelp from './projects/help.md';
+  import ChangelogButton from '../components/ChangeLogButton';
+  import filtering from '../FiltersAndSorter';
   import HeaderApp from '../components/HeaderApp';
   import {
     noData,
@@ -114,31 +117,11 @@
     separator,
     separatorOptions,
     pagination,
-    rowsPerPageOptions
-  } from '../datatable-utils'
+    rowsPerPageOptions,
+  } from '../datatable-utils';
 
-  const depTootip = (attr) => {
-    if (!attr || attr.length === 0) {
-      return '<p>Aucune dépendance.</p>';
-    }
-    return attr.map(v => `<ul><li>${v}</li></ul>`).reduce((a, b) => a + b, '');
-  };
-  const map = (l) => {
-    if (!l) {
-      return [];
-    }
-    return l.map(p => {
-      p.destinationUrl = `/projects/${p.id}`;
-      p.snapshot = p.snapshot || '-';
-      p.release = p.release || '-';
-      p.javaDeps = p.javaDeps || [];
-      p.npmDeps = p.npmDeps || [];
-      p.tables = p.tables || [];
-      p.npmDepsTootip = depTootip(p.npmDeps);
-      p.latest = formatYYYYMMDDHHmm(p.latestUpdate);
-      return p;
-    });
-  };
+  const microServicesStore = createNamespacedHelpers(namespaceMicroService);
+
 
   export default {
     name: 'ProjectsList',
@@ -150,7 +133,6 @@
       return {
         txtHelp,
         list: [],
-        original: [],
         filter: '',
         modal: false,
         modalOpt: {},
@@ -168,7 +150,7 @@
             name: 'name',
             sortable: true,
             type: 'string',
-            filter: true
+            filter: true,
           },
           {
             label: 'Snapshot',
@@ -176,7 +158,7 @@
             name: 'snapshot',
             sortable: false,
             type: 'string',
-            filter: true
+            filter: true,
           },
           {
             label: 'Release',
@@ -184,7 +166,7 @@
             name: 'release',
             sortable: false,
             type: 'string',
-            filter: true
+            filter: true,
           },
           {
             label: 'Java',
@@ -194,7 +176,7 @@
               return (a.length - b.length);
             },
             type: 'number',
-            filter: true
+            filter: true,
           },
           {
             label: 'Apis',
@@ -204,7 +186,7 @@
               return (a.length - b.length);
             },
             type: 'number',
-            filter: true
+            filter: true,
           },
           {
             label: 'Tables',
@@ -214,7 +196,7 @@
               return (a.length - b.length);
             },
             type: 'number',
-            filter: true
+            filter: true,
           },
           {
             label: 'Dernière Mise à jour',
@@ -222,31 +204,32 @@
             name: 'latest',
             sortable: true,
             type: 'date',
-            filter: true
+            filter: true,
           },
           {
             label: 'Log',
             field: 'changelog',
             name: 'changelog',
-            sortable: false
+            sortable: false,
           },
           {
             label: 'Détail',
             field: 'destinationUrl',
             name: 'destinationUrl',
-            sortable: false
-          }
-        ]
+            sortable: false,
+          },
+        ],
       };
+    },
+    computed: {
+      ...microServicesStore.mapGetters([projects]),
     },
     methods: {
       refresh() {
         this.loading = true;
-        ProjectsStore.initialize()
-          .then((list) => {
-            const res = map(list);
-            this.list = res;
-            this.original = res;
+        this.loadProjects()
+          .then(() => {
+            this.list = this.projects;
             this.filter = '';
             this.loading = false;
           });
@@ -254,21 +237,19 @@
       openInfos(p, title) {
         const data = p.sort();
         this.modalOpt = {
-          data, title
+          data, title,
         };
         this.modal = true;
       },
       filtering() {
-        this.list = filtering(this.original, this.filter);
+        this.list = filtering(this.projects, this.filter);
       },
-      link() {
-
-      }
+      ...microServicesStore.mapActions([loadProjects]),
     },
     mounted() {
       this.refresh();
-    }
-  }
+    },
+  };
 </script>
 <style lang="stylus" scoped>
   .projects-page

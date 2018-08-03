@@ -13,12 +13,10 @@ import net.christophe.genin.monitor.domain.server.ReadJsonFiles;
 import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
 import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.monitor.domain.server.model.Raw;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 
+@Ignore
 @RunWith(VertxUnitRunner.class)
 public class MysqlRawCommandTest extends DbWithSchemaTest implements ReadJsonFiles {
 

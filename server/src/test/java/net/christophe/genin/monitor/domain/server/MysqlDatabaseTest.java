@@ -6,28 +6,23 @@ import io.vertx.ext.unit.Async;
 import io.vertx.ext.unit.TestContext;
 import io.vertx.ext.unit.junit.VertxUnitRunner;
 import io.vertx.rxjava.core.Vertx;
-import net.christophe.genin.monitor.domain.server.adapter.nitrite.NitriteConfiguration;
 import net.christophe.genin.monitor.domain.server.base.DbTest;
 import net.christophe.genin.monitor.domain.server.base.NitriteDBManagemementTest;
-import net.christophe.genin.monitor.domain.server.model.Configuration;
+import net.christophe.genin.monitor.domain.server.db.mysql.FlywayVerticle;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import rx.Observable;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 @RunWith(VertxUnitRunner.class)
 public class MysqlDatabaseTest extends DbTest {
 
 
-    public static final String PATH_DB = "target/testMysqlDatabaseTest.db";
     private static DeploymentOptions option;
-    Vertx vertx;
+    private Vertx vertx;
 
 
     @BeforeClass
@@ -36,17 +31,20 @@ public class MysqlDatabaseTest extends DbTest {
     }
 
     @Before
-    public void before(TestContext context) throws IOException {
+    public void before(TestContext context) {
         vertx = Vertx.vertx();
         Async async = context.async(3);
-        vertx.deployVerticle(Database.class.getName(), option, r -> {
-            async.countDown();
-            setAntiMonitorDS(context, async, vertx);
 
-        });
+        Observable.concat(
+                vertx.rxDeployVerticle(Database.class.getName(), option).toObservable(),
+                vertx.rxDeployVerticle(FlywayVerticle.class.getName(), option).toObservable()
+        ).reduce("", (acc, s) -> s)
+                .subscribe(r -> {
+                    async.countDown();
+                    setAntiMonitorDS(context, async, vertx);
 
+                }, context::fail);
     }
-
 
 
     @After

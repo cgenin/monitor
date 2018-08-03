@@ -1,6 +1,6 @@
 <template>
   <div class="configuration-page container">
-    <header-app :bc-datas="[{icon:'build', label:'Console d\'administration'}]" />
+    <header-app :bc-datas="[{icon:'build', label:'Console d\'administration'}]"/>
     <q-card>
       <q-card-title>
         <h3>Console d'adminisration</h3>
@@ -41,8 +41,8 @@
     name: 'Configuration',
     components: {
       HeaderApp,
-    }
-  }
+    },
+  };
 </script>
 
 <style lang="stylus" scoped>

@@ -28,7 +28,7 @@ public class MysqlStoredServiceEvent extends StoredServiceEvent {
 
         @Override
         public Single<Boolean> create(StoredServiceEvent event) {
-            return mysqls.execute("INSERT INTO EVENTS (state, document, ARCHIVE, ORIGINAL_ID, LATEST_UPDATE) VALUES (?,?,?,?,?)",
+            return mysqls.execute("INSERT INTO STORED_SERVICE_EVENTS (state, document, ARCHIVE, ORIGINAL_ID, LATEST_UPDATE) VALUES (?,?,?,?,?)",
                     new JsonArray().add(Treatments.END.getState()).add(event.json().encode())
                             .add((event.archive()) ? 1 : 0)
                             .add(event.originalId())

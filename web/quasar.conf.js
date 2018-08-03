@@ -10,19 +10,15 @@ module.exports = function (ctx) {
     extras: [
       ctx.theme.mat ? 'roboto-font' : null,
       'material-icons',
-      'ionicons',
+      //'ionicons',
       // 'mdi',
       'fontawesome'
     ],
     supportIE: false,
-    vendor: {
-      add: [],
-      remove: []
-    },
     build: {
       scopeHoisting: true,
       vueRouterMode: 'history',
-      // gzip: true,
+      gzip: true,
       // analyze: true,
       // extractCSS: false,
       // useNotifier: false,
@@ -32,6 +28,16 @@ module.exports = function (ctx) {
             test: /\.md$/,
             loader: 'raw-loader'
           });
+        cfg.module.rules.push({
+          enforce: 'pre',
+          test: /\.(js|vue)$/,
+          loader: 'eslint-loader',
+          exclude: /(node_modules|quasar)/
+        });
+        if (cfg.output)
+          cfg.output.chunkFilename = 'js/[name].[id].[chunkhash:8].js';
+        const webpack = require('webpack');
+        cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
       }
     },
     devServer: {
@@ -43,6 +49,11 @@ module.exports = function (ctx) {
           target: 'http://localhost:8279',
           changeOrigin: true,
         },
+        '/eventbus/*': {
+          target: 'ws://localhost:8279',
+          changeOrigin: true,
+          ws: true
+        }
       }
     },
     // framework: 'all' --- includes everything; for dev only!

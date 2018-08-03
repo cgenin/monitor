@@ -6,8 +6,9 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.rxjava.core.Vertx;
+import io.vertx.rxjava.core.eventbus.Message;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
-import net.christophe.genin.monitor.domain.server.db.mysql.AntiMonitorSchemas;
+import net.christophe.genin.monitor.domain.server.db.mysql.FlywayVerticle;
 import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
 import net.christophe.genin.monitor.domain.server.db.nitrite.NitriteDbs;
 import net.christophe.genin.monitor.domain.server.model.Configuration;
@@ -32,6 +33,7 @@ public class Database extends AbstractVerticle {
 
     public static final String HEALTH = Database.class.getName() + ".health";
     public static final String MYSQL_CREATE_SCHEMA = Database.class.getName() + ".mysql.save.schema";
+    public static final String MYSQL_INFO_SCHEMA = Database.class.getName() + ".mysql.info.schema";
     public static final String MYSQL_ON_OFF = Database.class.getName() + ".mysql.on.off";
     public static final String TEST_MYSQL_CONNECTION = Database.class.getName() + ".mysql.test.connection";
 
@@ -106,7 +108,7 @@ public class Database extends AbstractVerticle {
     /**
      * Create Event bus endpoints.
      */
-    public void eventBusEndpoints() {
+    private void eventBusEndpoints() {
         // Health endpoints
         vertx.eventBus().consumer(HEALTH, msg -> {
             JsonArray health = NitriteDbs.toArray(
@@ -118,20 +120,38 @@ public class Database extends AbstractVerticle {
             msg.reply(new JsonObject().put("health", health).put("mysql", Mysqls.Instance.get().active()));
 
         });
+        vertx.eventBus().consumer(MYSQL_INFO_SCHEMA, msg -> {
+            Mysqls mysqls = Mysqls.Instance.get();
+            if (mysqls.active()) {
+                vertx.eventBus().<JsonArray>rxSend(FlywayVerticle.GET_STATE, mysqls.configuration())
+                        .map(Message::body)
+                        .subscribe(
+                                msg::reply,
+                                err -> {
+                                    logger.error("Error in creating table", err);
+                                    msg.reply(new JsonArray());
+                                });
+            } else {
+                msg.reply(new JsonArray());
+            }
+
+        });
         // mysql db schema creation
         vertx.eventBus().consumer(MYSQL_CREATE_SCHEMA, msg -> {
             Mysqls mysqls = Mysqls.Instance.get();
             if (mysqls.active()) {
-                AntiMonitorSchemas.create().subscribe(
-                        (report) -> msg.reply(new JsonObject()
-                                .put("active", true)
-                                .put("creation", true)
-                                .put("report", report)
-                        ),
-                        err -> {
-                            logger.error("Error in creating table", err);
-                            msg.fail(500, "Error in creating table");
-                        });
+                vertx.eventBus().<JsonObject>rxSend(FlywayVerticle.UPGRADE, mysqls.configuration())
+                        .map(Message::body)
+                        .subscribe(
+                                (report) -> msg.reply(new JsonObject()
+                                        .put("active", true)
+                                        .put("creation", true)
+                                        .put("report", report)
+                                ),
+                                err -> {
+                                    logger.error("Error in creating table", err);
+                                    msg.fail(500, "Error in creating table");
+                                });
             } else {
                 msg.reply(new JsonObject().put("active", false).put("creation", false));
             }

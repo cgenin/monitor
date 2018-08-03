@@ -6,6 +6,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
 import net.christophe.genin.monitor.domain.server.command.*;
+import net.christophe.genin.monitor.domain.server.db.mysql.FlywayVerticle;
 import net.christophe.genin.monitor.domain.server.migration.Nitrite2Mysql;
 import net.christophe.genin.monitor.domain.server.migration.MigrateInQueue;
 import net.christophe.genin.monitor.domain.server.query.*;
@@ -22,6 +23,7 @@ public class Server extends AbstractVerticle {
     private static final String MIGRATION = "migration";
     public static final String STOP = Server.class.getName() + ".stop";
     public static final String FAIL = Server.class.getName() + ".fail";
+    public static final DeploymentOptions OPTIONS_WORKER = new DeploymentOptions().setWorker(true);
 
 
     @Override
@@ -69,26 +71,28 @@ public class Server extends AbstractVerticle {
 
     private void deployCommand() {
         vertx.deployVerticle(new RawCommand());
-        vertx.deployVerticle(new Front());
-        vertx.deployVerticle(new ProjectCommand(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new TablesCommand(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new VersionCommand(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new DependenciesCommand(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new FrontCommand());
+        vertx.deployVerticle(new ProjectCommand(), OPTIONS_WORKER);
+        vertx.deployVerticle(new TablesCommand(), OPTIONS_WORKER);
+        vertx.deployVerticle(new VersionCommand(), OPTIONS_WORKER);
+        vertx.deployVerticle(new DependenciesCommand(), OPTIONS_WORKER);
         vertx.deployVerticle(new ImportCommand());
         vertx.deployVerticle(new ArchiveCommand());
         vertx.deployVerticle(new ConfigurationCommand());
         vertx.deployVerticle(new NitriteCommand());
-        vertx.deployVerticle(new ResetCommand(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new ApisCommand(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new FlywayVerticle());
+        vertx.deployVerticle(new ResetCommand(), OPTIONS_WORKER);
+        vertx.deployVerticle(new ApisCommand(), OPTIONS_WORKER);
     }
 
     private void deployQuery() {
-        vertx.deployVerticle(new ProjectQuery(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new TableQuery(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new BackupQuery(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new ProjectQuery(), OPTIONS_WORKER);
+        vertx.deployVerticle(new TableQuery(), OPTIONS_WORKER);
+        vertx.deployVerticle(new BackupQuery(), OPTIONS_WORKER);
         vertx.deployVerticle(new ConfigurationQuery());
-        vertx.deployVerticle(new ApiQuery(), new DeploymentOptions().setWorker(true));
-        vertx.deployVerticle(new DependencyQuery(), new DeploymentOptions().setWorker(true));
+        vertx.deployVerticle(new ApiQuery(), OPTIONS_WORKER);
+        vertx.deployVerticle(new DependencyQuery(), OPTIONS_WORKER);
+        vertx.deployVerticle(new FrontAppsQuery(), OPTIONS_WORKER);
     }
 
     private static class Stopping {

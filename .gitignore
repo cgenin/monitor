@@ -12,3 +12,4 @@ export.json
 server/test-docker.sh
 .ideaDataSources
 .shelf
+tmp/

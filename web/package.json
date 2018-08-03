@@ -6,25 +6,34 @@
   "description": "A Quasar App",
   "author": "Your Name <your@email.com>",
   "scripts": {
-    "clean": "node build/script.clean.js",
     "dev": "quasar dev",
+    "dev-ios": "quasar dev -t ios",
     "build": "quasar build",
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
     "chart.js": "^2.7.1",
+    "sockjs": "0.3.19",
     "sockjs-client": "1.1.4",
     "vertx3-eventbus-client": "^3.5.0",
     "vue-chartjs": "^3.3.1",
     "vue-markdown": "^2.2.4",
     "vue-router": "^3.0.1",
-    "vued3tree": "^3.4.3"
+    "vued3tree": "^3.4.3",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "eslint": "^4.18.2",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-html": "^4.0.5",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-vue": "^4.3.0",
     "json-loader": "^0.5.7",
-    "quasar-cli": "^0.15.11",
-    "raw-loader": "^0.5.1",
-    "sockjs": "0.3.19"
+    "quasar-cli": "^0.16.4",
+    "raw-loader": "^0.5.1"
   },
   "engines": {
     "node": ">= 8.9.0",
