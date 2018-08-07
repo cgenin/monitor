@@ -148,9 +148,8 @@ ${this.formatKeys(this.service.env[b])}
       formatYYYYMMDDHHmm(date) {
         return formatYYYYMMDDHHmm(mavenToDate(date));
       },
-
+      ...monithorStore.mapActions([getServiceForServer]),
     },
-    ...monithorStore.mapActions([getServiceForServer]),
   };
 </script>
 

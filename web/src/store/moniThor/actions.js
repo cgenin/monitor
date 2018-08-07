@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import { SET_CURRENT_SERVICE, SET_NPM_COMPONENT_INFOS, SET_NPM_LIST, SET_SERVERS } from './mutations-type';
 import { getNpmComponentInfos, getServiceForServer, loadNpmList, loadServers, pingServer } from './constants';
 

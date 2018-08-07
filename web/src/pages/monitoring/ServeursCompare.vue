@@ -38,7 +38,7 @@
               <q-search
                 v-model="filter"
                 class="col-auto"
-              />
+              ></q-search>
             </template>
             <template slot="top-right" slot-scope="props">
               <q-select
@@ -46,7 +46,7 @@
                 v-model="separator"
                 :options="separatorOptions"
                 hide-underline
-              />
+              ></q-select>
             </template>
             <q-td slot="body-cell-compare" slot-scope="props" :props="props">
               <div
@@ -56,7 +56,7 @@
               </div>
               <span
                 v-if="!servicesByServer[props.col.label][props.value].responding">
-                  <q-item-side class="down" icon="portable_wifi_off"/>
+                <q-item-side class="down" icon="portable_wifi_off"></q-item-side>
                 </span>
               <span
                 v-if="!(servicesByServer[props.col.label][props.value].info && servicesByServer[props.col.label][props.value].info.build) && servicesByServer[props.col.label][props.value].responding">
