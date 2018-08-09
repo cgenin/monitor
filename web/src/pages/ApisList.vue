@@ -262,6 +262,7 @@
       this.loadApis({ nb, page })
         .then(() => {
           this.datas = this.apis;
+          this.listCards = this.datas.filter((o, index) => index < maxLoadedCard);
           this.datasAsTree = createTree(this.apis);
         });
     },
