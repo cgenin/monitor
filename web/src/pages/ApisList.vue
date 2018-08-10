@@ -47,44 +47,65 @@
         <div class="results-number">
           <p class="caption">Résultat : {{datas.length}}</p>
         </div>
+        <q-inner-loading :visible="loading">
+          <q-spinner-gears size="50px" color="primary"></q-spinner-gears>
+        </q-inner-loading>
         <div v-if="viewTable">
-          <q-list>
-            <q-item v-for="api in datas" class="list-apis-table" :key="`table-${api.method}-${api.absolutePath}`">
-              <q-item-side>
-                <method-icon :method="api.method"></method-icon>
-              </q-item-side>
-              <q-item-main :label="api.path" :sublabel="api.comment">
-              </q-item-main>
-            </q-item>
-          </q-list>
+          <transition
+            appear
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
+          >
+            <q-list>
+              <q-item v-for="api in datas" class="list-apis-table" :key="`table-${api.method}-${api.absolutePath}`">
+                <q-item-side>
+                  <method-icon :method="api.method"></method-icon>
+                </q-item-side>
+                <q-item-main :label="api.path" :sublabel="api.comment">
+                </q-item-main>
+              </q-item>
+            </q-list>
+          </transition>
         </div>
         <div v-if="viewCard">
-          <q-infinite-scroll :handler="loadMore" ref="infiniteScroll">
-            <div class="card-container">
-              <apis-card :api="api" v-for="api in listCards"
-                         :key="`card-${api.method}-${api.absolutePath}`"></apis-card>
-            </div>
-            <div class="awaiting" slot="message">
-              <q-spinner-dots color="red" :size="40"></q-spinner-dots>
-            </div>
-          </q-infinite-scroll>
+          <transition
+            appear
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
+          >
+            <q-infinite-scroll :handler="loadMore" ref="infiniteScroll">
+              <div class="card-container">
+                <apis-card :api="api" v-for="api in listCards"
+                           :key="`card-${api.method}-${api.absolutePath}`"></apis-card>
+              </div>
+              <div class="awaiting" slot="message">
+                <q-spinner-dots color="red" :size="40"></q-spinner-dots>
+              </div>
+            </q-infinite-scroll>
+          </transition>
         </div>
         <div v-if="viewTree">
-          <q-tree
-            :nodes="datasAsTree"
-            node-key="id"
+          <transition
+            appear
+            enter-active-class="animated fadeIn"
+            leave-active-class="animated fadeOut"
           >
-            <div slot="header-generic" slot-scope="prop" class="row items-center">
-              <div class="text-weight-bold text-primary">{{ prop.node.label }}&nbsp;&nbsp;</div>
-              <method-icon :method="prop.node.method" v-if="prop.node.method"></method-icon>
-              <q-item-side icon="help" v-if="prop.node.comment">
-                <q-tooltip>
-                  {{prop.node.comment}}
-                </q-tooltip>
-              </q-item-side>
-            </div>
+            <q-tree
+              :nodes="datasAsTree"
+              node-key="id"
+            >
+              <div slot="header-generic" slot-scope="prop" class="row items-center">
+                <div class="text-weight-bold text-primary">{{ prop.node.label }}&nbsp;&nbsp;</div>
+                <method-icon :method="prop.node.method" v-if="prop.node.method"></method-icon>
+                <q-item-side icon="help" v-if="prop.node.comment">
+                  <q-tooltip>
+                    {{prop.node.comment}}
+                  </q-tooltip>
+                </q-item-side>
+              </div>
 
-          </q-tree>
+            </q-tree>
+          </transition>
         </div>
       </q-card-main>
     </q-card>
@@ -154,6 +175,7 @@
     },
     data() {
       return {
+        loading: false,
         nb: 25,
         filter: '',
         page: 1,
@@ -258,9 +280,11 @@
       ...microServicesStore.mapActions([loadApis]),
     },
     mounted() {
+      this.loading = true;
       const { nb, page } = this;
       this.loadApis({ nb, page })
         .then(() => {
+          this.loading = false;
           this.datas = this.apis;
           this.listCards = this.datas.filter((o, index) => index < maxLoadedCard);
           this.datasAsTree = createTree(this.apis);
