@@ -9,7 +9,7 @@
       </div>
     </q-card-title>
     <q-card-main>
-      <div>
+      <div class="text-comment">
         <p class="text-grey-7">{{api.comment}}</p>
       </div>
 
@@ -35,7 +35,7 @@
 
         <q-collapsible label="Entrée : " :sublabel="`nb : ${parameters.length}`">
           <div>
-            <table class="q-table striped">
+            <table class="params-table">
               <thead>
               <tr>
                 <th>Emp.</th>
@@ -45,9 +45,9 @@
               </thead>
               <tbody>
               <tr v-for="p in parameters" :key="p.name">
-                <td>{{p.type}}</td>
-                <td>{{p.object}}</td>
-                <td>{{p.name}}</td>
+                <td class="text-secondary">{{p.type}}</td>
+                <td class="text-secondary">{{p.object}}</td>
+                <td class="text-secondary">{{p.name}}</td>
               </tr>
               </tbody>
             </table>
@@ -83,6 +83,9 @@
   };
 </script>
 <style>
+  .apis-card {
+    margin-top: 2px;
+  }
 
   .apis-card .title {
     display: flex;
@@ -97,6 +100,10 @@
     font-weight: 700;
   }
 
+  .apis-card .text-comment {
+    margin-top: 10px;
+  }
+
   .apis-card p {
     word-break: break-all;
     max-width: 35vw;
@@ -104,5 +111,22 @@
 
   .apis-card table {
     width: 100%;
+  }
+
+  .apis-card .params-table th {
+    background-color: #0c0c0c;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+  }
+
+  .apis-card .params-table td {
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .apis-card .params-table th,
+  .apis-card .params-table td {
+    padding: 5px;
   }
 </style>
