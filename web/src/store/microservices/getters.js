@@ -1,4 +1,5 @@
 import { format, formatYYYYMMDDHHmm } from '../../Dates';
+import { ms } from '../../Routes';
 
 const sortApis = (a, b) => a.absolutePath.localeCompare(b.absolutePath);
 
@@ -42,7 +43,7 @@ const toProjectSummary = (l) => {
     return [];
   }
   return l.map((p) => {
-    p.destinationUrl = `/projects/${p.id}`;
+    p.destinationUrl = ms(`/projects/${p.id}`);
     p.snapshot = p.snapshot || '-';
     p.release = p.release || '-';
     p.javaDeps = p.javaDeps || [];

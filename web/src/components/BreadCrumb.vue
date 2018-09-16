@@ -1,6 +1,6 @@
 <template>
   <q-breadcrumbs class="root-breadcrumb" separator="">
-    <q-breadcrumbs-el icon="home" class="root" to="/" exact/>
+    <q-breadcrumbs-el icon="home" class="root" to="/rt" exact/>
     <q-breadcrumbs-el v-for="d in datas"
                       :label="d.label"
                       :icon="d.icon"

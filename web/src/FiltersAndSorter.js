@@ -29,6 +29,7 @@ export default function filtering(original, filter) {
   }
 
   const upFilter = filter.toUpperCase();
+  console.log(upFilter);
   return original
     .filter((p) => {
       const data = JSON.stringify(Object.values(p)).toUpperCase();

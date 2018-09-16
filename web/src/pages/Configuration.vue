@@ -9,23 +9,23 @@
       <q-card-main>
         <q-tabs inverted>
           <q-route-tab icon="screen_share" label="Status"
-                       to="/configuration/status"
+                       to="/rt/configuration/status"
                        exact
                        slot="title"/>
           <q-route-tab icon="radio" label="Traitement"
-                       to="/configuration/administration"
+                       to="/rt/configuration/administration"
                        exact
                        slot="title"/>
           <q-route-tab icon="cloud_upload" label="Import / Export"
-                       to="/configuration/import-export"
+                       to="/rt/configuration/import-export"
                        exact
                        slot="title"/>
           <q-route-tab icon="history" label="Reset"
-                       to="/configuration/reset"
+                       to="/rt/configuration/reset"
                        exact
                        slot="title"/>
           <q-route-tab icon="graphic_eq" label="Moni-thor"
-                       to="/configuration/monithor"
+                       to="/rt/configuration/monithor"
                        exact
                        slot="title"/>
         </q-tabs>

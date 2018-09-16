@@ -31,12 +31,17 @@ export default {
       if (state.npm.list) {
         return Promise.resolve(state.npm.list);
       }
-      return fetch(`${state.url}/api/components/`)
+      const url = `${state.url}/api/components/`;
+      return fetch(url)
         .catch(e => console.error(e))
         .then(response => response.json())
         .then((content) => {
           commit(SET_NPM_LIST, content);
           return content;
+        })
+        .catch((err) => {
+          console.error(`*** Error in contacting monithor server : ${url} ***`);
+          console.error(err);
         });
     }
     console.log('No monithor URL.');

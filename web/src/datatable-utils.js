@@ -1,5 +1,5 @@
-export const noData = '<i>Attention</i> aucune donnée disponible.';
-export const noDataAfterFiltering = '<i>Attention</i> aucun résultat. Veuillez affiner votre recherche.';
+export const noData = 'Attention aucune donnée disponible.';
+export const noDataAfterFiltering = 'Attention aucun résultat. Veuillez affiner votre recherche.';
 export const separator = 'horizontal';
 export const separatorOptions = [
   { label: 'Horizontal', value: 'horizontal' },

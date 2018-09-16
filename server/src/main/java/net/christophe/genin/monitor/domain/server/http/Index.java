@@ -28,12 +28,8 @@ public class Index {
      * The paths of routes
      */
     private enum Path {
-        index("/"),
-        projects("/projects-list", "/projects/*"),
-        apps("/apps", "/apps/*"),
-        tables("/tables-list", "/tables/*"),
-        configuration("/configuration", "/configuration/*"),
-        about("/about");
+        index("/", "/index.html"),
+        projects("/rt/*");
 
         private final String[] paths;
 

@@ -1,7 +1,7 @@
 <template>
   <div class="main container">
     <header-app :help="txtHelp"
-                :bc-datas="[{icon:'view_list', label:'Liste des Projets', path : '/projects-list'},{icon:'fas fa-file-alt', label:title}]"></header-app>
+                :bc-datas="[{icon:'view_list', label:'Liste des Projets', path : ProjectsList},{icon:'fas fa-file-alt', label:title}]"></header-app>
     <q-card>
       <q-card-title>
         <h3>{{title}}</h3>
@@ -53,12 +53,13 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
+  import VueMarkdown from 'vue-markdown';
+  import { ProjectsList } from '../../Routes';
   import {
     namespace as namespaceMicroService,
     getProject, getVersionsForProject, project, versions,
   } from '../../store/microservices/constants';
   import HeaderApp from '../../components/HeaderApp';
-  import VueMarkdown from 'vue-markdown';
   import { sortStringForSorter } from '../../FiltersAndSorter';
   import txtHelp from './help.md';
 
@@ -77,6 +78,7 @@
         selected: {},
         selectVersions: [],
         title: '',
+        ProjectsList,
       };
     },
     computed: {

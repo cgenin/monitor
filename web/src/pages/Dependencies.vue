@@ -34,7 +34,7 @@
 <script>
   import { createNamespacedHelpers } from 'vuex';
   import { filter } from 'quasar';
-  // import DependenciesStore from '../stores-old/DependenciesStore';
+  import { ms } from '../Routes';
   import HeaderApp from '../components/HeaderApp';
   import { initialize, namespace, resources } from '../store/dependencies/constants';
 
@@ -59,11 +59,11 @@
         done(filter(t, { field: 'value', list: this.resources }));
       },
       selected(result) {
-        this.$router.push(`/dependencies/search/${result.value.toUpperCase()}`);
+        this.$router.push(ms(`/dependencies/search/${result.value.toUpperCase()}`));
       },
       reset() {
         this.terms = '';
-        this.$router.push('/dependencies');
+        this.$router.push(ms('/dependencies'));
       },
       ...dependenciesStore.mapActions([initialize]),
     },

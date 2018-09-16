@@ -1,20 +1,19 @@
 <template>
   <div class="welcome-container logo-container">
-
     <div class="panel-information column items-center justify-around">
       <div class="column justify-between items-stretch" style="width: 500px;">
         <q-btn outline color="white" label="Services" size="lg" icon="fas fa-cogs"
-               @click="$router.push('/projects-list')">
+               @click="$router.push(ProjectsList)">
           <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbProjects}}</q-chip>
         </q-btn>
-        <q-btn outline color="white" label="Tables" size="lg" icon="border_all" @click="$router.push('/tables/list')">
+        <q-btn outline color="white" label="Tables" size="lg" icon="border_all" @click="$router.push(Tables)">
           <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbTables}}</q-chip>
         </q-btn>
-        <q-btn outline color="white" label="Apis" size="lg" icon="explore" @click="$router.push('/apis-list')">
+        <q-btn outline color="white" label="Apis" size="lg" icon="explore" @click="$router.push(ApisList)">
           <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbApis}}</q-chip>
         </q-btn>
         <q-btn outline color="white" label="Web-apps" size="lg" icon="fab fa-chrome"
-               @click="$router.push('/fronts-list')">
+               @click="$router.push(FrontList)">
           <q-chip color="secondary" style="font-size: 20px; margin: 0 15px;">{{nbFronts}}</q-chip>
         </q-btn>
       </div>
@@ -31,13 +30,19 @@
     nbApis,
     loadApis, loadProjects, nbProjects,
   } from '../store/microservices/constants';
+  import { ProjectsList, FrontList, Tables, ApisList } from '../Routes';
   import { namespace as namespaceFronts, nbFronts, loadResume } from '../store/fronts/constants';
 
   const microServicesStore = createNamespacedHelpers(namespaceMicroService);
   const frontsStore = createNamespacedHelpers(namespaceFronts);
 
   export default {
-    name: 'Welcome',
+    name: 'WelcomePage',
+    data() {
+      return {
+        ProjectsList, FrontList, Tables, ApisList,
+      };
+    },
     methods: {
       ...microServicesStore.mapActions([loadTables, loadApis, loadProjects]),
       ...frontsStore.mapActions([loadResume]),

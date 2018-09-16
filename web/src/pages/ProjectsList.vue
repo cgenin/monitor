@@ -8,6 +8,15 @@
       </q-card-title>
       <q-card-separator/>
       <q-card-main>
+        <div class="search-bar">
+          <q-search
+            v-model="filter"
+            :debounce="300"
+            placeholder="Rechercher par nom"
+            class="col-auto"
+            @input="filtering"
+          ></q-search>
+        </div>
         <transition
           appear
           enter-active-class="animated fadeIn"
@@ -18,20 +27,12 @@
               :data="list"
               :columns="columns"
               row-key="field"
-              :filter="filter"
               :separator="separator"
-              :no-data-label="noData"
+              :no-data-label="noDataAfterFiltering"
               :pagination.sync="pagination"
-              :no-results-label="noDataAfterFiltering"
               :rowsPerPageOptions="rowsPerPageOptions"
               @refresh="refresh"
             >
-              <template slot="top-left" slot-scope="props">
-                <q-search
-                  v-model="filter"
-                  class="col-auto"
-                ></q-search>
-              </template>
               <template slot="top-right" slot-scope="props">
                 <q-select
                   color="secondary"
@@ -103,22 +104,11 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import {
-    namespace as namespaceMicroService,
-    loadProjects, projects,
-  } from '../store/microservices/constants';
+  import { loadProjects, namespace as namespaceMicroService, projects } from '../store/microservices/constants';
   import txtHelp from './projects/help.md';
   import ChangelogButton from '../components/ChangeLogButton';
-  import filtering from '../FiltersAndSorter';
   import HeaderApp from '../components/HeaderApp';
-  import {
-    noData,
-    noDataAfterFiltering,
-    separator,
-    separatorOptions,
-    pagination,
-    rowsPerPageOptions,
-  } from '../datatable-utils';
+  import { noDataAfterFiltering, pagination, rowsPerPageOptions, separator, separatorOptions } from '../datatable-utils';
 
   const microServicesStore = createNamespacedHelpers(namespaceMicroService);
 
@@ -140,7 +130,6 @@
         separator,
         separatorOptions,
         pagination,
-        noData,
         noDataAfterFiltering,
         rowsPerPageOptions,
         columns: [
@@ -150,7 +139,7 @@
             name: 'name',
             sortable: true,
             type: 'string',
-            filter: true,
+            filter: false,
           },
           {
             label: 'Snapshot',
@@ -158,7 +147,7 @@
             name: 'snapshot',
             sortable: false,
             type: 'string',
-            filter: true,
+            filter: false,
           },
           {
             label: 'Release',
@@ -166,7 +155,7 @@
             name: 'release',
             sortable: false,
             type: 'string',
-            filter: true,
+            filter: false,
           },
           {
             label: 'Java',
@@ -176,7 +165,7 @@
               return (a.length - b.length);
             },
             type: 'number',
-            filter: true,
+            filter: false,
           },
           {
             label: 'Apis',
@@ -186,7 +175,7 @@
               return (a.length - b.length);
             },
             type: 'number',
-            filter: true,
+            filter: false,
           },
           {
             label: 'Tables',
@@ -196,7 +185,7 @@
               return (a.length - b.length);
             },
             type: 'number',
-            filter: true,
+            filter: false,
           },
           {
             label: 'Dernière Mise à jour',
@@ -204,7 +193,7 @@
             name: 'latest',
             sortable: true,
             type: 'date',
-            filter: true,
+            filter: false,
           },
           {
             label: 'Log',
@@ -242,7 +231,19 @@
         this.modal = true;
       },
       filtering() {
-        this.list = filtering(this.projects, this.filter);
+        const { filter } = this;
+        if (!filter || filter.trim() === '') {
+          this.list = this.projects;
+          return;
+        }
+
+        const upFilter = filter.toUpperCase();
+        this.list = this.projects
+          .filter((p) => {
+            const { name } = p;
+            const upName = name.toUpperCase();
+            return (upName.indexOf(upFilter) !== -1);
+          });
       },
       ...microServicesStore.mapActions([loadProjects]),
     },
@@ -253,7 +254,10 @@
 </script>
 <style lang="stylus" scoped>
   .projects-page
-    .q-table-control
+    .search-bar
+      display flex
+      justify-content center
+      margin 5px 5px
       .q-search
         min-width 30vw
 </style>

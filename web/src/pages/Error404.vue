@@ -24,7 +24,7 @@
           <q-btn
             color="primary"
             push
-            @click="$router.replace('/')"
+            @click="$router.replace('/rt')"
             icon-right="home"
           >
             Go home
