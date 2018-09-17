@@ -1,6 +1,7 @@
-# Quasar App
+# Monitor - wep App
 
-> A Quasar project
+based on  Quasar framework.
+
 
 ## Build Setup
 
@@ -8,12 +9,15 @@
 # install dependencies
 $ npm install
 
-# serve with hot reload at localhost:8080
-$ quasar dev
-
 # build for production with minification
-$ quasar build
+$ npm run build
+```
+## Dev Setup
 
-# lint code
-$ quasar lint
+``` bash
+# install dependencies
+$ npm install
+
+# launch the SPA web app
+$ npm run dev
 ```
