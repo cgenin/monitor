@@ -5,7 +5,7 @@
     <groupId>net.christophe.genin.domain</groupId>
     <artifactId>monitor</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.2</version>
+    <version>1.1.2-SNAPSHOT</version>
     <modules>
         <module>add-on</module>
         <module>server</module>
@@ -151,7 +151,7 @@
         <connection>scm:git:git://github.com/cgenin/monitor.git</connection>
         <developerConnection>scm:git:git@github.com:cgenin/monitor.git</developerConnection>
         <url>https://github.com/cgenin/monitor</url>
-      <tag>v1.1.2</tag>
+      <tag>v1.1.1</tag>
   </scm>
     <build>
         <pluginManagement>
