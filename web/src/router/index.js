@@ -58,10 +58,6 @@ export default new VueRouter({
           path: 'search/:resource',
           component: () => import(/* webpackChunkName: "dep-search" */ '../pages/dependencies/Search.vue'),
         },
-        {
-          path: 'search/:resource',
-          component: () => import(/* webpackChunkName: "dep-search" */ '../pages/dependencies/Search.vue'),
-        },
         { path: '', component: NoneDependencies },
       ],
     },
@@ -101,8 +97,12 @@ export default new VueRouter({
     },
     {
       path: FrontDependencies,
-      component: () => import(/* webpackChunkName: "dependencies" */ '../pages/fronts/FrontDependencies.vue'),
+      component: () => import(/* webpackChunkName: "fronts-dependencies" */ '../pages/fronts/FrontDependencies.vue'),
       children: [
+        {
+          path: 'search/:resource',
+          component: () => import(/* webpackChunkName: "fronts-dep-search" */ '../pages/fronts/FrontSearch.vue'),
+        },
         { path: '', component: NoneDependencies },
       ],
     },

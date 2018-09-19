@@ -60,8 +60,7 @@
         done(filter(t, { field: 'value', list: this.services }));
       },
       selected(result) {
-        console.log(result);
-        // this.$router.push(ms(`/dependencies/search/${result.value.toUpperCase()}`));
+         this.$router.push(`${FrontDependencies}/search/${result.value.toUpperCase()}`);
       },
       reset() {
         this.terms = '';
@@ -80,3 +79,6 @@
     },
   };
 </script>
+<style lang="stylus">
+  @import "../../css/pages/dependencies.styl"
+</style>

@@ -14,7 +14,10 @@ export const resume = state => state.resume.map((obj) => {
 });
 export const nbFronts = state => state.resume.length;
 
-export const services = state => state.services.map(r => ({
-  label: r,
-  value: r.toUpperCase(),
-}));
+export const services = state => state.services
+  .map(r => ({
+    label: r,
+    value: r.toUpperCase(),
+  }));
+
+export const fronts = state => state.fronts.map(o => `${o.groupId}.${o.artifactId}`);

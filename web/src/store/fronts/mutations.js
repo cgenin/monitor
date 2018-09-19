@@ -1,4 +1,4 @@
-import { SET_RESUME, SET_SERVICES } from './mutations-type';
+import { SET_RESUME, SET_SERVICES, SET_FRONTS } from './mutations-type';
 
 export default {
   [SET_RESUME](state, resume) {
@@ -6,5 +6,8 @@ export default {
   },
   [SET_SERVICES](state, services) {
     state.services = services;
+  },
+  [SET_FRONTS](state, fronts) {
+    state.fronts = fronts;
   },
 };
