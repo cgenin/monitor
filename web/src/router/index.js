@@ -3,11 +3,12 @@ import VueRouter from 'vue-router';
 import 'moment/locale/fr';
 import 'moment/locale/en-gb';
 import WelcomePage from '../pages/Welcome';
-import { ApisList, CONTEXT_ROUTE, Dependencies, FrontList, ms, ProjectsList, Tables, Welcome } from '../Routes';
+import { ApisList, CONTEXT_ROUTE, Dependencies, FrontList, ms, ProjectsList, Tables, Welcome, FrontDependencies } from '../Routes';
 
 Vue.use(VueRouter);
 
 
+const NoneDependencies = () => import(/* webpackChunkName: "dep-none" */ '../pages/dependencies/None.vue');
 export default new VueRouter({
   /*
    * NOTE! VueRouter "history" mode DOESN'T works for Cordova builds,
@@ -61,7 +62,7 @@ export default new VueRouter({
           path: 'search/:resource',
           component: () => import(/* webpackChunkName: "dep-search" */ '../pages/dependencies/Search.vue'),
         },
-        { path: '', component: () => import(/* webpackChunkName: "dep-none" */ '../pages/dependencies/None.vue') },
+        { path: '', component: NoneDependencies },
       ],
     },
     // Configuration
@@ -97,6 +98,13 @@ export default new VueRouter({
       path: FrontList,
       component: () => import(/* webpackChunkName: "fronts-resume" */ '../pages/fronts/FrontList.vue'),
 
+    },
+    {
+      path: FrontDependencies,
+      component: () => import(/* webpackChunkName: "dependencies" */ '../pages/fronts/FrontDependencies.vue'),
+      children: [
+        { path: '', component: NoneDependencies },
+      ],
     },
     // Moni-thor
     {

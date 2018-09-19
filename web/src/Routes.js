@@ -17,4 +17,5 @@ export const TablesList = ms('/tables/list');
 export const TablesCharts = ms('/tables/chart');
 export const ApisList = ms('/apis-list');
 export const Dependencies = ms('/dependencies');
-export const FrontList = front('/fronts-list');
+export const FrontList = front('/list');
+export const FrontDependencies = front('/dependencies');

@@ -63,6 +63,10 @@
                 <q-item-side icon="list_alt"/>
                 <q-item-main label="Liste des applications" sublabel="Résumé des derniers build"/>
               </q-item>
+              <q-item :to="FrontDependencies">
+                <q-item-side icon="link"/>
+                <q-item-main label="Dépendances" sublabel="Dép entre un MicroService et applications"/>
+              </q-item>
             </q-collapsible>
             <q-item to="/rt/npm-list" v-if="moniThorUrl">
               <q-item-side icon="featured_play_list"/>
@@ -90,7 +94,7 @@
 
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { ApisList, Dependencies, FrontList, isFront, isMicroService, ProjectsList, Tables, Welcome } from './Routes';
+  import { ApisList, Dependencies, FrontList, isFront, isMicroService, ProjectsList, Tables, Welcome, FrontDependencies } from './Routes';
   import { initialize, moniThorUrl, namespace as namespaceConf } from './store/configuration/constants';
   import { loadNpmList, namespace as namespaceMonithor } from './store/moniThor/constants';
 
@@ -114,6 +118,7 @@
         Dependencies,
         Tables,
         FrontList,
+        FrontDependencies,
       };
     },
     computed: {
