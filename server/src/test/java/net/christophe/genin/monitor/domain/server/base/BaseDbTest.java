@@ -12,7 +12,7 @@ import net.christophe.genin.monitor.domain.server.Database;
 import net.christophe.genin.monitor.domain.server.adapter.Adapters;
 import net.christophe.genin.monitor.domain.server.adapter.nitrite.NitriteConfiguration;
 import net.christophe.genin.monitor.domain.server.db.mysql.Mysqls;
-import net.christophe.genin.monitor.domain.server.model.Configuration;
+import net.christophe.genin.monitor.domain.boundedcontext.domain.model.Configuration;
 
 import java.util.Optional;
 
@@ -74,7 +74,8 @@ public class BaseDbTest {
                 .setMysqlPassword(PWD_DB)
                 .setMysqlPort(PORT_DB)
                 .setMysqlUser(USER_DB);
-        Configuration.save(conf).subscribe(
+        IConfiguration iConfiguration = Adapters.get().configurationHandler();
+        new ConfigurationDomain(iConfiguration).save(conf).subscribe(
                 bool -> {
                     context.assertTrue(bool);
                     async.countDown();
