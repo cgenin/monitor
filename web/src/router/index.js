@@ -1,12 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueClipBoard from 'vue-clipboard2';
 import 'moment/locale/fr';
 import 'moment/locale/en-gb';
 import WelcomePage from '../pages/Welcome';
 import { ApisList, CONTEXT_ROUTE, Dependencies, FrontList, ms, ProjectsList, Tables, Welcome, FrontDependencies } from '../Routes';
 
+VueClipBoard.config.autoSetContainer = true;
 Vue.use(VueRouter);
-
+Vue.use(VueClipBoard);
 
 const NoneDependencies = () => import(/* webpackChunkName: "dep-none" */ '../pages/dependencies/None.vue');
 export default new VueRouter({

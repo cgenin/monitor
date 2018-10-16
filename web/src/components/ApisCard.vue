@@ -58,9 +58,23 @@
             <p><strong>{{api.returns}}</strong></p>
           </div>
         </q-collapsible>
-
       </q-list>
     </q-card-main>
+    <q-card-actions>
+      <q-btn disabled>Export :</q-btn>
+      <q-btn v-clipboard:copy="clipboardJson"
+             v-clipboard:success="onCopySuccess"
+             v-clipboard:error="onCopyError" outline>{}
+      </q-btn>
+      <q-btn v-clipboard:copy="clipboardCsv"
+             v-clipboard:success="onCopySuccess"
+             v-clipboard:error="onCopyError" outline>Csv
+      </q-btn>
+      <q-btn v-clipboard:copy="clipboardTxt"
+             v-clipboard:success="onCopySuccess"
+             v-clipboard:error="onCopyError" outline>Txt
+      </q-btn>
+    </q-card-actions>
   </q-card>
 </template>
 <script>
@@ -69,6 +83,21 @@
   export default {
     name: 'ApisCard',
     props: ['api'],
+    data() {
+      return {
+        clipboardJson: '',
+        clipboardCsv: '',
+        clipboardTxt: '',
+      };
+    },
+    methods: {
+      onCopySuccess() {
+        alert('La valeur a été mise dans le presse-papier');
+      },
+      onCopyError() {
+        alert('Un erreur s\'est produite.');
+      },
+    },
     components: {
       MethodIcon,
     },
@@ -79,6 +108,26 @@
         }
         return JSON.parse(this.api.params);
       },
+    },
+    mounted() {
+      this.clipboardJson = JSON.stringify(this.api);
+      this.clipboardCsv = Object.values(this.api)
+        .filter(t => typeof t !== 'object')
+        .map(t => `"${t}"`)
+        .reduce((acc, str) => {
+          if (acc === '') {
+            return str;
+          }
+          return `${acc};${str}`;
+        }, '');
+      this.clipboardTxt =
+        `
+        /**
+        * ${this.api.comment}
+        * URL : ${this.api.path}
+        **/
+        ${this.api.groupId}.${this.api.className}.${this.api.name}
+        `;
     },
   };
 </script>

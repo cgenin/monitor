@@ -24,7 +24,8 @@ export const nbProjects = state => state.projects.length;
 
 export const apis = state => state.apis
   .map((o) => {
-    const context = (o.artifactId || '').replace('-client', '');
+    const context = (o.artifactId || '')
+      .replace('-impl', '');
     const absolutePath = `/${context}${o.path}`
       .replace(/\?(.*)$/, '');
     const queryParams = extractQueryParams(`/${context}${o.path}`);
