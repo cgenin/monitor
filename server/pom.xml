@@ -22,11 +22,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>net.christophe.genin.domain.monitor</groupId>
-            <artifactId>boundedcontext</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
         </dependency>
