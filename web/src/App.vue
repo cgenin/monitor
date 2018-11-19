@@ -80,6 +80,10 @@
               <q-item-side icon="build"/>
               <q-item-main label="Console d'administration" sublabel="Configuration et outils"/>
             </q-item>
+            <q-item @click.native="showAbout">
+              <q-item-side icon="copyright"/>
+              <q-item-main label="A propos"/>
+            </q-item>
           </q-list>
         </div>
       </q-layout-drawer>
@@ -87,14 +91,37 @@
         <transition :name="transitionName">
           <router-view/>
         </transition>
+        <q-modal v-model="openAboutModal" minimized>
+          <div style="padding: 50px">
+            <div class="q-display-1 q-mb-md">Version : {{packageJson.version}}</div>
+            <p>Tu comprends, je suis mon meilleur modèle car entre penser et dire, il y a un monde de différence et
+              c'est très, très beau d'avoir son propre moi-même ! Ça respire le meuble de Provence, hein ?</p>
+              <p>Tu comprends, je ne suis pas un simple danseur car là, j'ai un chien en ce moment à côté de moi et je
+                le caresse, parce que spirituellement, on est tous ensemble, ok ? Et là, vraiment, j'essaie de tout
+                coeur de donner la plus belle réponse de la terre !</p>
+            <q-btn color="red" v-close-overlay label="Close"    @click="openAboutModal = false"/>
+          </div>
+        </q-modal>
       </q-page-container>
     </q-layout>
+
   </div>
 </template>
 
 <script>
+  import packageJson from '../package.json';
   import { createNamespacedHelpers } from 'vuex';
-  import { ApisList, Dependencies, FrontList, isFront, isMicroService, ProjectsList, Tables, Welcome, FrontDependencies } from './Routes';
+  import {
+    ApisList,
+    Dependencies,
+    FrontList,
+    isFront,
+    isMicroService,
+    ProjectsList,
+    Tables,
+    Welcome,
+    FrontDependencies,
+  } from './Routes';
   import { initialize, moniThorUrl, namespace as namespaceConf } from './store/configuration/constants';
   import { loadNpmList, namespace as namespaceMonithor } from './store/moniThor/constants';
 
@@ -119,6 +146,8 @@
         Tables,
         FrontList,
         FrontDependencies,
+        openAboutModal: false,
+        packageJson,
       };
     },
     computed: {
@@ -127,6 +156,9 @@
     methods: {
       menuExpand() {
         this.opened = !this.opened;
+      },
+      showAbout() {
+        this.openAboutModal = true;
       },
       ...confStore.mapActions([initialize]),
       ...monithorStore.mapActions([loadNpmList]),
