@@ -6,6 +6,7 @@
 **/*.1
 **/*.iws
 *.db
+server/test.db.backup
 target
 .idea
 export.json
