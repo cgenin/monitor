@@ -80,7 +80,7 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { namespace as namespaceFronts, resume, loadResume } from '../../store/fronts/constants';
+  import { nameModule as namespaceFronts, resume, loadResume } from '../../store/fronts/constants';
   import HeaderApp from '../../components/HeaderApp';
   import {
     noData,

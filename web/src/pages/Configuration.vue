@@ -34,15 +34,19 @@
     </q-card>
   </div>
 </template>
-<script>
-  import HeaderApp from '../components/HeaderApp';
+<script lang="ts">
 
-  export default {
-    name: 'Configuration',
+  import HeaderApp from '../components/HeaderApp';
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+
+  @Component({
     components: {
       HeaderApp,
     },
-  };
+  })
+  export default class ConfigurationPage extends Vue {
+  }
 </script>
 
 <style lang="stylus" scoped>

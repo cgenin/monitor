@@ -1,5 +1,40 @@
 // Configuration for your app
 
+function extendTypescriptToWebpack(cfg) {
+  // added the type-script supports
+  cfg.resolve.extensions.push('.ts')
+  cfg.module.rules.push({
+    test: /\.ts$/,
+    loader: 'ts-loader',
+    options: { appendTsSuffixTo: [/\.vue$/] }
+  })
+}
+
+function stripMoment(cfg) {
+  const webpack = require('webpack');
+  cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+}
+
+function addMarkdownPage(cfg) {
+  cfg.module.rules.push(
+    {
+      test: /\.md$/,
+      loader: 'raw-loader'
+    });
+}
+function add_linter(cfg) {
+  cfg.module.rules.push({
+    enforce: 'pre',
+    test: /\.(js|vue)$/,
+    loader: 'eslint-loader',
+    exclude: /(node_modules|quasar)/
+  });
+}
+
+function definedChunkFileName(cfg) {
+  if (cfg.output)
+    cfg.output.chunkFilename = 'js/[name].[id].[chunkhash:8].js';
+}
 module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
@@ -22,21 +57,11 @@ module.exports = function (ctx) {
       // extractCSS: false,
       // useNotifier: false,
       extendWebpack(cfg) {
-        cfg.module.rules.push(
-          {
-            test: /\.md$/,
-            loader: 'raw-loader'
-          });
-        cfg.module.rules.push({
-          enforce: 'pre',
-          test: /\.(js|vue)$/,
-          loader: 'eslint-loader',
-          exclude: /(node_modules|quasar)/
-        });
-        if (cfg.output)
-          cfg.output.chunkFilename = 'js/[name].[id].[chunkhash:8].js';
-        const webpack = require('webpack');
-        cfg.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+        addMarkdownPage(cfg);
+       // add_linter(cfg);
+        definedChunkFileName(cfg);
+        stripMoment(cfg);
+        extendTypescriptToWebpack(cfg);
       }
     },
     devServer: {

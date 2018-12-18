@@ -36,9 +36,9 @@
   import { filter } from 'quasar';
   import { ms } from '../Routes';
   import HeaderApp from '../components/HeaderApp';
-  import { initialize, namespace, resources } from '../store/dependencies/constants';
+  import { initialize, nameModule, resources } from '../store/dependencies/constants';
 
-  const dependenciesStore = createNamespacedHelpers(namespace);
+  const dependenciesStore = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'Configuration',

@@ -9,29 +9,33 @@
     </div>
   </q-modal>
 </template>
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {Prop} from "vue-property-decorator";
   import VueMarkdown from 'vue-markdown';
 
-  export default {
-    name: 'StacktraceModal',
-    props: ['message', 'stacktrace', 'opened', 'callback'],
-    components: { VueMarkdown },
-    computed: {
-      showStackTrace() {
-        return this.stacktrace !== null
-          && this.stacktrace !== undefined
-          && this.stacktrace !== '';
-      },
-      isOpen() {
-        return this.opened;
-      },
-    },
-    methods: {
-      escape() {
-        this.callback();
-      },
-    },
-  };
+  @Component({components: {VueMarkdown},})
+  export default class StacktraceModal extends Vue {
+    @Prop(String) message: string;
+    @Prop(String) stacktrace?: string;
+    @Prop(Boolean) opened: boolean;
+    @Prop() callback: () => void;
+
+    get showStackTrace() {
+      return this.stacktrace !== null
+        && this.stacktrace !== undefined
+        && this.stacktrace !== '';
+    }
+
+    get isOpen() {
+      return this.opened;
+    }
+
+    escape() {
+      this.callback();
+    }
+  }
 </script>
 <style scoped>
   h4 {

@@ -52,9 +52,9 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { findByService, fronts, namespace, reset } from '../../store/fronts/constants';
+  import { findByService, fronts, nameModule, reset } from '../../store/fronts/constants';
 
-  const frontsStore = createNamespacedHelpers(namespace);
+  const frontsStore = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'DependenciesSearch',

@@ -104,13 +104,13 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { loadProjects, namespace as namespaceMicroService, projects } from '../store/microservices/constants';
+  import { loadProjects, nameModule, projects } from '../store/microservices/constants';
   import txtHelp from './projects/help.md';
   import ChangelogButton from '../components/ChangeLogButton';
   import HeaderApp from '../components/HeaderApp';
   import { noDataAfterFiltering, pagination, rowsPerPageOptions, separator, separatorOptions } from '../datatable-utils';
 
-  const microServicesStore = createNamespacedHelpers(namespaceMicroService);
+  const microServicesStore = createNamespacedHelpers(nameModule);
 
 
   export default {

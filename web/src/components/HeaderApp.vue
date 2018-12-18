@@ -8,21 +8,21 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
   import BreadCrumb from './BreadCrumb';
   import HelpButton from './HelpButton';
+  import {Prop} from "vue-property-decorator";
 
-  export default {
-    name: 'HeaderApp',
-    props: ['help', 'bcDatas'],
+  @Component({
     components: {
       BreadCrumb, HelpButton,
     },
-    computed: {
-      showHelpButton() {
-        return (this.help);
-      },
-    },
+  })
+  export default class HeaderApp extends Vue {
+    @Prop(String) help:string;
+    @Prop() bcDatas: any[];
+  }
 
-  };
 </script>

@@ -19,12 +19,12 @@
 <script>
   import { createNamespacedHelpers } from 'vuex';
   import {
-    namespace,
+    nameModule,
     groupByProjects,
   } from '../../store/microservices/constants';
   import CardChart from '../../components/CardChart';
 
-  const microservices = createNamespacedHelpers(namespace);
+  const microservices = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'TablesChart',

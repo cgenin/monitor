@@ -122,8 +122,8 @@
     Welcome,
     FrontDependencies,
   } from './Routes';
-  import { initialize, moniThorUrl, namespace as namespaceConf } from './store/configuration/constants';
-  import { loadNpmList, namespace as namespaceMonithor } from './store/moniThor/constants';
+  import { initialize, moniThorUrl, nameModule as namespaceConf } from './store/configuration/constants';
+  import { loadNpmList, nameModule as namespaceMonithor } from './store/moniThor/constants';
 
   let first = true;
   const confStore = createNamespacedHelpers(namespaceConf);

@@ -21,22 +21,19 @@
     </q-card>
   </div>
 </template>
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
   import HeaderApp from '../components/HeaderApp';
   import { TablesCharts, TablesList } from '../Routes';
 
-  export default {
-    name: 'Tables',
-    components: {
-      HeaderApp,
-    },
-    data() {
-      return {
-        TablesCharts,
-        TablesList,
-      };
-    },
-  };
+  @Component({
+    components: { HeaderApp },
+  })
+  export default class Tables extends Vue {
+    TablesCharts = TablesCharts;
+    TablesList = TablesList;
+  }
 </script>
 <style lang="stylus" scoped>
   @import "../css/pages/tables.styl"

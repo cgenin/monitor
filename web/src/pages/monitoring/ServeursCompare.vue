@@ -71,7 +71,7 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { namespace, loadServers, servers as serverFromStore, pingServer } from '../../store/moniThor/constants';
+  import { nameModule, loadServers, servers as serverFromStore, pingServer } from '../../store/moniThor/constants';
   import ChangelogButton from '../../components/ChangeLogButton';
   import ChartsButton from '../../components/ChartsButton';
   import HeaderApp from '../../components/HeaderApp';
@@ -85,7 +85,7 @@
     separatorOptions,
   } from '../../datatable-utils';
 
-  const serverStore = createNamespacedHelpers(namespace);
+  const serverStore = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'ServeursCompare',

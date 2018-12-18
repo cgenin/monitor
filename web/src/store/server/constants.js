@@ -1,4 +1,4 @@
-export const namespace = 'server';
+export const nameModule = 'server';
 // Actions
 export const getHealth = 'getHealth';
 export const importDb = 'importDb';

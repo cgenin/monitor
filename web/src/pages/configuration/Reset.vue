@@ -59,12 +59,12 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { namespace as namespaceMysql, createSchema } from '../../store/mysql/constants';
-  import { namespace as namespaceServer, remove, clearDatas, deletedCollections } from '../../store/server/constants';
+  import { nameModule as namespaceMysql, createSchema } from '../../store/mysql/constants';
+  import { nameModule as namespaceServer, remove, clearDatas, deletedCollections } from '../../store/server/constants';
   import { success, error } from '../../Toasts';
 
   const mysqlStore = createNamespacedHelpers(namespaceMysql);
-  const serverStore = createNamespacedHelpers(namespaceServer);
+  const serverStore = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'ConfigurationReset',

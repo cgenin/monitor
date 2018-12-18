@@ -51,7 +51,7 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { namespace, loadNpmList, getNpmComponentInfos } from '../../store/moniThor/constants';
+  import { nameModule, loadNpmList, getNpmComponentInfos } from '../../store/moniThor/constants';
   import MarkdownButton from '../../components/MarkdownButton';
   import HeaderApp from '../../components/HeaderApp';
   import filtering from '../../FiltersAndSorter';
@@ -63,9 +63,9 @@
     pagination,
     rowsPerPageOptions,
   } from '../../datatable-utils';
-  import { formatYYYYMMDDHHmm } from '../../Dates';
+  import { formatYYYYMMDDHHmm } from '../../Dates.ts';
 
-  const monithorStore = createNamespacedHelpers(namespace);
+  const monithorStore = createNamespacedHelpers(nameModule);
   const objectAsArray = obj => Object.keys(obj).map(key => obj[key]);
 
   const createInfos = component => `

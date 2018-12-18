@@ -113,11 +113,7 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import {
-    namespace as namespaceMicroService,
-    apis,
-    loadApis,
-  } from '../store/microservices/constants';
+  import { apis, loadApis, nameModule as namespaceMicroService, } from '../store/microservices/constants';
   import filtering, { filteringByAttribute } from '../FiltersAndSorter';
   import MethodIcon from '../components/MethodIcon';
   import ApisCard from '../components/ApisCard';

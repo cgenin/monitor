@@ -49,9 +49,9 @@
 <script>
   import { createNamespacedHelpers } from 'vuex';
   import SubTree from '../../components/SubTree';
-  import { reset, namespace, usedBy } from '../../store/dependencies/constants';
+  import { reset, nameModule, usedBy } from '../../store/dependencies/constants';
 
-  const dependenciesStore = createNamespacedHelpers(namespace);
+  const dependenciesStore = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'DependenciesSearch',

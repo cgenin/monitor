@@ -60,8 +60,8 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'Vuex';
-  import { initialize, namespace as namespaceConf, save as saveConfiguration, global as state } from '../../store/configuration/constants';
-  import { namespace as namespaceMysql, testConnectionLoading, test as testMysqlConnection } from '../../store/mysql/constants';
+  import { initialize, nameModule as namespaceConf, save as saveConfiguration, global as state } from '../../store/configuration/constants';
+  import { nameModule as namespaceMysql, testConnectionLoading, test as testMysqlConnection } from '../../store/mysql/constants';
   import StackTraceModal from '../../components/StackTraceModal';
   import { success, error } from '../../Toasts';
 

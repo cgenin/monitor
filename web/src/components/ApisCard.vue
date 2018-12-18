@@ -63,24 +63,28 @@
     </q-card-main>
   </q-card>
 </template>
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
   import MethodIcon from './MethodIcon';
+  import { ApiDto } from '../store/microservices/types';
+  import {Prop} from "vue-property-decorator";
 
-  export default {
-    name: 'ApisCard',
-    props: ['api'],
+  @Component({
     components: {
       MethodIcon,
     },
-    computed: {
-      parameters() {
-        if (!this.api.params) {
-          return [];
-        }
-        return JSON.parse(this.api.params);
-      },
-    },
-  };
+  })
+  export default class ApisCard extends Vue {
+   @Prop() api: ApiDto;
+
+    get parameters() {
+      if (!this.api.params) {
+        return [];
+      }
+      return JSON.parse(this.api.params);
+    }
+  }
 </script>
 <style>
   .apis-card {

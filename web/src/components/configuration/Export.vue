@@ -15,30 +15,37 @@
     </div>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
-  import { namespace, migrateEvents } from '../../store/mysql/constants';
-  import { success, error } from '../../Toasts';
+<script lang="ts">
+  import Vue from 'vue'
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
+  import {migrateEvents, nameModule} from '../../store/mysql/constants';
+  import {error, success} from '../../Toasts';
 
-  const mysqlStore = createNamespacedHelpers(namespace);
+  const module = namespace(nameModule);
 
-  export default {
-    name: 'ConfigurationExport',
-    methods: {
-      doExportJson() {
-        this.$refs.link.click();
-      },
-      doExportToMysqlEvents() {
-        this.migrateEvents()
-          .then((result) => {
-            console.log(result);
-            success(`Migration effectuée avec succès pour ${result.numberOfExported}`);
-          })
-          .catch(err => error(err));
-      },
-      ...mysqlStore.mapActions([migrateEvents]),
-    },
-  };
+  @Component
+  export default class ConfigurationExport extends Vue {
+    @module.Action(migrateEvents) migrateEvents: () => Promise<any>;
+
+    doExportJson() {
+      const link = this.$refs.link;
+      const l = <HTMLElement>link;
+      l.click();
+    }
+
+    doExportToMysqlEvents() {
+      this.migrateEvents()
+        .then((result) => {
+          console.log(result);
+          success(`Migration effectuée avec succès pour ${result.numberOfExported}`);
+        })
+        .catch((err) => {
+          error(err);
+        });
+    }
+  }
+
 </script>
 <style scoped>
   .export-page {

@@ -73,9 +73,9 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { namespace as namespaceConf, mysql } from '../../store/configuration/constants';
-  import { namespace as namespaceMysql, startOrStop } from '../../store/mysql/constants';
-  import { namespace as namespaceServer, getHealth, health, nitrite } from '../../store/server/constants';
+  import { mysql, nameModule as namespaceConf } from '../../store/configuration/constants';
+  import { nameModule as namespaceMysql, startOrStop } from '../../store/mysql/constants';
+  import { getHealth, health, nameModule as namespaceServer, nitrite } from '../../store/server/constants';
   import DbMigration from '../../components/configuration/DbMigration';
   import Console from '../../components/configuration/Console';
 

@@ -56,14 +56,14 @@
   import VueMarkdown from 'vue-markdown';
   import { ProjectsList } from '../../Routes';
   import {
-    namespace as namespaceMicroService,
+    nameModule,
     getProject, getVersionsForProject, project, versions,
   } from '../../store/microservices/constants';
   import HeaderApp from '../../components/HeaderApp';
   import { sortStringForSorter } from '../../FiltersAndSorter';
   import txtHelp from './help.md';
 
-  const microServicesStore = createNamespacedHelpers(namespaceMicroService);
+  const microServicesStore = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'ProjectDetail',

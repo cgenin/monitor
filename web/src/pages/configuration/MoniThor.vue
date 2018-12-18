@@ -21,10 +21,10 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { namespace, global, initialize, save as saveConfiguration } from '../../store/configuration/constants';
+  import { nameModule, global, initialize, save as saveConfiguration } from '../../store/configuration/constants';
   import { error, success } from '../../Toasts';
 
-  const conf = createNamespacedHelpers(namespace);
+  const conf = createNamespacedHelpers(nameModule);
   export default {
     name: 'MoniThor',
     data() {

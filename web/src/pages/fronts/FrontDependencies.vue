@@ -37,9 +37,9 @@
   import HeaderApp from '../../components/HeaderApp';
   import { FrontDependencies } from '../../Routes';
 
-  import { loadServices, namespace, services } from '../../store/fronts/constants';
+  import { loadServices, nameModule, services } from '../../store/fronts/constants';
 
-  const frontsStore = createNamespacedHelpers(namespace);
+  const frontsStore = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'FrontDependencies',

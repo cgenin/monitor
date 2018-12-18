@@ -19,15 +19,19 @@
     </q-modal>
   </div>
 </template>
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
   import VueMarkdown from 'vue-markdown';
+  import { Prop } from "vue-property-decorator";
 
-  export default {
-    name: 'HelpButton',
-    props: ['text'],
-    components: { VueMarkdown },
-    data() {
-      return { modal: false };
+  @Component({
+    components: {
+      VueMarkdown,
     },
-  };
+  })
+  export default class HelpButton extends Vue {
+    modal: boolean = false;
+    @Prop(String) text:string;
+  }
 </script>

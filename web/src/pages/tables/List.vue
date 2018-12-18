@@ -59,14 +59,14 @@
 <script>
   import { createNamespacedHelpers } from 'vuex';
   import {
-    namespace,
+    nameModule,
     loadTables,
     tables,
   } from '../../store/microservices/constants';
   import { sortString } from '../../FiltersAndSorter';
   import { pagination, separator, separatorOptions, noDataAfterFiltering, noData, rowsPerPageOptions } from '../../datatable-utils';
 
-  const microservices = createNamespacedHelpers(namespace);
+  const microservices = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'TablesList',

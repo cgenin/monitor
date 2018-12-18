@@ -1,6 +1,6 @@
 import { SET_URL } from './mutations-type';
 
-export const namespace = 'moniThor';
+export const nameModule = 'moniThor';
 // actions
 export const getServiceForServer = 'getServiceForServer';
 export const getNpmComponentInfos = 'getNpmComponentInfos';
@@ -12,4 +12,4 @@ export const pingServer = 'pingServer';
 export const servers = 'servers';
 
 // Mutations
-export const setUrlMutation = `${namespace}/${SET_URL}`;
+export const setUrlMutation = `${nameModule}/${SET_URL}`;

@@ -1,4 +1,4 @@
-export const namespace = 'microservices';
+export const nameModule = 'microservices';
 // actions
 export const groupByProjects = 'groupByProjects';
 export const loadTables = 'loadTables';

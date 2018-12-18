@@ -50,14 +50,14 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { namespace, getServiceForServer } from '../store/moniThor/constants';
+  import { nameModule, getServiceForServer } from '../store/moniThor/constants';
   import ResponseTimeChart from './charts/ResponseTimeChart';
   import CounterChart from './charts/CounterChart';
   import SuccessChart from './charts/SuccessChart';
-  import { formatYYYYMMDDHHmm, mavenToDate } from '../Dates';
+  import { formatYYYYMMDDHHmm, mavenToDate } from '../Dates.ts';
   import MarkdownButton from './MarkdownButton';
 
-  const monithorStore = createNamespacedHelpers(namespace);
+  const monithorStore = createNamespacedHelpers(nameModule);
 
   export default {
     name: 'ChartsButton',

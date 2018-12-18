@@ -21,37 +21,41 @@
   </div>
 </template>
 
-<script>
-  import { createNamespacedHelpers } from 'vuex';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
   import {
-    namespace as namespaceMicroService,
+    loadApis,
+    loadProjects,
     loadTables,
-    nbTables,
+    nameModule as namespaceMicroService,
     nbApis,
-    loadApis, loadProjects, nbProjects,
+    nbProjects,
+    nbTables,
   } from '../store/microservices/constants';
-  import { ProjectsList, FrontList, Tables, ApisList } from '../Routes';
-  import { namespace as namespaceFronts, nbFronts, loadResume } from '../store/fronts/constants';
+  import {ApisList, FrontList, ProjectsList, Tables} from '../Routes';
+  import {loadResume, nameModule as namespaceFronts, nbFronts} from '../store/fronts/constants';
 
-  const microServicesStore = createNamespacedHelpers(namespaceMicroService);
-  const frontsStore = createNamespacedHelpers(namespaceFronts);
+  const microServicesStore = namespace(namespaceMicroService);
+  const frontsStore = namespace(namespaceFronts);
 
-  export default {
-    name: 'WelcomePage',
-    data() {
-      return {
-        ProjectsList, FrontList, Tables, ApisList,
-      };
-    },
-    methods: {
-      ...microServicesStore.mapActions([loadTables, loadApis, loadProjects]),
-      ...frontsStore.mapActions([loadResume]),
+  @Component
+  export default class WelcomePage extends Vue {
+    ProjectsList = ProjectsList;
+    FrontList = FrontList;
+    Tables = Tables;
+    ApisList = ApisList;
+    @microServicesStore.Action(loadTables) loadTables: () => Promise<number>;
+    @microServicesStore.Action(loadApis) loadApis: (param: any) => Promise<number>;
+    @microServicesStore.Action(loadProjects) loadProjects: () => Promise<number>;
+    @frontsStore.Action(loadResume) loadResume: () => Promise<number>;
 
-    },
-    computed: {
-      ...microServicesStore.mapGetters([nbTables, nbApis, nbProjects]),
-      ...frontsStore.mapGetters([nbFronts]),
-    },
+    @microServicesStore.Getter(nbTables) nbTables: number;
+    @microServicesStore.Getter(nbApis) nbApis: number;
+    @microServicesStore.Getter(nbProjects) nbProjects: number;
+    @frontsStore.Getter(nbFronts) nbFronts: number;
+
     mounted() {
       const promiseProject = this.loadProjects();
       const promiseTables = this.loadTables();
@@ -59,7 +63,7 @@
       const promiseFronts = this.loadResume();
       Promise.all([promiseProject, promiseTables, promiseApis, promiseFronts])
         .then(() => console.log('all loaded'));
-    },
+    }
   };
 </script>
 

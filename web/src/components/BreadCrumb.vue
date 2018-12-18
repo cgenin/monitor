@@ -11,11 +11,16 @@
     </q-breadcrumbs-el>
   </q-breadcrumbs>
 </template>
-<script>
-  export default {
-    name: 'BreadCrumb',
-    props: ['datas'],
-  };
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {Prop} from "vue-property-decorator";
+
+
+  @Component
+  export default class BreadCrumb extends Vue {
+    @Prop() datas: any[];
+  }
 </script>
 <style lang="stylus">
 </style>

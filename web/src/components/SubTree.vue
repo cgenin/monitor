@@ -12,9 +12,9 @@
 </template>
 <script>
   import { createNamespacedHelpers } from 'vuex';
-  import { namespace, usedBy, dependencies } from '../store/dependencies/constants';
+  import { nameModule, usedBy, dependencies } from '../store/dependencies/constants';
 
-  const dependenciesStore = createNamespacedHelpers(namespace);
+  const dependenciesStore = createNamespacedHelpers(nameModule);
 
 
   export default {
