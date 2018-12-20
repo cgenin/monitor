@@ -6,46 +6,45 @@
       {{resource}}
     </p>
     <ul v-if="open">
-      <sub-tree v-for="sub in subs" :key="sub" :resource="sub"/>
+      <sub-tree v-for="sub in subs" :key="sub" :resource="sub"></sub-tree>
     </ul>
   </li>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
-  import { nameModule, usedBy, dependencies } from '../store/dependencies/constants';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
+  import {dependencies, nameModule, usedBy} from '../store/dependencies/constants';
+  import {Prop} from 'vue-property-decorator';
 
-  const dependenciesStore = createNamespacedHelpers(nameModule);
+  const dependenciesStore = namespace(nameModule);
 
+  @Component
+  export default class SubTree extends Vue {
+    @Prop() resource: string;
+    open = false;
+    subs: string[] = [];
+    notOpens = false;
+    @dependenciesStore.Getter(dependencies) dependencies;
+    @dependenciesStore.Action(usedBy) usedBy;
 
-  export default {
-    name: 'SubTree',
-    props: ['resource'],
-    data() {
-      return { open: false, subs: [], notOpens: false };
-    },
-    computed: {
-      ...dependenciesStore.mapGetters([dependencies]),
-    },
-    methods: {
-      click() {
-        if (this.notOpens) {
-          return;
-        }
+    click() {
+      if (this.notOpens) {
+        return;
+      }
+      this.open = !this.open;
+      if (this.open) {
+        this.usedBy(this.resource)
+          .then((subs) => {
+            this.subs = subs;
+          });
+      } else {
+        this.subs = [];
+      }
+    }
 
-        this.open = !this.open;
-        if (this.open) {
-          this.usedBy(this.resource)
-            .then((subs) => {
-              this.subs = subs;
-            });
-        } else {
-          this.subs = [];
-        }
-      },
-      ...dependenciesStore.mapActions([usedBy]),
-    },
     mounted() {
       this.notOpens = this.dependencies[this.resource];
-    },
-  };
+    }
+  }
 </script>

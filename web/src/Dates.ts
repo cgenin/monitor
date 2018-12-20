@@ -3,14 +3,14 @@ function twoDigits(v: any): String {
   return (value.length === 1) ? `0${value}` : value;
 }
 
-export function format(long: number): string {
+export function format(long: number | Date): string {
   const date = new Date(long);
   const cMont = `${date.getMonth() + 1}`;
   const fMonth = twoDigits(cMont);
   return `${date.getFullYear()}/${fMonth}/${twoDigits(date.getDate())}`;
 }
 
-export function formatYYYYMMDDHHmm(long: number): string {
+export function formatYYYYMMDDHHmm(long: number | Date): string {
   const date = new Date(long);
   return `${format(long)} ${date.getHours()}:${twoDigits(date.getMinutes())}`;
 }

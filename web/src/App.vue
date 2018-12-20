@@ -96,10 +96,10 @@
             <div class="q-display-1 q-mb-md">Version : {{packageJson.version}}</div>
             <p>Tu comprends, je suis mon meilleur modèle car entre penser et dire, il y a un monde de différence et
               c'est très, très beau d'avoir son propre moi-même ! Ça respire le meuble de Provence, hein ?</p>
-              <p>Tu comprends, je ne suis pas un simple danseur car là, j'ai un chien en ce moment à côté de moi et je
-                le caresse, parce que spirituellement, on est tous ensemble, ok ? Et là, vraiment, j'essaie de tout
-                coeur de donner la plus belle réponse de la terre !</p>
-            <q-btn color="red" v-close-overlay label="Close"    @click="openAboutModal = false"/>
+            <p>Tu comprends, je ne suis pas un simple danseur car là, j'ai un chien en ce moment à côté de moi et je
+              le caresse, parce que spirituellement, on est tous ensemble, ok ? Et là, vraiment, j'essaie de tout
+              coeur de donner la plus belle réponse de la terre !</p>
+            <q-btn color="red" v-close-overlay label="Close" @click="openAboutModal = false"/>
           </div>
         </q-modal>
       </q-page-container>
@@ -108,76 +108,80 @@
   </div>
 </template>
 
-<script>
-  import packageJson from '../package.json';
-  import { createNamespacedHelpers } from 'vuex';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
   import {
     ApisList,
     Dependencies,
+    FrontDependencies,
     FrontList,
     isFront,
     isMicroService,
     ProjectsList,
     Tables,
     Welcome,
-    FrontDependencies,
   } from './Routes';
-  import { initialize, moniThorUrl, nameModule as namespaceConf } from './store/configuration/constants';
-  import { loadNpmList, nameModule as namespaceMonithor } from './store/moniThor/constants';
+  import {initialize, moniThorUrl, nameModule as namespaceConf} from './store/configuration/constants';
+  import {loadNpmList, nameModule as namespaceMonithor} from './store/moniThor/constants';
+  import {Watch} from 'vue-property-decorator';
+  import {Route} from 'vue-router';
+
+  const packageJson = require('../package.json');
+
 
   let first = true;
-  const confStore = createNamespacedHelpers(namespaceConf);
-  const monithorStore = createNamespacedHelpers(namespaceMonithor);
+  const confStore = namespace(namespaceConf);
+  const monithorStore = namespace(namespaceMonithor);
   /*
    * Root component
    */
-  export default {
-    name: 'App',
-    data() {
-      return {
-        openedMs: false,
-        openedFront: false,
-        transitionName: 'slide-right',
-        opened: this.$q.platform.is.desktop,
-        Welcome,
-        ProjectsList,
-        ApisList,
-        Dependencies,
-        Tables,
-        FrontList,
-        FrontDependencies,
-        openAboutModal: false,
-        packageJson,
-      };
-    },
-    computed: {
-      ...confStore.mapGetters([moniThorUrl]),
-    },
-    methods: {
-      menuExpand() {
-        this.opened = !this.opened;
-      },
-      showAbout() {
-        this.openAboutModal = true;
-      },
-      ...confStore.mapActions([initialize]),
-      ...monithorStore.mapActions([loadNpmList]),
-    },
-    watch: {
-      $route(to, from) {
-        const toDepth = to.path.split('/').length;
-        const fromDepth = from.path.split('/').length;
-        this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left';
-        if (first) {
-          this.openedMs = isMicroService(to);
-          this.openedFront = isFront(to);
-          first = false;
-        }
-      },
-    },
+  @Component
+  export default class App extends Vue {
+    $q: any;
+    openedMs = false;
+    openedFront = false;
+    transitionName = 'slide-right';
+    opened = this.$q.platform.is.desktop;
+    Welcome = Welcome;
+    ProjectsList = ProjectsList;
+    ApisList = ApisList;
+    Dependencies = Dependencies;
+    Tables = Tables;
+    FrontList = FrontList;
+    FrontDependencies = FrontDependencies;
+    openAboutModal = false;
+    packageJson = packageJson;
+    @confStore.Getter(moniThorUrl) moniThorUrl;
+    @confStore.Action(initialize) initialize;
+    @monithorStore.Action(loadNpmList) loadNpmList;
+
+    menuExpand() {
+      this.opened = !this.opened;
+    }
+
+    showAbout() {
+      this.openAboutModal = true;
+    }
+
+    @Watch('$route')
+    onRouteChanged(to: Route, from: Route) {
+      const reload = to || {path: ''};
+      const toDepth = reload.path.split('/').length;
+      const fromDepth = from.path.split('/').length;
+      this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left';
+      if (first) {
+        this.openedMs = isMicroService(to);
+        this.openedFront = isFront(to);
+        first = false;
+      }
+    }
+
     mounted() {
       this.initialize()
         .then(() => this.loadNpmList());
-    },
-  };
+    }
+
+  }
 </script>

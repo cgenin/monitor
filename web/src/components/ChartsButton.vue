@@ -48,109 +48,120 @@
     </q-modal>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
-  import { nameModule, getServiceForServer } from '../store/moniThor/constants';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
+  import {getServiceForServer, nameModule} from '../store/moniThor/constants';
   import ResponseTimeChart from './charts/ResponseTimeChart';
   import CounterChart from './charts/CounterChart';
   import SuccessChart from './charts/SuccessChart';
-  import { formatYYYYMMDDHHmm, mavenToDate } from '../Dates.ts';
+  import {formatYYYYMMDDHHmm, mavenToDate} from '../Dates';
   import MarkdownButton from './MarkdownButton';
+  import {Prop} from 'vue-property-decorator';
 
-  const monithorStore = createNamespacedHelpers(nameModule);
+  const monithorStore = namespace(nameModule);
 
-  export default {
-    name: 'ChartsButton',
-    data() {
-      return {
-        modal: false,
-        service: null,
-        displayGraph: false,
-        loading: false,
-        properties: ' ',
-      };
-    },
-    props: ['serviceName', 'server', 'serviceInfos'],
+  @Component({
     components: {
       MarkdownButton,
       ResponseTimeChart,
       CounterChart,
       SuccessChart,
     },
-    methods: {
-      async loadServiceData() {
-        this.loading = true;
-        if (this.serviceName && this.server) {
-          const payload = { service: this.serviceName, server: this.server };
-          await this.getServiceForServer(payload)
-            .then((service) => {
-              this.service = service.servers.find(s => s.host === this.server);
-            }).catch((err) => {
-              console.error('Error while recuperating datas', err);
-            })
-            .then(() => {
-              // Sans le timeout je n'arrive pas a afficher le graph...
-              setTimeout(() => {
-                this.loading = false;
-                this.displayGraph = true;
-              }, 0);
-            });
-        }
-      },
-      getAverage() {
-        const metrics = this.getMetrics();
-        return metrics.reduce((a, b) => a + b, 0) / metrics.length;
-      },
-      get80() {
-        const metrics = this.getMetrics();
-        return metrics
-          .sort((a, b) => a - b)[Math.floor(metrics.length * 0.80)];
-      },
-      getMetrics() {
-        const filteredMetrics = Object.keys(this.service.metrics)
-          .filter(key => key.startsWith('gauge') && !key.includes('hystrix'));
-        return filteredMetrics
-          .reduce((obj, key) => {
-            obj.push(this.service.metrics[key]);
-            return obj;
-          }, []);
-      },
-      openModal() {
-        this.modal = true;
-        this.loadServiceData();
-      },
-      formatKeys(a) {
-        return (Object.keys(a)
-          .sort((c, b) => c.localeCompare(b))
-          .reduce((a1, b1) => `
+  })
+  export default class ChartsButton extends Vue {
+    modal = false;
+    service = null;
+    displayGraph = false;
+    loading = false;
+    properties = ' ';
+    @Prop() serviceName;
+    @Prop() server;
+    @Prop() serviceInfos;
+    @monithorStore.Action(getServiceForServer) getServiceForServer: (p: any) => Promise<any>;
+
+
+    async loadServiceData() {
+      this.loading = true;
+      if (this.serviceName && this.server) {
+        const payload = {service: this.serviceName, server: this.server};
+        await this.getServiceForServer(payload)
+          .then((service) => {
+            this.service = service.servers.find(s => s.host === this.server);
+          }).catch((err) => {
+            console.error('Error while recuperating datas', err);
+          })
+          .then(() => {
+            // Sans le timeout je n'arrive pas a afficher le graph...
+            setTimeout(() => {
+              this.loading = false;
+              this.displayGraph = true;
+            }, 0);
+          });
+      }
+    }
+
+    getAverage() {
+      const metrics = this.getMetrics();
+      return metrics.reduce((a, b) => a + b, 0) / metrics.length;
+    }
+
+    get80() {
+      const metrics = this.getMetrics();
+      return metrics
+        .sort((a, b) => a - b)[Math.floor(metrics.length * 0.80)];
+    }
+
+    getMetrics() {
+      const filteredMetrics = Object.keys(this.service.metrics)
+        .filter(key => key.startsWith('gauge') && !key.includes('hystrix'));
+      return filteredMetrics
+        .reduce((obj, key) => {
+          obj.push(this.service.metrics[key]);
+          return obj;
+        }, []);
+    }
+
+    openModal() {
+      this.modal = true;
+      this.loadServiceData();
+    }
+
+    formatKeys(a) {
+      return (Object.keys(a)
+        .sort((c, b) => c.localeCompare(b))
+        .reduce((a1, b1) => `
 ${a1}
 ${b1}=${a[b1]}
 `, ''));
-      },
-      async openProperties() {
-        this.properties = 'Chargement des données en cours...';
-        await this.loadServiceData();
-        const env = Object.keys(this.service.env)
-          .filter(k => k !== 'systemProperties' && k !== 'systemEnvironment' && k !== 'servletContextInitParams')
-          .sort((a, b) => a.localeCompare(b))
-          .reduce((a, b) => `
+    }
+
+    async openProperties() {
+      this.properties = 'Chargement des données en cours...';
+      await this.loadServiceData();
+      const env = Object.keys(this.service.env)
+        .filter(k => k !== 'systemProperties' && k !== 'systemEnvironment' && k !== 'servletContextInitParams')
+        .sort((a, b) => a.localeCompare(b))
+        .reduce((a, b) => `
 ${a}
 ----
 ${b}
 ----
 ${this.formatKeys(this.service.env[b])}
           `, '');
-        this.properties = env;
-      },
-      closingModal() {
-        this.displayGraph = false;
-      },
-      formatYYYYMMDDHHmm(date) {
-        return formatYYYYMMDDHHmm(mavenToDate(date));
-      },
-      ...monithorStore.mapActions([getServiceForServer]),
-    },
-  };
+      this.properties = env;
+    }
+
+    closingModal() {
+      this.displayGraph = false;
+    }
+
+    formatYYYYMMDDHHmm(date) {
+      return formatYYYYMMDDHHmm(mavenToDate(date));
+    }
+
+  }
 </script>
 
 <style lang="stylus">
