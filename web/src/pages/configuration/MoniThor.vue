@@ -19,40 +19,39 @@
     </q-list>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
-  import { nameModule, global, initialize, save as saveConfiguration } from '../../store/configuration/constants';
-  import { error, success } from '../../Toasts';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
+  import {global, initialize, nameModule, save as saveConfiguration} from '../../store/configuration/constants';
+  import {error, success} from '../../Toasts';
+  import {ConfiguationState} from '../../store/configuration/types';
 
-  const conf = createNamespacedHelpers(nameModule);
-  export default {
-    name: 'MoniThor',
-    data() {
-      return {
-        moniThorUrl: null,
-      };
-    },
-    computed: {
-      ...conf.mapGetters([global]),
-    },
-    methods: {
-      refresh() {
-        this.initialize().then(() => {
-          this.moniThorUrl = this.global.moniThorUrl || '';
-        });
-      },
-      save() {
-        const configuration = Object.assign({}, this.global, { moniThorUrl: this.moniThorUrl });
-        this.saveConfiguration(configuration)
-          .then(() => success())
-          .catch(err => error(err));
-      },
-      ...conf.mapActions({ initialize, saveConfiguration }),
-    },
+  const conf = namespace(nameModule);
+  @Component
+  export default class MoniThor extends Vue {
+    moniThorUrl: string = null;
+    @conf.Getter(global) global: ConfiguationState;
+    @conf.Action(initialize) initialize: () => Promise<any>;
+    @conf.Action(saveConfiguration) saveConfiguration: (c: ConfiguationState) => Promise<any>;
+
+    refresh() {
+      this.initialize().then(() => {
+        this.moniThorUrl = this.global.moniThorUrl || '';
+      });
+    }
+
+    save() {
+      const configuration = Object.assign({}, this.global, {moniThorUrl: this.moniThorUrl});
+      this.saveConfiguration(configuration)
+        .then(() => success())
+        .catch(err => error(err));
+    }
+
     mounted() {
       this.refresh();
-    },
-  };
+    }
+  }
 </script>
 <style lang="stylus" scoped>
   @import "../../css/pages/monithor.styl"

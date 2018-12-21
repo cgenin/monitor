@@ -30,6 +30,7 @@ export interface ApiDto extends Api {
 
 export interface Project {
   id: string
+  name: string
   artifactId: string
   groupId: string
   snapshot: string
@@ -60,4 +61,13 @@ export interface Version {
 
 export interface VersionDto extends Version {
   latest: string
+}
+
+export interface GroupProjects {
+  [key: string]: number
+}
+
+export interface Pagination {
+  nb: number
+  page: number
 }

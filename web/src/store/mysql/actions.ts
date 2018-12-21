@@ -1,8 +1,9 @@
 import {ActionTree} from 'vuex';
-import { SET_INFO_SCHEMA, UPDATE_LOADING } from './mutation-type';
-import { startOrStop, test, infoSchema, createSchema, migrateEvents } from './constants';
-import {InfoSchema, MysqlState} from "./types";
+import {SET_INFO_SCHEMA, UPDATE_LOADING} from './mutation-type';
+import {createSchema, infoSchema, migrateEvents, startOrStop, test} from './constants';
+import {CreationSchemaResult, FailureConnexionDb, InfoSchema, MysqlState} from "./types";
 import {RootState} from "../types";
+import {Mysql} from "../configuration/types";
 
 export const actions: ActionTree<MysqlState, RootState> = {
   [startOrStop]() {
@@ -10,7 +11,7 @@ export const actions: ActionTree<MysqlState, RootState> = {
       method: 'POST',
     });
   },
-  [test]({ commit }, mysql) {
+  [test]({commit}, mysql: Mysql): Promise<FailureConnexionDb> {
     commit(UPDATE_LOADING, true);
     const body = JSON.stringify(mysql);
     return fetch('/api/configuration/db/mysql/connect', {
@@ -27,15 +28,15 @@ export const actions: ActionTree<MysqlState, RootState> = {
         return err;
       });
   },
-  [infoSchema]({ commit }) {
+  [infoSchema]({commit}) {
     return fetch('/api/configuration/db/mysql')
       .then(res => res.json())
       .then((content) => {
-        commit(SET_INFO_SCHEMA, <InfoSchema[]> content);
+        commit(SET_INFO_SCHEMA, <InfoSchema[]>content);
         return content;
-    });
+      });
   },
-  [createSchema]() {
+  [createSchema]():Promise<CreationSchemaResult> {
     return fetch('/api/configuration/db/mysql/schemas', {
       method: 'PUT',
     })

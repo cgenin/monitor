@@ -56,92 +56,100 @@
     </q-card>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
+  import {loadTables, nameModule, tables,} from '../../store/microservices/constants';
+  import {sortString} from '../../FiltersAndSorter';
   import {
-    nameModule,
-    loadTables,
-    tables,
-  } from '../../store/microservices/constants';
-  import { sortString } from '../../FiltersAndSorter';
-  import { pagination, separator, separatorOptions, noDataAfterFiltering, noData, rowsPerPageOptions } from '../../datatable-utils';
+    noData,
+    noDataAfterFiltering,
+    pagination,
+    rowsPerPageOptions,
+    separator,
+    separatorOptions
+  } from '../../datatable-utils';
+  import {TableDto} from "../../store/microservices/types";
 
-  const microservices = createNamespacedHelpers(nameModule);
+  const microservices = namespace(nameModule);
 
-  export default {
-    name: 'TablesList',
-    data() {
-      return {
-        filter: '',
-        loading: false,
-        pagination,
-        separator,
-        separatorOptions,
-        rowsPerPageOptions,
-        visibleColumns: ['name', 'services', 'latest'],
-        noData,
-        noDataAfterFiltering,
-        columns: [
-          {
-            label: 'Nom',
-            name: 'name',
-            field: 'name',
-            align: 'left',
-            width: '400px',
-            sortable: true,
-            type: 'string',
-            filter: true,
-          },
-          {
-            label: 'Projet(s) lié(s)',
-            name: 'services',
-            field: 'services',
-            align: 'left',
-            width: '380px',
-            filter: true,
-            sort(a, b) {
-              if (a.length === b.length) {
-                return sortString(a[0], b[0]);
-              }
-              return a.length - b.length;
-            },
-          },
-          {
-            label: 'Dernière Mise à jour',
-            name: 'latest',
-            field: 'latest',
-            align: 'center',
-            width: '230px',
-            sortable: true,
-            type: 'date',
-            filter: true,
-          },
-        ],
-      };
-    },
-    computed: {
-      ...microservices.mapGetters([tables]),
-    },
-    methods: {
-      refresh() {
-        this.loading = true;
-        this.loadTables()
-          .then(() => {
-            this.filter = '';
-            setTimeout(() => {
-              this.loading = false;
-            }, 300);
-          });
+  @Component
+  export default class TablesList extends Vue {
+    filter= '';
+    loading= false;
+    pagination = pagination;
+    separator = separator;
+    separatorOptions = separatorOptions;
+    rowsPerPageOptions = rowsPerPageOptions;
+    visibleColumns= ['name', 'services', 'latest'];
+    noData = noData;
+    noDataAfterFiltering = noDataAfterFiltering;
+    columns = [
+      {
+        label: 'Nom',
+        name: 'name',
+        field: 'name',
+        align: 'left',
+        width: '400px',
+        sortable: true,
+        type: 'string',
+        filter: true,
       },
-      ...microservices.mapActions([loadTables]),
-    },
+      {
+        label: 'Projet(s) lié(s)',
+        name: 'services',
+        field: 'services',
+        align: 'left',
+        width: '380px',
+        filter: true,
+        sort(a: string, b: string) {
+          if (a.length === b.length) {
+            return sortString(a[0], b[0]);
+          }
+          return a.length - b.length;
+        },
+      },
+      {
+        label: 'Dernière Mise à jour',
+        name:
+          'latest',
+        field:
+          'latest',
+        align:
+          'center',
+        width:
+          '230px',
+        sortable:
+          true,
+        type:
+          'date',
+        filter:
+          true,
+      },
+    ];
+
+    @microservices.Getter(tables) tables: TableDto[];
+    @microservices.Action(loadTables) loadTables: () => Promise<void>;
+
+    refresh() {
+      this.loading = true;
+      this.loadTables()
+        .then(() => {
+          this.filter = '';
+          setTimeout(() => {
+            this.loading = false;
+          }, 300);
+        });
+    }
+
     mounted() {
       this.refresh();
-    },
-  };
+    }
+  }
 </script>
 <style lang="stylus" scoped>
-   .page-list
+  .page-list
     .sql-table-and-project
       .q-table-control
         .q-search

@@ -5,10 +5,10 @@
     </div>
     <div>
       <div class="error-card shadow-4 bg-white column items-center justify-center no-wrap">
-        <q-icon name="error_outline" color="yellow-8" />
+        <q-icon name="error_outline" color="yellow-8"/>
         <p class="caption text-center">
-          You want more ?<br />
-          Oops. Nothing here...<br />
+          You want more ?<br/>
+          Oops. Nothing here...<br/>
           Sinestros killed the page you were searching for !
         </p>
         <p class="text-center group">
@@ -35,20 +35,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
 
-export default {
-  data() {
-    return {
-      canGoBack: window.history.length > 1,
-    };
-  },
-  methods: {
+  @Component
+  export default class Error404 extends Vue {
+
+    canGoBack: boolean = false;
+
     goBack() {
       window.history.go(-1);
-    },
-  },
-};
+    }
+
+    mounted() {
+      this.canGoBack = window.history.length > 1;
+    }
+  }
 </script>
 
 <style lang="stylus" scoped>
