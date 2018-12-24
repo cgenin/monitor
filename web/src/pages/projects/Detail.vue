@@ -51,56 +51,59 @@
     </div>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
   import VueMarkdown from 'vue-markdown';
-  import { ProjectsList } from '../../Routes';
+  import {ProjectsList} from '../../Routes';
   import {
     nameModule,
     getProject, getVersionsForProject, project, versions,
   } from '../../store/microservices/constants';
   import HeaderApp from '../../components/HeaderApp';
-  import { sortStringForSorter } from '../../FiltersAndSorter';
-  import txtHelp from './help.md';
+  import {sortStringForSorter} from '../../FiltersAndSorter';
 
-  const microServicesStore = createNamespacedHelpers(nameModule);
+  import {VersionDto} from "../../store/microservices/types";
 
-  export default {
-    name: 'ProjectDetail',
-    components: {
-      HeaderApp,
-      VueMarkdown,
-    },
-    data() {
-      return {
-        id: null,
-        txtHelp,
-        selected: {},
-        selectVersions: [],
-        title: '',
-        ProjectsList,
-      };
-    },
-    computed: {
-      ...microServicesStore.mapGetters([project, versions]),
-    },
-    methods: {
-      changeVersion(id) {
-        this.selected = this.versions.find(v => v.id === id);
+  const txtHelp = require('./help.md');
+  const microServices = namespace(nameModule);
+
+  @Component(
+    {
+      components: {
+        HeaderApp,
+        VueMarkdown,
       },
-      ...microServicesStore.mapActions([getProject, getVersionsForProject]),
     },
+  )
+  export default class ProjectDetail extends Vue {
+    id = null;
+    txtHelp = txtHelp;
+    selected: VersionDto = <VersionDto>{};
+    selectVersions=[];
+    latest: VersionDto = <VersionDto>{};
+    title = '';
+    ProjectsList = ProjectsList;
+    @microServices.Getter(versions) versions: VersionDto[];
+    @microServices.Getter(project) project;
+    @microServices.Action(getProject) getProject;
+    @microServices.Action(getVersionsForProject) getVersionsForProject;
+
+    changeVersion(id) {
+      this.selected = this.versions.find(v => v.id === id);
+    }
+
     mounted() {
-      const { id } = this.$route.params;
+      const {id} = this.$route.params;
       Promise.all([this.getProject(id), this.getVersionsForProject(id)])
         .then(() => {
           this.title = `Détail du projet : ${this.project.name}`;
           this.latest = this.versions
             .map((v) => {
-              v.table = v.tables.sort();
+              v.tables = v.tables.sort();
               v.javaDeps = v.javaDeps.sort();
               v.apis = v.apis.sort();
-              v.icon = (v.isSnapshot) ? '/img/snapshot.svg' : '/img/release.svg';
               return v;
             })
             .reduce((a, b) => {
@@ -123,8 +126,8 @@
             .sort(sortStringForSorter(a => a.label));
         })
         .catch(err => console.error(err));
-    },
-  };
+    }
+  }
 </script>
 <style lang="stylus" scoped>
   .main

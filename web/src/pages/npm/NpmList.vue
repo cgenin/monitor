@@ -49,9 +49,11 @@
     </q-card>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
-  import { nameModule, loadNpmList, getNpmComponentInfos } from '../../store/moniThor/constants';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
+  import {nameModule, loadNpmList, getNpmComponentInfos} from '../../store/moniThor/constants';
   import MarkdownButton from '../../components/MarkdownButton';
   import HeaderApp from '../../components/HeaderApp';
   import filtering from '../../FiltersAndSorter';
@@ -63,9 +65,9 @@
     pagination,
     rowsPerPageOptions,
   } from '../../datatable-utils';
-  import { formatYYYYMMDDHHmm } from '../../Dates.ts';
+  import {formatYYYYMMDDHHmm} from '../../Dates';
 
-  const monithorStore = createNamespacedHelpers(nameModule);
+  const monithor = namespace(nameModule);
   const objectAsArray = obj => Object.keys(obj).map(key => obj[key]);
 
   const createInfos = component => `
@@ -73,108 +75,111 @@
     ${component.description}
     ## Versions
         ${
-      Object.values(component.versions).reverse().reduce((a, b) => `
+    Object.values(component.versions).reverse().reduce((a, b) => `
     ${a}
     ### ${b}
     Build time : ${component.time[b] ? formatYYYYMMDDHHmm(component.time[b]) : ''}
     `, '')}`;
 
-  export default {
-    name: 'NpmList',
+  @Component({
     components: {
       HeaderApp,
       MarkdownButton,
     },
-    data() {
-      return {
-        list: null,
-        selected: null,
-        loading: false,
-        filter: '',
-        separator,
-        separatorOptions,
-        pagination,
-        noData,
-        noDataAfterFiltering,
-        rowsPerPageOptions,
-        columns: [
-          {
-            label: 'Nom',
-            field: 'name',
-            name: 'name',
-            width: '270px',
-            sortable: true,
-            type: 'string',
-            filter: true,
-          },
-          {
-            label: 'Version',
-            field: 'latestVersion',
-            name: 'latestVersion',
-            sortable: true,
-            type: 'string',
-            filter: true,
-          },
-          {
-            label: 'Build time',
-            field: 'latestBuildTime',
-            name: 'latestBuildTime',
-            sortable: true,
-            type: 'string',
-            filter: true,
-          },
-          {
-            label: 'Readme',
-            field: 'readme',
-            name: 'readme',
-            width: '57px',
-            sortable: true,
-          },
-          {
-            label: 'Détail',
-            field: 'infos',
-            name: 'infos',
-            width: '67px',
-            sortable: false,
-          },
-        ],
-      };
-    },
-    methods: {
-      async refresh() {
-        this.filter = '';
-        const obj = await this.loadNpmList();
-        this.list = objectAsArray(obj)
-          .filter(component => component.name)
-          .map((el) => {
-            const latestBuild = (el['dist-tags'] || {}).latest;
-            return {
-              ...el,
-              latestVersion: latestBuild,
-              latestBuildTime: formatYYYYMMDDHHmm(new Date(el.time[latestBuild])),
-              infos: createInfos(el),
-            };
-          })
-          .sort((a, b) => a.name.localeCompare(b.name));
+  })
+  export default class NpmList extends Vue {
+    list = null;
+    selected = null;
+    original = null;
+    loading = false;
+    filter = '';
+    separator = separator;
+    separatorOptions = separatorOptions;
+    pagination = pagination;
+    noData = rowsPerPageOptions;
+    noDataAfterFiltering = rowsPerPageOptions;
+    rowsPerPageOptions = rowsPerPageOptions;
+    columns = [
+      {
+        label: 'Nom',
+        field: 'name',
+        name: 'name',
+        width: '270px',
+        sortable: true,
+        type: 'string',
+        filter: true,
       },
-      async selectComponent(component) {
-        this.loading = true;
-        try {
-          this.selected = await this.getNpmComponentInfos(component);
-        } catch (e) {
-          console.error(e);
-        }
-        this.loading = false;
+      {
+        label: 'Version',
+        field: 'latestVersion',
+        name: 'latestVersion',
+        sortable: true,
+        type: 'string',
+        filter: true,
       },
-      filtering() {
-        this.list = filtering(this.original, this.filter);
+      {
+        label: 'Build time',
+        field: 'latestBuildTime',
+        name: 'latestBuildTime',
+        sortable: true,
+        type: 'string',
+        filter: true,
       },
-      ...monithorStore.mapActions([loadNpmList, getNpmComponentInfos]),
-    },
+      {
+        label: 'Readme',
+        field: 'readme',
+        name: 'readme',
+        width: '57px',
+        sortable: true,
+      },
+      {
+        label: 'Détail',
+        field: 'infos',
+        name: 'infos',
+        width: '67px',
+        sortable: false,
+      },
+    ];
+    @monithor.Action(loadNpmList) loadNpmList: () => Promise<any>;
+    @monithor.Action(getNpmComponentInfos) getNpmComponentInfos: (c: any) => Promise<any>;
+
+    async refresh() {
+      this.filter = '';
+      const obj = await this.loadNpmList();
+      this.list = objectAsArray(obj)
+        .filter(component => component.name)
+        .map((el) => {
+          const latestBuild = (el['dist-tags'] || {}).latest;
+          return {
+            ...el,
+            latestVersion: latestBuild,
+            latestBuildTime: formatYYYYMMDDHHmm(new Date(el.time[latestBuild])),
+            infos: createInfos(el),
+          };
+        })
+        .sort((a, b) => a.name.localeCompare(b.name));
+      this.original = this.list;
+    }
+
+    async selectComponent(component) {
+      this.loading = true;
+      try {
+        this.selected = await this.getNpmComponentInfos(component);
+      } catch (e) {
+        console.error(e);
+      }
+      this.loading = false;
+    }
+
+    filtering() {
+      this.list = filtering(this.original, this.filter);
+    }
+
     async mounted() {
       this.refresh();
-    },
-  };
+    }
+  }
+
 </script>
 <style>
 </style>
