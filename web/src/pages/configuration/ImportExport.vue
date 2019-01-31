@@ -12,13 +12,14 @@
     </q-list>
   </div>
 </template>
-<script>
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
   import Import from '../../components/configuration/Import';
   import Export from '../../components/configuration/Export';
 
-  export default {
-    name: 'ConfigurationImportExport',
-    components: { Import, Export },
+  @Component({components: {Import, Export},})
+  export default class ConfigurationImportExport extends Vue {
   };
 
 </script>

@@ -9,8 +9,8 @@ export interface ConfiguationState {
 export interface Mysql {
   database: string
   host: string
-  password: string
-  user: string
+  password?: string
+  user?: string
   port: number
 }
 

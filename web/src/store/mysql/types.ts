@@ -25,3 +25,18 @@ export interface FlywayState {
 
 }
 
+export interface FailureConnexionDb {
+  msgError?: string
+  stacktrace?: string
+  state: 'fail' | 'success'
+}
+
+export interface CreationSchemaResult {
+  creation: boolean
+  report?:Report
+}
+
+export interface Report {
+  nbMigration: number
+}
+

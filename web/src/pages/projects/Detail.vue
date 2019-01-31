@@ -57,10 +57,7 @@
   import {namespace} from 'vuex-class';
   import VueMarkdown from 'vue-markdown';
   import {ProjectsList} from '../../Routes';
-  import {
-    nameModule,
-    getProject, getVersionsForProject, project, versions,
-  } from '../../store/microservices/constants';
+  import {getProject, getVersionsForProject, nameModule, project, versions,} from '../../store/microservices/constants';
   import HeaderApp from '../../components/HeaderApp';
   import {sortStringForSorter} from '../../FiltersAndSorter';
 

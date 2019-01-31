@@ -27,14 +27,15 @@
   import {error, success} from '../../Toasts';
   import {ConfiguationState} from '../../store/configuration/types';
 
-  const configuration = namespace(nameModule);
 
+
+  const conf = namespace(nameModule);
   @Component
   export default class MoniThor extends Vue {
     moniThorUrl: string = null;
-    @configuration.Getter(global) global: ConfiguationState;
-    @configuration.Action(initialize) initialize: () => Promise<void>;
-    @configuration.Action(saveConfiguration) saveConfiguration: (conf: ConfiguationState) => Promise<void>;
+    @conf.Getter(global) global: ConfiguationState;
+    @conf.Action(initialize) initialize: () => Promise<any>;
+    @conf.Action(saveConfiguration) saveConfiguration: (c: ConfiguationState) => Promise<any>;
 
     refresh() {
       this.initialize().then(() => {
@@ -43,8 +44,8 @@
     }
 
     save() {
-      const conf = Object.assign({}, this.global, {moniThorUrl: this.moniThorUrl});
-      this.saveConfiguration(conf)
+      const configuration = Object.assign({}, this.global, {moniThorUrl: this.moniThorUrl});
+      this.saveConfiguration(configuration)
         .then(() => success())
         .catch(err => error(err));
     }
@@ -52,7 +53,7 @@
     mounted() {
       this.refresh();
     }
-  };
+  }
 </script>
 <style lang="stylus" scoped>
   @import "../../css/pages/monithor.styl"

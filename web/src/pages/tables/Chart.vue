@@ -16,37 +16,38 @@
     </q-card>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
-  import {
-    nameModule,
-    groupByProjects,
-  } from '../../store/microservices/constants';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
+  import {groupByProjects, nameModule,} from '../../store/microservices/constants';
   import CardChart from '../../components/CardChart';
+  import {GroupProjects} from '../../store/microservices/types';
 
-  const microservices = createNamespacedHelpers(nameModule);
+  const microservices = namespace(nameModule);
 
-  export default {
-    name: 'TablesChart',
+
+  @Component({
     components: {
       CardChart,
     },
-    data() {
-      return { chart1: {}, median1: 0 };
-    },
-    methods: {
-      ...microservices.mapActions([groupByProjects]),
-    },
+  })
+  export default class TablesChart extends Vue {
+    chart1:GroupProjects = {};
+    median1 = 0;
+    @microservices.Action(groupByProjects) groupByProjects;
+
     mounted() {
       this.groupByProjects()
-        .then((chart1) => {
+        .then((chart1:GroupProjects) => {
           this.chart1 = chart1;
-          const sum = Object.values(chart1).reduce((acc, nb) => acc + nb, 0);
-          const res = sum / Object.values(chart1).length;
+          const values = Object.values(chart1);
+          const sum = values.reduce((acc, nb) => acc + nb, 0);
+          const res = sum / values.length;
           this.median1 = Math.floor(res);
         });
-    },
-  };
+    }
+  }
 </script>
 <style lang="stylus" scoped>
   .tables-chart-page

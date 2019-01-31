@@ -70,16 +70,19 @@
   const monithor = namespace(nameModule);
   const objectAsArray = obj => Object.keys(obj).map(key => obj[key]);
 
+  const getBuilds = (component) => {
+    const versions:string[] =  component.versions as string[];
+    return Object.values(versions).reverse().reduce((a, b) => `
+    ${a}
+    ### ${b}
+    Build time : ${component.time[b] ? formatYYYYMMDDHHmm(component.time[b]) : ''}
+    `, '');
+  };
   const createInfos = component => `
     ## Description
     ${component.description}
     ## Versions
-        ${
-    Object.values(component.versions).reverse().reduce((a, b) => `
-    ${a}
-    ### ${b}
-    Build time : ${component.time[b] ? formatYYYYMMDDHHmm(component.time[b]) : ''}
-    `, '')}`;
+        ${getBuilds(component)}`;
 
   @Component({
     components: {

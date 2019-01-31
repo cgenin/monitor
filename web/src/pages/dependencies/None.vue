@@ -3,8 +3,11 @@
     &nbsp;
   </div>
 </template>
-<script>
-  export default {
-    name: 'DependenciesNone',
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+
+  @Component
+  export default class DependenciesNone extends Vue {
   };
 </script>

@@ -2,7 +2,7 @@ import {ActionTree} from 'vuex';
 
 import { groupByProjects, loadTables, loadApis, loadProjects, getProject, getVersionsForProject } from './constants';
 import { SET_APIS, SET_PROJECT, SET_PROJECTS, SET_TABLES, SET_VERSIONS } from './mutations-type';
-import { MicroServiceState } from './types';
+import {MicroServiceState, Pagination} from './types';
 import { RootState } from '../types';
 
 const projects = () => fetch(`/api/projects?t=${new Date().getTime()}`)
@@ -21,7 +21,7 @@ export const actions: ActionTree<MicroServiceState, RootState> = {
         return content;
       });
   },
-  [loadApis]({ commit }, { nb = 25, page = 1 }) {
+  [loadApis]({ commit }, { nb = 25, page = 1 }:Pagination) {
     return fetch(`/api/endpoints?nb=${nb}&page=${page}`)
       .then(res => res.json())
       .then((content) => {

@@ -111,15 +111,18 @@
     </q-card>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
-  import { apis, loadApis, nameModule as namespaceMicroService, } from '../store/microservices/constants';
-  import filtering, { filteringByAttribute } from '../FiltersAndSorter';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
+  import {apis, loadApis, nameModule as namespaceMicroService,} from '../store/microservices/constants';
+  import filtering, {filteringByAttribute} from '../FiltersAndSorter';
   import MethodIcon from '../components/MethodIcon';
   import ApisCard from '../components/ApisCard';
   import HeaderApp from '../components/HeaderApp';
+  import {ApiDto, Pagination} from "../store/microservices/types";
 
-  const microServicesStore = createNamespacedHelpers(namespaceMicroService);
+  const microServicesStore = namespace(namespaceMicroService);
   const methodFiltering = filteringByAttribute('method');
   const artifactIdFiltering = filteringByAttribute('artifactId');
   const absolutePathFiltering = filteringByAttribute('absolutePath');
@@ -162,132 +165,139 @@
     return adaptForQTree(datasPrepareAsTree, i);
   };
 
-  export default {
-    name: 'ApisList',
+  interface SubFilterType {
+    method?: string
+    path?: string
+    domain?: string
+  }
+
+  @Component({
     components: {
       HeaderApp,
       MethodIcon,
       ApisCard,
     },
-    data() {
-      return {
-        loading: false,
-        nb: 25,
-        filter: '',
-        page: 1,
-        datas: [],
-        datasAsTree: {},
-        listCards: [],
-        viewTable: true,
-        viewTree: false,
-        viewCard: false,
-        filtersPanel: false,
-        subFilters: {},
-        methodsOptions: [
-          { label: '', value: null },
-          { label: 'GET', value: 'GET' },
-          { label: 'POST', value: 'POST' },
-          { label: 'PUT', value: 'PUT' },
-          { label: 'DELETE', value: 'DELETE' },
-          { label: 'HEAD', value: 'HEAD' },
-        ],
-        columns: [
-          {
-            label: 'Méthode',
-            name: 'method',
-            field: 'nmethod',
-            align: 'left',
-            sortable: true,
-          },
-          {
-            label: 'Path',
-            name: 'path',
-            field: 'path',
-            align: 'left',
-            sortable: true,
-          },
-          {
-            label: 'Commentaire',
-            name: 'comment',
-            field: 'comment',
-            align: 'left',
-            sortable: true,
-          },
-        ],
-      };
-    },
-    computed: {
-      ...microServicesStore.mapGetters([apis]),
-    },
-    methods: {
-      showOrHideFilterPanel() {
-        this.filtersPanel = !this.filtersPanel;
-        if (!this.filtersPanel) {
-          this.subFilters = {};
-          this.filtering();
-        }
+  })
+  export default class ApisList extends Vue {
+    loading = false;
+    nb = 25;
+    filter = '';
+    page = 1;
+    datas = [];
+    datasAsTree = {};
+    listCards = [];
+    viewTable = true;
+    viewTree = false;
+    viewCard = false;
+    filtersPanel = false;
+    subFilters: SubFilterType = {};
+    methodsOptions = [
+      {label: '', value: null},
+      {label: 'GET', value: 'GET'},
+      {label: 'POST', value: 'POST'},
+      {label: 'PUT', value: 'PUT'},
+      {label: 'DELETE', value: 'DELETE'},
+      {label: 'HEAD', value: 'HEAD'},
+    ];
+    columns = [
+      {
+        label: 'Méthode',
+        name: 'method',
+        field: 'nmethod',
+        align: 'left',
+        sortable: true,
       },
-      filtering() {
-        const mF = methodFiltering(this.apis, this.subFilters.method);
-        const aF = absolutePathFiltering(mF, this.subFilters.path);
-        const aiF = artifactIdFiltering(aF, this.subFilters.domain);
-        this.datas = filtering(aiF, this.filter);
-        this.listCards = this.datas.filter((o, index) => index < maxLoadedCard);
-        this.datasAsTree = createTree(this.datas);
+      {
+        label: 'Path',
+        name: 'path',
+        field: 'path',
+        align: 'left',
+        sortable: true,
       },
-      loadMore(index, done) {
-        if (index < (this.datas.length - 1)) {
-          if ((index + maxLoadedCard) >= this.datas.length) {
-            this.listCards = this.datas;
-          } else {
-            this.listCards = this.datas
-              .filter((o, i) => i < index + maxLoadedCard);
-          }
-          done();
+      {
+        label: 'Commentaire',
+        name: 'comment',
+        field: 'comment',
+        align: 'left',
+        sortable: true,
+      },
+    ];
+
+    @microServicesStore.Getter(apis) apis: ApiDto[];
+    @microServicesStore.Action(loadApis) loadApis: (p: Pagination) => Promise<void>;
+
+
+    showOrHideFilterPanel() {
+      this.filtersPanel = !this.filtersPanel;
+      if (!this.filtersPanel) {
+        this.subFilters = {};
+        this.filtering();
+      }
+    }
+
+    filtering() {
+      const mF = methodFiltering(this.apis, this.subFilters.method);
+      const aF = absolutePathFiltering(mF, this.subFilters.path);
+      const aiF = artifactIdFiltering(aF, this.subFilters.domain);
+      this.datas = filtering(aiF, this.filter);
+      this.listCards = this.datas.filter((o, index) => index < maxLoadedCard);
+      this.datasAsTree = createTree(this.datas);
+    }
+
+    loadMore(index, done) {
+      if (index < (this.datas.length - 1)) {
+        if ((index + maxLoadedCard) >= this.datas.length) {
+          this.listCards = this.datas;
         } else {
-          if (this.listCards.length !== this.datas.length) {
-            this.listCards = this.datas;
-          }
-          done(true);
-          this.$refs.infiniteScroll.stop();
+          this.listCards = this.datas
+            .filter((o, i) => i < index + maxLoadedCard);
         }
-      },
-      changedTable(v) {
-        if (!v) {
-          this.viewTable = true;
+        done();
+      } else {
+        if (this.listCards.length !== this.datas.length) {
+          this.listCards = this.datas;
         }
-        this.viewTree = false;
-        this.viewCard = false;
-      },
-      changedCard(v) {
-        if (!v) {
-          this.viewCard = true;
-        }
-        this.viewTable = false;
-        this.viewTree = false;
-      },
-      changedTree(v) {
-        if (!v) {
-          this.viewTree = true;
-        }
-        this.viewTable = false;
-        this.viewCard = false;
-      },
-      ...microServicesStore.mapActions([loadApis]),
-    },
+        done(true);
+        (<any>this.$refs.infiniteScroll).stop();
+      }
+    }
+
+    changedTable(v) {
+      if (!v) {
+        this.viewTable = true;
+      }
+      this.viewTree = false;
+      this.viewCard = false;
+    }
+
+    changedCard(v) {
+      if (!v) {
+        this.viewCard = true;
+      }
+      this.viewTable = false;
+      this.viewTree = false;
+    }
+
+    changedTree(v) {
+      if (!v) {
+        this.viewTree = true;
+      }
+      this.viewTable = false;
+      this.viewCard = false;
+    }
+
     mounted() {
       this.loading = true;
-      const { nb, page } = this;
-      this.loadApis({ nb, page })
+      const {nb, page} = this;
+      this.loadApis(<Pagination>{nb, page})
         .then(() => {
           this.loading = false;
           this.datas = this.apis;
           this.listCards = this.datas.filter((o, index) => index < maxLoadedCard);
           this.datasAsTree = createTree(this.apis);
         });
-    },
-
-  };
+    }
+  }
 </script>
 <style lang="stylus">
   @import "../css/pages/apilist.styl"

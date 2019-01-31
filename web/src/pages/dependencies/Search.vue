@@ -46,35 +46,40 @@
     </q-card>
   </div>
 </template>
-<script>
-  import { createNamespacedHelpers } from 'vuex';
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import {namespace} from 'vuex-class';
   import SubTree from '../../components/SubTree';
-  import { reset, nameModule, usedBy } from '../../store/dependencies/constants';
+  import {nameModule, reset, usedBy} from '../../store/dependencies/constants';
 
-  const dependenciesStore = createNamespacedHelpers(nameModule);
+  const dependencies = namespace(nameModule);
 
-  export default {
-    name: 'DependenciesSearch',
+  @Component({
     components: {
       SubTree,
     },
-    data() {
-      return { resource: '', list: [], vertical: false };
-    },
-    methods: {
-      print() {
-        window.print();
-      },
-      ...dependenciesStore.mapActions([usedBy, reset]),
-    },
+  })
+  export default class DependenciesSearch extends Vue {
+    resource = '';
+    list:any[] = [];
+    vertical = false;
+    @dependencies.Action(usedBy) usedBy: (c: string) => Promise<any[]>;
+    @dependencies.Action(reset) reset: () => Promise<void>;
+
+    print() {
+      window.print();
+    }
+
     mounted() {
-      this.resource = this.$router.history.current.params.resource;
+      const history = (<any>this.$router).history;
+      this.resource = history.current.params.resource;
       this.reset()
         .then(() => this.usedBy(this.resource))
         .then((c) => {
           this.list = c;
         });
-    },
+    }
 
-  };
+  }
 </script>
