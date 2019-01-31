@@ -1,7 +1,7 @@
 {
   "name": "web-monitor",
   "productName": "monitor",
-  "version": "1.1.3",
+  "version": "1.1.4-SNAPSHOT",
   "private": true,
   "description": "A Quasar App",
   "author": "Your Name <your@email.com>",
