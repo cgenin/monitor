@@ -3,13 +3,13 @@
     <parent>
         <artifactId>monitor</artifactId>
         <groupId>net.christophe.genin.domain</groupId>
-        <version>1.1.3-SNAPSHOT</version>
+        <version>1.1.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.christophe.genin.domain.monitor</groupId>
     <artifactId>web-app-plugin</artifactId>
-    <version>1.1.3-SNAPSHOT</version>
+    <version>1.1.3</version>
     <packaging>maven-plugin</packaging>
 
     <dependencies>
